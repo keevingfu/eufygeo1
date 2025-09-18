@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Production System - Eufy GEO Platform</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.2/dist/echarts.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 1rem 2rem;
+            color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .navbar h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .header-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        
+        .header-info h2 {
+            color: #333;
+            margin-bottom: 1rem;
+            font-size: 28px;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #666;
+            border: 1px solid #e9ecef;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 2rem;
+        }
+        
+        .content-area {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .content-editor {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .editor-header {
+            background: #f8f9fa;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .editor-tabs {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .tab-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            background: transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-btn.active {
+            background: white;
+            color: #667eea;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .editor-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .editor-content {
+            padding: 1.5rem;
+        }
+        
+        .content-input {
+            width: 100%;
+            min-height: 400px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+            resize: vertical;
+        }
+        
+        .content-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .outline-generator {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .outline-generator h3 {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        
+        .keyword-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 14px;
+        }
+        
+        .generate-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .outline-result {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .seo-panel {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .seo-score {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            margin-bottom: 1.5rem;
+        }
+        
+        .score-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+        
+        .score-excellent {
+            background: linear-gradient(135deg, #2ed573 0%, #27ae60 100%);
+        }
+        
+        .score-good {
+            background: linear-gradient(135deg, #ffa502 0%, #e67e22 100%);
+        }
+        
+        .score-poor {
+            background: linear-gradient(135deg, #ff4757 0%, #e74c3c 100%);
+        }
+        
+        .seo-checks {
+            list-style: none;
+        }
+        
+        .seo-checks li {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+            font-size: 14px;
+        }
+        
+        .check-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .check-pass {
+            background: #2ed573;
+            color: white;
+        }
+        
+        .check-warning {
+            background: #ffa502;
+            color: white;
+        }
+        
+        .check-fail {
+            background: #ff4757;
+            color: white;
+        }
+        
+        .ai-assistant {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .ai-suggestions {
+            margin-top: 1rem;
+        }
+        
+        .suggestion {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border-left: 4px solid #667eea;
+        }
+        
+        .suggestion-type {
+            font-size: 12px;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 0.25rem;
+        }
+        
+        .suggestion-text {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 0.5rem;
+        }
+        
+        .apply-suggestion {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .apply-suggestion:hover {
+            background: #5a6fd8;
+        }
+        
+        .content-stats {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .content-preview {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .preview-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .preview-tab {
+            padding: 0.5rem 1rem;
+            border: none;
+            background: transparent;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .preview-tab.active {
+            border-bottom-color: #667eea;
+            color: #667eea;
+            font-weight: 600;
+        }
+        
+        .preview-content {
+            min-height: 300px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1rem;
+            background: #f8f9fa;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .version-history {
+            margin-top: 1rem;
+        }
+        
+        .version-item {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            padding: 0.75rem;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .version-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .version-info {
+            flex: 1;
+        }
+        
+        .version-timestamp {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .version-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        @media (max-width: 1200px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                order: -1;
+                flex-direction: row;
+                overflow-x: auto;
+            }
+            
+            .sidebar > * {
+                min-width: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>Content Production System - Eufy GEO Platform</h1>
+    </nav>
+
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header-section">
+            <div class="header-info">
+                <h2>AI-Powered Content Creation Studio</h2>
+                <p>Create, optimize, and manage SEO-friendly content with intelligent writing assistance</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-secondary" onclick="showTemplates()">
+                    📄 Templates
+                </button>
+                <button class="btn btn-secondary" onclick="showVersionHistory()">
+                    🕒 History
+                </button>
+                <button class="btn btn-primary" onclick="publishContent()">
+                    🚀 Publish
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Layout -->
+        <div class="main-layout">
+            <!-- Content Area -->
+            <div class="content-area">
+                <!-- Content Editor -->
+                <div class="content-editor">
+                    <div class="editor-header">
+                        <div class="editor-tabs">
+                            <button class="tab-btn active" onclick="switchEditorTab('article')">📝 Article</button>
+                            <button class="tab-btn" onclick="switchEditorTab('video')">🎥 Video Script</button>
+                            <button class="tab-btn" onclick="switchEditorTab('social')">📱 Social</button>
+                        </div>
+                        <div class="editor-actions">
+                            <button class="btn btn-secondary" onclick="saveContent()">💾 Save</button>
+                            <button class="btn btn-secondary" onclick="previewContent()">👁️ Preview</button>
+                        </div>
+                    </div>
+                    <div class="editor-content">
+                        <div id="articleEditor">
+                            <input type="text" placeholder="Content Title" class="keyword-input" style="font-size: 18px; font-weight: 600; margin-bottom: 1rem;" id="contentTitle">
+                            <textarea class="content-input" placeholder="Start writing your content here... Use the AI assistant on the right for suggestions and optimizations." id="contentBody"></textarea>
+                        </div>
+                        <div id="videoEditor" style="display: none;">
+                            <input type="text" placeholder="Video Title" class="keyword-input" style="font-size: 18px; font-weight: 600; margin-bottom: 1rem;">
+                            <textarea class="content-input" placeholder="Scene 1: [00:00-00:15] Introduction hook
+Scene 2: [00:15-01:00] Main content...
+Scene 3: [01:00-01:30] Call to action..." style="min-height: 300px;"></textarea>
+                        </div>
+                        <div id="socialEditor" style="display: none;">
+                            <select class="keyword-input" style="margin-bottom: 1rem;">
+                                <option>Select Platform</option>
+                                <option>Reddit</option>
+                                <option>Twitter</option>
+                                <option>LinkedIn</option>
+                                <option>Facebook</option>
+                            </select>
+                            <textarea class="content-input" placeholder="Write your social media content here..." style="min-height: 200px;"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content Preview -->
+                <div class="content-preview">
+                    <div class="preview-tabs">
+                        <button class="preview-tab active" onclick="switchPreviewTab('desktop')">🖥️ Desktop</button>
+                        <button class="preview-tab" onclick="switchPreviewTab('mobile')">📱 Mobile</button>
+                        <button class="preview-tab" onclick="switchPreviewTab('serp')">🔍 SERP</button>
+                    </div>
+                    <div class="preview-content" id="previewContent">
+                        <div style="text-align: center; padding: 3rem; color: #666;">
+                            Preview will appear here as you type...
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Outline Generator -->
+                <div class="outline-generator">
+                    <h3>🤖 AI Outline Generator</h3>
+                    <input type="text" class="keyword-input" placeholder="Target keyword" id="outlineKeyword">
+                    <button class="generate-btn" onclick="generateOutline()">Generate Outline</button>
+                    <div class="outline-result" id="outlineResult" style="display: none;">
+                        <strong>Generated Outline:</strong>
+                        <ul style="margin-top: 0.5rem; padding-left: 1.5rem;">
+                            <li>Introduction to smart home security</li>
+                            <li>Why choose Eufy security cameras</li>
+                            <li>Top 5 Eufy camera features</li>
+                            <li>Installation and setup guide</li>
+                            <li>Comparison with competitors</li>
+                            <li>Conclusion and recommendations</li>
+                        </ul>
+                        <button class="apply-suggestion" onclick="applyOutline()" style="margin-top: 0.5rem;">Apply Outline</button>
+                    </div>
+                </div>
+
+                <!-- SEO Score Panel -->
+                <div class="seo-panel">
+                    <h3>📊 SEO Score</h3>
+                    <div class="seo-score">
+                        <div class="score-circle score-good" id="seoScoreCircle">78</div>
+                        <div style="font-size: 14px; color: #666;">Good Optimization</div>
+                    </div>
+                    <ul class="seo-checks">
+                        <li>
+                            <div class="check-icon check-pass">✓</div>
+                            <span>Keyword in title</span>
+                        </li>
+                        <li>
+                            <div class="check-icon check-pass">✓</div>
+                            <span>Meta description optimized</span>
+                        </li>
+                        <li>
+                            <div class="check-icon check-warning">!</div>
+                            <span>Add more internal links</span>
+                        </li>
+                        <li>
+                            <div class="check-icon check-warning">!</div>
+                            <span>Keyword density: 1.8%</span>
+                        </li>
+                        <li>
+                            <div class="check-icon check-fail">✗</div>
+                            <span>Missing alt text for images</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- AI Writing Assistant -->
+                <div class="ai-assistant">
+                    <h3>✨ AI Assistant</h3>
+                    <button class="generate-btn" onclick="getAISuggestions()">Get Suggestions</button>
+                    <div class="ai-suggestions" id="aiSuggestions">
+                        <div class="suggestion">
+                            <div class="suggestion-type">INTRO IMPROVEMENT</div>
+                            <div class="suggestion-text">Consider starting with a compelling statistic about home security to hook readers immediately.</div>
+                            <button class="apply-suggestion" onclick="applySuggestion(this)">Apply</button>
+                        </div>
+                        <div class="suggestion">
+                            <div class="suggestion-type">KEYWORD OPTIMIZATION</div>
+                            <div class="suggestion-text">Include "security camera" in the first paragraph for better SEO performance.</div>
+                            <button class="apply-suggestion" onclick="applySuggestion(this)">Apply</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content Statistics -->
+                <div class="content-stats">
+                    <h3>📈 Content Stats</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value" id="wordCount">0</div>
+                            <div class="stat-label">Words</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="readTime">0</div>
+                            <div class="stat-label">Min Read</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="keywordDensity">0%</div>
+                            <div class="stat-label">Keyword Density</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="readabilityScore">0</div>
+                            <div class="stat-label">Readability</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Templates Modal -->
+    <div class="modal" id="templatesModal">
+        <div class="modal-content">
+            <h3>Content Templates</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                <div style="border: 1px solid #e9ecef; border-radius: 8px; padding: 1rem; cursor: pointer;" onclick="useTemplate('product-review')">
+                    <h4>Product Review</h4>
+                    <p style="font-size: 14px; color: #666;">Comprehensive product review template with pros/cons</p>
+                </div>
+                <div style="border: 1px solid #e9ecef; border-radius: 8px; padding: 1rem; cursor: pointer;" onclick="useTemplate('how-to-guide')">
+                    <h4>How-to Guide</h4>
+                    <p style="font-size: 14px; color: #666;">Step-by-step tutorial template</p>
+                </div>
+                <div style="border: 1px solid #e9ecef; border-radius: 8px; padding: 1rem; cursor: pointer;" onclick="useTemplate('comparison')">
+                    <h4>Comparison Article</h4>
+                    <p style="font-size: 14px; color: #666;">Compare multiple products or services</p>
+                </div>
+                <div style="border: 1px solid #e9ecef; border-radius: 8px; padding: 1rem; cursor: pointer;" onclick="useTemplate('listicle')">
+                    <h4>Listicle</h4>
+                    <p style="font-size: 14px; color: #666;">Numbered or bulleted list article</p>
+                </div>
+            </div>
+            <div style="text-align: right; margin-top: 2rem;">
+                <button class="btn btn-secondary" onclick="hideModal('templatesModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Version History Modal -->
+    <div class="modal" id="versionModal">
+        <div class="modal-content">
+            <h3>Version History</h3>
+            <div class="version-history">
+                <div class="version-item">
+                    <div class="version-info">
+                        <div><strong>Current Version</strong></div>
+                        <div class="version-timestamp">Today 3:24 PM - Auto-saved</div>
+                    </div>
+                    <div class="version-actions">
+                        <button class="btn btn-secondary" style="padding: 0.5rem;">View</button>
+                    </div>
+                </div>
+                <div class="version-item">
+                    <div class="version-info">
+                        <div>Version 2.3</div>
+                        <div class="version-timestamp">Today 2:15 PM - Manual save</div>
+                    </div>
+                    <div class="version-actions">
+                        <button class="btn btn-secondary" style="padding: 0.5rem;">Restore</button>
+                    </div>
+                </div>
+                <div class="version-item">
+                    <div class="version-info">
+                        <div>Version 2.2</div>
+                        <div class="version-timestamp">Yesterday 4:32 PM - Auto-saved</div>
+                    </div>
+                    <div class="version-actions">
+                        <button class="btn btn-secondary" style="padding: 0.5rem;">Restore</button>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: right; margin-top: 2rem;">
+                <button class="btn btn-secondary" onclick="hideModal('versionModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentEditorTab = 'article';
+        let currentPreviewTab = 'desktop';
+
+        // Update content statistics
+        function updateStats() {
+            const contentBody = document.getElementById('contentBody');
+            const text = contentBody.value;
+            
+            // Word count
+            const wordCount = text.trim() ? text.trim().split(/\s+/).length : 0;
+            document.getElementById('wordCount').textContent = wordCount;
+            
+            // Reading time (average 200 words per minute)
+            const readTime = Math.ceil(wordCount / 200);
+            document.getElementById('readTime').textContent = readTime;
+            
+            // Keyword density (mock calculation)
+            const keywordDensity = wordCount > 0 ? Math.min(3.5, (wordCount * 0.02).toFixed(1)) : 0;
+            document.getElementById('keywordDensity').textContent = keywordDensity + '%';
+            
+            // Readability score (mock)
+            const readabilityScore = Math.min(100, 60 + (wordCount * 0.1));
+            document.getElementById('readabilityScore').textContent = Math.floor(readabilityScore);
+            
+            // Update SEO score
+            updateSEOScore();
+            
+            // Update preview
+            updatePreview();
+        }
+
+        // Update SEO score
+        function updateSEOScore() {
+            const title = document.getElementById('contentTitle').value;
+            const content = document.getElementById('contentBody').value;
+            
+            let score = 0;
+            
+            // Title checks
+            if (title.length > 0) score += 20;
+            if (title.length >= 30 && title.length <= 60) score += 15;
+            
+            // Content checks
+            if (content.length > 300) score += 20;
+            if (content.split('\n\n').length >= 3) score += 15; // Paragraphs
+            if (content.includes('Eufy')) score += 10; // Keyword presence
+            
+            score = Math.min(100, score);
+            
+            const scoreCircle = document.getElementById('seoScoreCircle');
+            scoreCircle.textContent = score;
+            
+            // Update score color
+            scoreCircle.className = 'score-circle';
+            if (score >= 80) scoreCircle.classList.add('score-excellent');
+            else if (score >= 60) scoreCircle.classList.add('score-good');
+            else scoreCircle.classList.add('score-poor');
+        }
+
+        // Update preview
+        function updatePreview() {
+            const title = document.getElementById('contentTitle').value;
+            const content = document.getElementById('contentBody').value;
+            const previewContent = document.getElementById('previewContent');
+            
+            if (currentPreviewTab === 'desktop') {
+                previewContent.innerHTML = `
+                    <div style="max-width: 800px; margin: 0 auto; padding: 2rem; background: white;">
+                        <h1 style="font-size: 32px; margin-bottom: 1rem; color: #333;">${title || 'Your Title Here'}</h1>
+                        <div style="white-space: pre-wrap; line-height: 1.6; color: #555;">${content || 'Your content will appear here...'}</div>
+                    </div>
+                `;
+            } else if (currentPreviewTab === 'mobile') {
+                previewContent.innerHTML = `
+                    <div style="max-width: 375px; margin: 0 auto; padding: 1rem; background: white;">
+                        <h1 style="font-size: 24px; margin-bottom: 1rem; color: #333;">${title || 'Your Title Here'}</h1>
+                        <div style="white-space: pre-wrap; line-height: 1.6; color: #555; font-size: 14px;">${content || 'Your content will appear here...'}</div>
+                    </div>
+                `;
+            } else if (currentPreviewTab === 'serp') {
+                previewContent.innerHTML = `
+                    <div style="max-width: 600px; margin: 0 auto; padding: 1rem;">
+                        <div style="background: white; border: 1px solid #e9ecef; border-radius: 8px; padding: 1rem;">
+                            <h3 style="color: #1a0dab; font-size: 18px; margin-bottom: 0.5rem;">${title || 'Your Title Here'}</h3>
+                            <div style="color: #006621; font-size: 14px; margin-bottom: 0.5rem;">https://eufy.com/security-camera-guide</div>
+                            <div style="color: #545454; font-size: 14px; line-height: 1.4;">${content.substring(0, 160) || 'Your meta description will appear here...'}${content.length > 160 ? '...' : ''}</div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Switch editor tabs
+        function switchEditorTab(tab) {
+            // Update tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Show/hide editor content
+            document.getElementById('articleEditor').style.display = tab === 'article' ? 'block' : 'none';
+            document.getElementById('videoEditor').style.display = tab === 'video' ? 'block' : 'none';
+            document.getElementById('socialEditor').style.display = tab === 'social' ? 'block' : 'none';
+            
+            currentEditorTab = tab;
+        }
+
+        // Switch preview tabs
+        function switchPreviewTab(tab) {
+            // Update tab buttons
+            document.querySelectorAll('.preview-tab').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            currentPreviewTab = tab;
+            updatePreview();
+        }
+
+        // Generate outline
+        function generateOutline() {
+            const keyword = document.getElementById('outlineKeyword').value;
+            if (!keyword) {
+                alert('Please enter a target keyword');
+                return;
+            }
+            
+            // Simulate AI processing
+            const btn = event.target;
+            btn.textContent = 'Generating...';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                document.getElementById('outlineResult').style.display = 'block';
+                btn.textContent = 'Generate Outline';
+                btn.disabled = false;
+            }, 2000);
+        }
+
+        // Apply outline
+        function applyOutline() {
+            const outlineText = `# ${document.getElementById('outlineKeyword').value || 'Your Keyword'} - Complete Guide
+
+## Introduction
+Brief introduction to the topic and what readers will learn.
+
+## Why Choose Eufy Security Cameras
+Explain the key benefits and unique selling points.
+
+## Top 5 Eufy Camera Features
+1. Feature 1
+2. Feature 2
+3. Feature 3
+4. Feature 4
+5. Feature 5
+
+## Installation and Setup Guide
+Step-by-step installation process.
+
+## Comparison with Competitors
+How Eufy compares to other brands.
+
+## Conclusion and Recommendations
+Summary and final thoughts.`;
+
+            document.getElementById('contentBody').value = outlineText;
+            updateStats();
+        }
+
+        // Get AI suggestions
+        function getAISuggestions() {
+            const btn = event.target;
+            btn.textContent = 'Analyzing...';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                btn.textContent = 'Get Suggestions';
+                btn.disabled = false;
+                
+                // Add new suggestion
+                const newSuggestion = document.createElement('div');
+                newSuggestion.className = 'suggestion';
+                newSuggestion.innerHTML = `
+                    <div class="suggestion-type">CONTENT ENHANCEMENT</div>
+                    <div class="suggestion-text">Consider adding customer testimonials to build trust and credibility.</div>
+                    <button class="apply-suggestion" onclick="applySuggestion(this)">Apply</button>
+                `;
+                document.getElementById('aiSuggestions').appendChild(newSuggestion);
+            }, 1500);
+        }
+
+        // Apply suggestion
+        function applySuggestion(btn) {
+            btn.textContent = 'Applied!';
+            btn.disabled = true;
+            btn.style.background = '#2ed573';
+            
+            setTimeout(() => {
+                btn.parentElement.style.opacity = '0.5';
+            }, 1000);
+        }
+
+        // Modal functions
+        function showTemplates() {
+            document.getElementById('templatesModal').style.display = 'flex';
+        }
+
+        function showVersionHistory() {
+            document.getElementById('versionModal').style.display = 'flex';
+        }
+
+        function hideModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Use template
+        function useTemplate(templateType) {
+            let templateContent = '';
+            
+            switch(templateType) {
+                case 'product-review':
+                    templateContent = `# ${document.getElementById('outlineKeyword').value || 'Product'} Review
+
+## Overview
+Brief product overview and key features.
+
+## Pros
+- Benefit 1
+- Benefit 2
+- Benefit 3
+
+## Cons
+- Limitation 1
+- Limitation 2
+
+## Who Should Buy This
+Target audience description.
+
+## Final Verdict
+Overall recommendation and rating.`;
+                    break;
+                case 'how-to-guide':
+                    templateContent = `# How to [Action] - Step by Step Guide
+
+## What You'll Need
+List of required materials or tools.
+
+## Step 1: [First Step]
+Detailed instructions for the first step.
+
+## Step 2: [Second Step]
+Detailed instructions for the second step.
+
+## Step 3: [Third Step]
+Detailed instructions for the third step.
+
+## Tips and Best Practices
+Additional helpful tips.
+
+## Conclusion
+Summary and next steps.`;
+                    break;
+                // Add more templates as needed
+            }
+            
+            document.getElementById('contentBody').value = templateContent;
+            updateStats();
+            hideModal('templatesModal');
+        }
+
+        // Save content
+        function saveContent() {
+            alert('Content saved successfully!');
+        }
+
+        // Preview content
+        function previewContent() {
+            alert('Opening preview in new window...');
+        }
+
+        // Publish content
+        function publishContent() {
+            alert('Publishing content...');
+        }
+
+        // Event listeners
+        document.getElementById('contentTitle').addEventListener('input', updateStats);
+        document.getElementById('contentBody').addEventListener('input', updateStats);
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStats();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Generation System - Eufy GEO Platform</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.2/dist/echarts.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 1rem 2rem;
+            color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .navbar h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .header-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        
+        .header-info h2 {
+            color: #333;
+            margin-bottom: 1rem;
+            font-size: 28px;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #666;
+            border: 1px solid #e9ecef;
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #2ed573 0%, #27ae60 100%);
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .report-dashboard {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .report-sidebar {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+        
+        .report-main {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .template-section {
+            margin-bottom: 2rem;
+        }
+        
+        .template-section h3 {
+            margin-bottom: 1rem;
+            color: #333;
+            font-size: 18px;
+        }
+        
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .template-card {
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .template-card:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+        
+        .template-card.selected {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+        
+        .template-card .template-icon {
+            font-size: 32px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .template-card .template-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .template-card .template-desc {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .filter-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .filter-group {
+            margin-bottom: 1rem;
+        }
+        
+        .filter-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .filter-select,
+        .filter-input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+        
+        .date-range {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .checkbox-item input[type="checkbox"] {
+            margin: 0;
+        }
+        
+        .checkbox-item label {
+            font-size: 14px;
+            color: #555;
+            margin: 0;
+        }
+        
+        .report-preview {
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 2rem;
+            min-height: 600px;
+            background: #fafafa;
+            margin-top: 1rem;
+        }
+        
+        .preview-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .preview-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        
+        .preview-subtitle {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .preview-section {
+            margin-bottom: 2rem;
+        }
+        
+        .preview-section h4 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .metric-card {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.25rem;
+        }
+        
+        .metric-label {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .chart-placeholder {
+            background: white;
+            border: 2px dashed #e9ecef;
+            border-radius: 8px;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 14px;
+            margin: 1rem 0;
+        }
+        
+        .scheduled-reports {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .schedule-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .schedule-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .schedule-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .schedule-info {
+            flex: 1;
+        }
+        
+        .schedule-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .schedule-details {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .schedule-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 1rem;
+        }
+        
+        .status-active {
+            background: #e8f8f0;
+            color: #2ed573;
+        }
+        
+        .status-paused {
+            background: #fff4e5;
+            color: #ffa502;
+        }
+        
+        .schedule-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .export-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .export-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .export-option:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+        
+        .export-option.selected {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+        
+        .export-icon {
+            font-size: 24px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .export-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .generation-progress {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 0.5rem 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+        
+        @media (max-width: 1024px) {
+            .report-dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .template-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+            
+            .metrics-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>Report Generation System - Eufy GEO Platform</h1>
+    </nav>
+
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header-section">
+            <div class="header-info">
+                <h2>Automated Report Generation Center</h2>
+                <p>Create, customize, and schedule comprehensive SEO and marketing reports with automated data collection</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-secondary" onclick="showScheduleModal()">
+                    📅 Schedule Report
+                </button>
+                <button class="btn btn-primary" onclick="generateReport()">
+                    📊 Generate Report
+                </button>
+            </div>
+        </div>
+
+        <!-- Report Dashboard -->
+        <div class="report-dashboard">
+            <!-- Sidebar -->
+            <div class="report-sidebar">
+                <!-- Report Templates -->
+                <div class="template-section">
+                    <h3>Report Templates</h3>
+                    <div class="template-grid">
+                        <div class="template-card selected" onclick="selectTemplate('daily')">
+                            <div class="template-icon">📈</div>
+                            <div class="template-name">Daily Summary</div>
+                            <div class="template-desc">Key metrics & trends</div>
+                        </div>
+                        <div class="template-card" onclick="selectTemplate('weekly')">
+                            <div class="template-icon">📊</div>
+                            <div class="template-name">Weekly Analysis</div>
+                            <div class="template-desc">Comprehensive overview</div>
+                        </div>
+                        <div class="template-card" onclick="selectTemplate('monthly')">
+                            <div class="template-icon">📋</div>
+                            <div class="template-name">Monthly Report</div>
+                            <div class="template-desc">Strategic insights</div>
+                        </div>
+                        <div class="template-card" onclick="selectTemplate('campaign')">
+                            <div class="template-icon">🎯</div>
+                            <div class="template-name">Campaign Report</div>
+                            <div class="template-desc">Performance analysis</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Filters -->
+                <div class="filter-section">
+                    <h3>Data Filters</h3>
+                    
+                    <div class="filter-group">
+                        <label class="filter-label">Date Range</label>
+                        <div class="date-range">
+                            <input type="date" class="filter-input" id="startDate">
+                            <input type="date" class="filter-input" id="endDate">
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label">Data Sources</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="source-gsc" checked>
+                                <label for="source-gsc">Google Search Console</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="source-ga" checked>
+                                <label for="source-ga">Google Analytics</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="source-youtube" checked>
+                                <label for="source-youtube">YouTube Analytics</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="source-reddit">
+                                <label for="source-reddit">Reddit Metrics</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label">Priority Keywords</label>
+                        <select class="filter-select">
+                            <option>All Keywords</option>
+                            <option>P0-P1 Only</option>
+                            <option>P0-P2 Only</option>
+                            <option>High Volume (>50K)</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label">Metrics</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="metric-traffic" checked>
+                                <label for="metric-traffic">Traffic & Impressions</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="metric-rankings" checked>
+                                <label for="metric-rankings">Ranking Positions</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="metric-conversions" checked>
+                                <label for="metric-conversions">Conversions & ROI</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="metric-competitive">
+                                <label for="metric-competitive">Competitive Analysis</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Report Area -->
+            <div class="report-main">
+                <h3>Report Preview</h3>
+                <div class="report-preview" id="reportPreview">
+                    <div class="preview-header">
+                        <div class="preview-title">Daily SEO Performance Summary</div>
+                        <div class="preview-subtitle">October 15, 2024 • Eufy Security Campaign</div>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>📊 Key Performance Metrics</h4>
+                        <div class="metrics-grid">
+                            <div class="metric-card">
+                                <div class="metric-value">156.2K</div>
+                                <div class="metric-label">Organic Traffic</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-value">342</div>
+                                <div class="metric-label">Keywords in Top 10</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-value">4.8%</div>
+                                <div class="metric-label">Click-Through Rate</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-value">$12,450</div>
+                                <div class="metric-label">Revenue Generated</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>📈 Traffic Performance</h4>
+                        <div class="chart-placeholder">
+                            [Traffic Performance Chart - 30 Day Trend]
+                        </div>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>🎯 Top Performing Keywords</h4>
+                        <div style="background: white; padding: 1rem; border-radius: 8px;">
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="border-bottom: 1px solid #e9ecef;">
+                                        <th style="text-align: left; padding: 0.5rem;">Keyword</th>
+                                        <th style="text-align: center; padding: 0.5rem;">Position</th>
+                                        <th style="text-align: center; padding: 0.5rem;">Traffic</th>
+                                        <th style="text-align: center; padding: 0.5rem;">Change</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="padding: 0.5rem;">eufy security camera</td>
+                                        <td style="text-align: center; padding: 0.5rem;">#3</td>
+                                        <td style="text-align: center; padding: 0.5rem;">45,230</td>
+                                        <td style="text-align: center; padding: 0.5rem; color: #2ed573;">+23%</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 0.5rem;">best home security</td>
+                                        <td style="text-align: center; padding: 0.5rem;">#7</td>
+                                        <td style="text-align: center; padding: 0.5rem;">28,450</td>
+                                        <td style="text-align: center; padding: 0.5rem; color: #2ed573;">+15%</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 0.5rem;">smart doorbell camera</td>
+                                        <td style="text-align: center; padding: 0.5rem;">#12</td>
+                                        <td style="text-align: center; padding: 0.5rem;">18,920</td>
+                                        <td style="text-align: center; padding: 0.5rem; color: #ff4757;">-5%</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>💡 AI Insights & Recommendations</h4>
+                        <div style="background: #f8f9ff; border-left: 4px solid #667eea; padding: 1rem; border-radius: 0 8px 8px 0;">
+                            <ul style="margin-left: 1rem;">
+                                <li>Strong performance in security camera keywords - consider expanding content</li>
+                                <li>Mobile optimization needed for "doorbell camera" keywords</li>
+                                <li>Opportunity to target "smart home security" seasonal trends</li>
+                                <li>Competitor analysis suggests focusing on long-tail variations</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="generation-progress" id="generationProgress">
+                    <div style="font-weight: 600; margin-bottom: 0.5rem;">Generating Report...</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div style="font-size: 14px; color: #666;" id="progressText">Collecting data from Google Search Console...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scheduled Reports -->
+        <div class="scheduled-reports">
+            <div class="schedule-header">
+                <h3>Scheduled Reports</h3>
+                <button class="btn btn-primary" onclick="showScheduleModal()">
+                    ➕ Add Schedule
+                </button>
+            </div>
+
+            <div class="schedule-item">
+                <div class="schedule-info">
+                    <div class="schedule-name">Weekly Performance Report</div>
+                    <div class="schedule-details">Every Monday at 9:00 AM • PDF & Email • Last sent: Oct 14, 2024</div>
+                </div>
+                <div class="schedule-status status-active">Active</div>
+                <div class="schedule-actions">
+                    <button class="btn btn-secondary" style="padding: 0.5rem;">✏️</button>
+                    <button class="btn btn-secondary" style="padding: 0.5rem;">⏸️</button>
+                    <button class="btn btn-secondary" style="padding: 0.5rem;">🗑️</button>
+                </div>
+            </div>
+
+            <div class="schedule-item">
+                <div class="schedule-info">
+                    <div class="schedule-name">Monthly Strategic Report</div>
+                    <div class="schedule-details">1st of every month at 10:00 AM • PPT & PDF • Last sent: Oct 1, 2024</div>
+                </div>
+                <div class="schedule-status status-active">Active</div>
+                <div class="schedule-actions">
+                    <button class="btn btn-secondary" style="padding: 0.5rem;">✏️</button>
+                    <button class="btn btn-secondary" style="padding: 0.5rem;">⏸️</button>
+                    <button class="btn btn-secondary" style="padding: 0.5rem;">🗑️</button>
+                </div>
+            </div>
+
+            <div class="schedule-item">
+                <div class="schedule-info">
+                    <div class="schedule-name">Campaign Performance Report</div>
+                    <div class="schedule-details">Every Friday at 5:00 PM • Excel & Dashboard • Paused by user</div>
+                </div>
+                <div class="schedule-status status-paused">Paused</div>
+                <div class="schedule-actions">
+                    <button class="btn btn-secondary" style="padding: 0.5rem;">✏️</button>
+                    <button class="btn btn-success" style="padding: 0.5rem;">▶️</button>
+                    <button class="btn btn-secondary" style="padding: 0.5rem;">🗑️</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Schedule Modal -->
+    <div class="modal" id="scheduleModal">
+        <div class="modal-content">
+            <h3>Schedule New Report</h3>
+            
+            <div class="form-group">
+                <label class="form-label">Report Name</label>
+                <input type="text" class="form-input" placeholder="Enter report name">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Report Template</label>
+                <select class="form-select">
+                    <option>Daily Summary</option>
+                    <option>Weekly Analysis</option>
+                    <option>Monthly Report</option>
+                    <option>Campaign Report</option>
+                    <option>Custom Report</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Schedule Frequency</label>
+                <select class="form-select" onchange="toggleScheduleOptions(this.value)">
+                    <option>Daily</option>
+                    <option>Weekly</option>
+                    <option>Monthly</option>
+                    <option>Quarterly</option>
+                    <option>Custom</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Delivery Time</label>
+                <input type="time" class="form-input" value="09:00">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Export Formats</label>
+                <div class="export-options">
+                    <div class="export-option selected" onclick="toggleExportFormat(this)">
+                        <div class="export-icon">📊</div>
+                        <div class="export-name">PDF</div>
+                    </div>
+                    <div class="export-option" onclick="toggleExportFormat(this)">
+                        <div class="export-icon">📋</div>
+                        <div class="export-name">PPT</div>
+                    </div>
+                    <div class="export-option" onclick="toggleExportFormat(this)">
+                        <div class="export-icon">📈</div>
+                        <div class="export-name">Excel</div>
+                    </div>
+                    <div class="export-option" onclick="toggleExportFormat(this)">
+                        <div class="export-icon">📄</div>
+                        <div class="export-name">Word</div>
+                    </div>
+                    <div class="export-option" onclick="toggleExportFormat(this)">
+                        <div class="export-icon">🌐</div>
+                        <div class="export-name">HTML</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Email Recipients</label>
+                <textarea class="form-textarea" placeholder="Enter email addresses separated by commas"></textarea>
+            </div>
+
+            <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+                <button class="btn btn-secondary" onclick="hideModal('scheduleModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="scheduleReport()">Schedule Report</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export Modal -->
+    <div class="modal" id="exportModal">
+        <div class="modal-content">
+            <h3>Export Report</h3>
+            
+            <div class="form-group">
+                <label class="form-label">Select Export Format</label>
+                <div class="export-options">
+                    <div class="export-option selected" onclick="selectExportFormat(this, 'pdf')">
+                        <div class="export-icon">📊</div>
+                        <div class="export-name">PDF</div>
+                    </div>
+                    <div class="export-option" onclick="selectExportFormat(this, 'ppt')">
+                        <div class="export-icon">📋</div>
+                        <div class="export-name">PowerPoint</div>
+                    </div>
+                    <div class="export-option" onclick="selectExportFormat(this, 'excel')">
+                        <div class="export-icon">📈</div>
+                        <div class="export-name">Excel</div>
+                    </div>
+                    <div class="export-option" onclick="selectExportFormat(this, 'word')">
+                        <div class="export-icon">📄</div>
+                        <div class="export-name">Word</div>
+                    </div>
+                    <div class="export-option" onclick="selectExportFormat(this, 'html')">
+                        <div class="export-icon">🌐</div>
+                        <div class="export-name">HTML</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Include Sections</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="include-summary" checked>
+                        <label for="include-summary">Executive Summary</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="include-metrics" checked>
+                        <label for="include-metrics">Key Metrics</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="include-charts" checked>
+                        <label for="include-charts">Charts & Visualizations</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="include-insights" checked>
+                        <label for="include-insights">AI Insights</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="include-recommendations">
+                        <label for="include-recommendations">Recommendations</label>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+                <button class="btn btn-secondary" onclick="hideModal('exportModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="exportReport()">Export Report</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedTemplate = 'daily';
+        let selectedExportFormat = 'pdf';
+
+        // Template selection
+        function selectTemplate(template) {
+            // Update UI
+            document.querySelectorAll('.template-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            event.target.closest('.template-card').classList.add('selected');
+            
+            selectedTemplate = template;
+            updateReportPreview();
+        }
+
+        // Update report preview based on selected template
+        function updateReportPreview() {
+            const preview = document.getElementById('reportPreview');
+            const templates = {
+                daily: {
+                    title: 'Daily SEO Performance Summary',
+                    subtitle: 'October 15, 2024 • Eufy Security Campaign'
+                },
+                weekly: {
+                    title: 'Weekly Strategic Analysis Report',
+                    subtitle: 'Week of October 14-20, 2024 • Comprehensive Review'
+                },
+                monthly: {
+                    title: 'Monthly Growth & Performance Report',
+                    subtitle: 'September 2024 • Strategic Insights & Trends'
+                },
+                campaign: {
+                    title: 'Black Friday Campaign Performance',
+                    subtitle: 'November 1-30, 2024 • Campaign ROI Analysis'
+                }
+            };
+
+            const template = templates[selectedTemplate];
+            const header = preview.querySelector('.preview-header');
+            header.innerHTML = `
+                <div class="preview-title">${template.title}</div>
+                <div class="preview-subtitle">${template.subtitle}</div>
+            `;
+        }
+
+        // Generate report
+        function generateReport() {
+            const progress = document.getElementById('generationProgress');
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            
+            progress.style.display = 'block';
+            
+            const steps = [
+                { text: 'Collecting data from Google Search Console...', progress: 20 },
+                { text: 'Analyzing Google Analytics data...', progress: 40 },
+                { text: 'Processing YouTube metrics...', progress: 60 },
+                { text: 'Generating AI insights...', progress: 80 },
+                { text: 'Finalizing report layout...', progress: 100 }
+            ];
+            
+            let currentStep = 0;
+            
+            function updateProgress() {
+                if (currentStep < steps.length) {
+                    const step = steps[currentStep];
+                    progressFill.style.width = step.progress + '%';
+                    progressText.textContent = step.text;
+                    currentStep++;
+                    setTimeout(updateProgress, 1500);
+                } else {
+                    setTimeout(() => {
+                        progress.style.display = 'none';
+                        showExportModal();
+                    }, 1000);
+                }
+            }
+            
+            updateProgress();
+        }
+
+        // Show export modal
+        function showExportModal() {
+            document.getElementById('exportModal').style.display = 'flex';
+        }
+
+        // Show schedule modal
+        function showScheduleModal() {
+            document.getElementById('scheduleModal').style.display = 'flex';
+        }
+
+        // Hide modal
+        function hideModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Toggle export format
+        function toggleExportFormat(element) {
+            element.classList.toggle('selected');
+        }
+
+        // Select export format
+        function selectExportFormat(element, format) {
+            document.querySelectorAll('.export-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            selectedExportFormat = format;
+        }
+
+        // Export report
+        function exportReport() {
+            alert(`Exporting report as ${selectedExportFormat.toUpperCase()}...`);
+            hideModal('exportModal');
+        }
+
+        // Schedule report
+        function scheduleReport() {
+            alert('Report scheduled successfully!');
+            hideModal('scheduleModal');
+        }
+
+        // Toggle schedule options
+        function toggleScheduleOptions(frequency) {
+            // Handle different frequency options
+            console.log('Frequency changed to:', frequency);
+        }
+
+        // Set default dates
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date();
+            const lastWeek = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+            
+            document.getElementById('endDate').value = today.toISOString().split('T')[0];
+            document.getElementById('startDate').value = lastWeek.toISOString().split('T')[0];
+        });
+
+        // Close modals when clicking outside
+        document.addEventListener('click', function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

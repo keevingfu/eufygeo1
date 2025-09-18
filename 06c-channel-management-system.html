@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Channel Management System - Eufy GEO Platform</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.2/dist/echarts.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 1rem 2rem;
+            color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .navbar h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .header-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        
+        .header-info h2 {
+            color: #333;
+            margin-bottom: 1rem;
+            font-size: 28px;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #666;
+            border: 1px solid #e9ecef;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .channel-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .channel-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .channel-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+        
+        .channel-header {
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .channel-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+        
+        .google-icon {
+            background: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
+        }
+        
+        .youtube-icon {
+            background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+        }
+        
+        .reddit-icon {
+            background: linear-gradient(135deg, #ff4500 0%, #ff6600 100%);
+        }
+        
+        .channel-info h3 {
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+        
+        .channel-status {
+            font-size: 14px;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        
+        .status-active {
+            background: #2ed573;
+        }
+        
+        .status-warning {
+            background: #ffa502;
+        }
+        
+        .status-error {
+            background: #ff4757;
+        }
+        
+        .channel-content {
+            padding: 1.5rem;
+        }
+        
+        .channel-metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .metric-item {
+            text-align: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.25rem;
+        }
+        
+        .metric-label {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .channel-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .performance-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .performance-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .chart-container {
+            height: 400px;
+            margin-bottom: 2rem;
+        }
+        
+        .publishing-queue {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .queue-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .queue-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .queue-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .queue-content {
+            flex: 1;
+        }
+        
+        .queue-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .queue-meta {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .queue-channels {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .channel-tag {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .tag-google {
+            background: #e8f0fe;
+            color: #4285f4;
+        }
+        
+        .tag-youtube {
+            background: #ffeaea;
+            color: #ff0000;
+        }
+        
+        .tag-reddit {
+            background: #fff3e6;
+            color: #ff4500;
+        }
+        
+        .queue-status {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .status-scheduled {
+            background: #e8f4fd;
+            color: #1890ff;
+        }
+        
+        .status-publishing {
+            background: #fff7e6;
+            color: #fa8c16;
+        }
+        
+        .status-published {
+            background: #f6ffed;
+            color: #52c41a;
+        }
+        
+        .status-failed {
+            background: #fff2f0;
+            color: #ff4d4f;
+        }
+        
+        .queue-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        
+        .form-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 0.75rem;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+            resize: vertical;
+        }
+        
+        .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+        
+        .channel-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+        
+        .channel-option {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .channel-option:hover {
+            border-color: #667eea;
+        }
+        
+        .channel-option.selected {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+        
+        .channel-option input[type="checkbox"] {
+            display: none;
+        }
+        
+        .optimization-panel {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+        
+        .optimization-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+        
+        .optimization-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .optimization-label {
+            font-size: 14px;
+            color: #555;
+        }
+        
+        .optimization-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        @media (max-width: 768px) {
+            .channel-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .channel-metrics {
+                grid-template-columns: 1fr;
+            }
+            
+            .channel-selector {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>Channel Management System - Eufy GEO Platform</h1>
+    </nav>
+
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header-section">
+            <div class="header-info">
+                <h2>Multi-Channel Publishing Hub</h2>
+                <p>Manage and optimize content across Google Search, YouTube, and Reddit with unified publishing workflow</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-secondary" onclick="showChannelSettings()">
+                    ⚙️ Settings
+                </button>
+                <button class="btn btn-primary" onclick="showScheduleModal()">
+                    📅 Schedule Content
+                </button>
+            </div>
+        </div>
+
+        <!-- Channel Overview -->
+        <div class="channel-grid">
+            <!-- Google Search Channel -->
+            <div class="channel-card">
+                <div class="channel-header">
+                    <div class="channel-icon google-icon">🔍</div>
+                    <div class="channel-info">
+                        <h3>Google Search</h3>
+                        <div class="channel-status">
+                            <div class="status-dot status-active"></div>
+                            <span>Active - API Connected</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="channel-content">
+                    <div class="channel-metrics">
+                        <div class="metric-item">
+                            <div class="metric-value">1,247</div>
+                            <div class="metric-label">Indexed Pages</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-value">89.2K</div>
+                            <div class="metric-label">Monthly Clicks</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-value">4.2%</div>
+                            <div class="metric-label">Avg CTR</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-value">12.5</div>
+                            <div class="metric-label">Avg Position</div>
+                        </div>
+                    </div>
+                    <div class="channel-actions">
+                        <button class="btn btn-secondary" onclick="optimizeGoogle()">🎯 Optimize</button>
+                        <button class="btn btn-secondary" onclick="viewGoogleAnalytics()">📊 Analytics</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- YouTube Channel -->
+            <div class="channel-card">
+                <div class="channel-header">
+                    <div class="channel-icon youtube-icon">📺</div>
+                    <div class="channel-info">
+                        <h3>YouTube</h3>
+                        <div class="channel-status">
+                            <div class="status-dot status-active"></div>
+                            <span>Active - 145K Subscribers</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="channel-content">
+                    <div class="channel-metrics">
+                        <div class="metric-item">
+                            <div class="metric-value">342</div>
+                            <div class="metric-label">Total Videos</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-value">2.1M</div>
+                            <div class="metric-label">Monthly Views</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-value">8.7%</div>
+                            <div class="metric-label">Engagement Rate</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-value">65%</div>
+                            <div class="metric-label">Avg Watch Time</div>
+                        </div>
+                    </div>
+                    <div class="channel-actions">
+                        <button class="btn btn-secondary" onclick="optimizeYouTube()">🎬 Optimize</button>
+                        <button class="btn btn-secondary" onclick="viewYouTubeAnalytics()">📈 Analytics</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reddit Channel -->
+            <div class="channel-card">
+                <div class="channel-header">
+                    <div class="channel-icon reddit-icon">🤖</div>
+                    <div class="channel-info">
+                        <h3>Reddit Communities</h3>
+                        <div class="channel-status">
+                            <div class="status-dot status-warning"></div>
+                            <span>12 Active Communities</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="channel-content">
+                    <div class="channel-metrics">
+                        <div class="metric-item">
+                            <div class="metric-value">156</div>
+                            <div class="metric-label">Total Posts</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-value">45.2K</div>
+                            <div class="metric-label">Monthly Reach</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-value">12.8%</div>
+                            <div class="metric-label">Upvote Rate</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-value">892</div>
+                            <div class="metric-label">Total Karma</div>
+                        </div>
+                    </div>
+                    <div class="channel-actions">
+                        <button class="btn btn-secondary" onclick="optimizeReddit()">💬 Optimize</button>
+                        <button class="btn btn-secondary" onclick="viewRedditAnalytics()">📋 Analytics</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Analytics -->
+        <div class="performance-section">
+            <div class="performance-header">
+                <h3>Cross-Channel Performance (30 Days)</h3>
+                <div style="display: flex; gap: 1rem;">
+                    <select class="form-select" style="width: auto;">
+                        <option>Last 30 Days</option>
+                        <option>Last 7 Days</option>
+                        <option>Last 90 Days</option>
+                    </select>
+                    <button class="btn btn-secondary">📊 Export Report</button>
+                </div>
+            </div>
+            <div id="performanceChart" class="chart-container"></div>
+        </div>
+
+        <!-- Publishing Queue -->
+        <div class="publishing-queue">
+            <div class="queue-header">
+                <h3>Publishing Queue</h3>
+                <div style="display: flex; gap: 1rem;">
+                    <select class="form-select" style="width: auto;">
+                        <option>All Status</option>
+                        <option>Scheduled</option>
+                        <option>Publishing</option>
+                        <option>Published</option>
+                        <option>Failed</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="showScheduleModal()">➕ Add Content</button>
+                </div>
+            </div>
+
+            <div class="queue-item">
+                <div class="queue-content">
+                    <div class="queue-title">Complete Guide to Eufy Security Camera Setup</div>
+                    <div class="queue-meta">Scheduled for Today 2:30 PM</div>
+                    <div class="queue-channels">
+                        <span class="channel-tag tag-google">Google</span>
+                        <span class="channel-tag tag-youtube">YouTube</span>
+                    </div>
+                </div>
+                <div class="queue-status status-scheduled">Scheduled</div>
+                <div class="queue-actions">
+                    <button class="btn btn-secondary" style="padding: 0.5rem;">✏️</button>
+                    <button class="btn btn-secondary" style="padding: 0.5rem;">🗑️</button>
+                </div>
+            </div>
+
+            <div class="queue-item">
+                <div class="queue-content">
+                    <div class="queue-title">Top 5 Smart Home Security Tips for 2024</div>
+                    <div class="queue-meta">Publishing now to Reddit communities</div>
+                    <div class="queue-channels">
+                        <span class="channel-tag tag-reddit">Reddit</span>
+                    </div>
+                </div>
+                <div class="queue-status status-publishing">Publishing</div>
+                <div class="queue-actions">
+                    <button class="btn btn-secondary" style="padding: 0.5rem;">📊</button>
+                </div>
+            </div>
+
+            <div class="queue-item">
+                <div class="queue-content">
+                    <div class="queue-title">Eufy vs Ring: Which Security System is Better?</div>
+                    <div class="queue-meta">Published 2 hours ago</div>
+                    <div class="queue-channels">
+                        <span class="channel-tag tag-google">Google</span>
+                        <span class="channel-tag tag-youtube">YouTube</span>
+                        <span class="channel-tag tag-reddit">Reddit</span>
+                    </div>
+                </div>
+                <div class="queue-status status-published">Published</div>
+                <div class="queue-actions">
+                    <button class="btn btn-secondary" style="padding: 0.5rem;">📈</button>
+                    <button class="btn btn-secondary" style="padding: 0.5rem;">🔗</button>
+                </div>
+            </div>
+
+            <div class="queue-item">
+                <div class="queue-content">
+                    <div class="queue-title">How to Choose the Perfect Doorbell Camera</div>
+                    <div class="queue-meta">Failed to publish to YouTube - API rate limit</div>
+                    <div class="queue-channels">
+                        <span class="channel-tag tag-youtube">YouTube</span>
+                    </div>
+                </div>
+                <div class="queue-status status-failed">Failed</div>
+                <div class="queue-actions">
+                    <button class="btn btn-secondary" style="padding: 0.5rem;">🔄</button>
+                    <button class="btn btn-secondary" style="padding: 0.5rem;">⚙️</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Schedule Content Modal -->
+    <div class="modal" id="scheduleModal">
+        <div class="modal-content">
+            <h3>Schedule Multi-Channel Content</h3>
+            
+            <div class="form-group">
+                <label class="form-label">Content Title</label>
+                <input type="text" class="form-input" placeholder="Enter content title">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Content Type</label>
+                <select class="form-select">
+                    <option>Article/Blog Post</option>
+                    <option>Video Content</option>
+                    <option>Social Media Post</option>
+                    <option>Product Review</option>
+                    <option>How-to Guide</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Target Channels</label>
+                <div class="channel-selector">
+                    <label class="channel-option">
+                        <input type="checkbox" checked>
+                        <div class="channel-icon google-icon" style="width: 40px; height: 40px; font-size: 16px;">🔍</div>
+                        <div>
+                            <div style="font-weight: 600;">Google Search</div>
+                            <div style="font-size: 12px; color: #666;">SEO Optimized</div>
+                        </div>
+                    </label>
+                    <label class="channel-option">
+                        <input type="checkbox" checked>
+                        <div class="channel-icon youtube-icon" style="width: 40px; height: 40px; font-size: 16px;">📺</div>
+                        <div>
+                            <div style="font-weight: 600;">YouTube</div>
+                            <div style="font-size: 12px; color: #666;">Video Format</div>
+                        </div>
+                    </label>
+                    <label class="channel-option">
+                        <input type="checkbox">
+                        <div class="channel-icon reddit-icon" style="width: 40px; height: 40px; font-size: 16px;">🤖</div>
+                        <div>
+                            <div style="font-weight: 600;">Reddit</div>
+                            <div style="font-size: 12px; color: #666;">Community Posts</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Publishing Schedule</label>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <input type="date" class="form-input">
+                    <input type="time" class="form-input">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Content Description</label>
+                <textarea class="form-textarea" placeholder="Describe your content and target audience..."></textarea>
+            </div>
+
+            <div class="optimization-panel">
+                <h4 style="margin-bottom: 1rem;">Channel Optimization Preview</h4>
+                <div class="optimization-item">
+                    <span class="optimization-label">Google Title Length</span>
+                    <span class="optimization-value">45/60 characters ✓</span>
+                </div>
+                <div class="optimization-item">
+                    <span class="optimization-label">YouTube Title Length</span>
+                    <span class="optimization-value">38/100 characters ✓</span>
+                </div>
+                <div class="optimization-item">
+                    <span class="optimization-label">Reddit Character Count</span>
+                    <span class="optimization-value">0/300 characters</span>
+                </div>
+                <div class="optimization-item">
+                    <span class="optimization-label">Estimated Reach</span>
+                    <span class="optimization-value">~15,000 impressions</span>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+                <button class="btn btn-secondary" onclick="hideModal('scheduleModal')">Cancel</button>
+                <button class="btn btn-secondary">Save Draft</button>
+                <button class="btn btn-primary" onclick="scheduleContent()">Schedule Publishing</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Channel Settings Modal -->
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <h3>Channel Settings</h3>
+            
+            <div style="margin-bottom: 2rem;">
+                <h4>Google Search Console</h4>
+                <div class="form-group">
+                    <label class="form-label">API Status</label>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <div class="status-dot status-active"></div>
+                        <span>Connected</span>
+                        <button class="btn btn-secondary" style="margin-left: auto; padding: 0.5rem 1rem;">Reconnect</button>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 2rem;">
+                <h4>YouTube Data API</h4>
+                <div class="form-group">
+                    <label class="form-label">Channel Status</label>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <div class="status-dot status-active"></div>
+                        <span>Connected - 145K Subscribers</span>
+                        <button class="btn btn-secondary" style="margin-left: auto; padding: 0.5rem 1rem;">Manage</button>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 2rem;">
+                <h4>Reddit Integration</h4>
+                <div class="form-group">
+                    <label class="form-label">Active Communities</label>
+                    <div style="font-size: 14px; color: #666;">
+                        r/smarthome, r/homesecurity, r/gadgets, r/technology, +8 more
+                    </div>
+                    <button class="btn btn-secondary" style="margin-top: 0.5rem; padding: 0.5rem 1rem;">Manage Communities</button>
+                </div>
+            </div>
+
+            <div style="text-align: right;">
+                <button class="btn btn-secondary" onclick="hideModal('settingsModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize performance chart
+        function initPerformanceChart() {
+            const chart = echarts.init(document.getElementById('performanceChart'));
+            const option = {
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'cross'
+                    }
+                },
+                legend: {
+                    data: ['Google Search', 'YouTube', 'Reddit']
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: ['Sep 1', 'Sep 5', 'Sep 10', 'Sep 15', 'Sep 20', 'Sep 25', 'Sep 30']
+                },
+                yAxis: [
+                    {
+                        type: 'value',
+                        name: 'Engagement',
+                        position: 'left',
+                        axisLabel: {
+                            formatter: '{value}'
+                        }
+                    },
+                    {
+                        type: 'value',
+                        name: 'Reach',
+                        position: 'right',
+                        axisLabel: {
+                            formatter: '{value}K'
+                        }
+                    }
+                ],
+                series: [
+                    {
+                        name: 'Google Search',
+                        type: 'line',
+                        data: [820, 932, 901, 934, 1290, 1330, 1320],
+                        itemStyle: {
+                            color: '#4285f4'
+                        },
+                        areaStyle: {
+                            opacity: 0.1
+                        }
+                    },
+                    {
+                        name: 'YouTube',
+                        type: 'line',
+                        data: [1200, 1400, 1350, 1500, 1800, 1900, 2100],
+                        itemStyle: {
+                            color: '#ff0000'
+                        },
+                        areaStyle: {
+                            opacity: 0.1
+                        }
+                    },
+                    {
+                        name: 'Reddit',
+                        type: 'line',
+                        yAxisIndex: 1,
+                        data: [15, 23, 28, 35, 42, 45, 48],
+                        itemStyle: {
+                            color: '#ff4500'
+                        },
+                        areaStyle: {
+                            opacity: 0.1
+                        }
+                    }
+                ]
+            };
+            chart.setOption(option);
+
+            // Make chart responsive
+            window.addEventListener('resize', function() {
+                chart.resize();
+            });
+        }
+
+        // Channel optimization functions
+        function optimizeGoogle() {
+            alert('Opening Google Search optimization panel...');
+        }
+
+        function optimizeYouTube() {
+            alert('Opening YouTube optimization panel...');
+        }
+
+        function optimizeReddit() {
+            alert('Opening Reddit community optimization panel...');
+        }
+
+        // Analytics functions
+        function viewGoogleAnalytics() {
+            alert('Opening Google Search Console analytics...');
+        }
+
+        function viewYouTubeAnalytics() {
+            alert('Opening YouTube Studio analytics...');
+        }
+
+        function viewRedditAnalytics() {
+            alert('Opening Reddit analytics dashboard...');
+        }
+
+        // Modal functions
+        function showScheduleModal() {
+            document.getElementById('scheduleModal').style.display = 'flex';
+        }
+
+        function showChannelSettings() {
+            document.getElementById('settingsModal').style.display = 'flex';
+        }
+
+        function hideModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Schedule content
+        function scheduleContent() {
+            alert('Content scheduled successfully for multi-channel publishing!');
+            hideModal('scheduleModal');
+        }
+
+        // Channel selector handling
+        document.addEventListener('DOMContentLoaded', function() {
+            const channelOptions = document.querySelectorAll('.channel-option');
+            channelOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const checkbox = this.querySelector('input[type="checkbox"]');
+                    checkbox.checked = !checkbox.checked;
+                    this.classList.toggle('selected', checkbox.checked);
+                });
+            });
+
+            // Initialize chart
+            initPerformanceChart();
+        });
+
+        // Close modals when clicking outside
+        document.addEventListener('click', function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

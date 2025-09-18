@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workflow Automation System - Eufy GEO Platform</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.2/dist/echarts.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 1rem 2rem;
+            color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .navbar h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .header-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        
+        .header-info h2 {
+            color: #333;
+            margin-bottom: 1rem;
+            font-size: 28px;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #666;
+            border: 1px solid #e9ecef;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .workflow-timeline {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .timeline-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .cycle-selector {
+            padding: 0.5rem 1rem;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            background: white;
+            font-size: 14px;
+        }
+        
+        .timeline {
+            position: relative;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 30px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #e9ecef;
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            padding-left: 4rem;
+        }
+        
+        .timeline-marker {
+            position: absolute;
+            left: 21px;
+            top: 0.5rem;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+            color: white;
+            z-index: 1;
+        }
+        
+        .marker-completed {
+            background: #2ed573;
+        }
+        
+        .marker-active {
+            background: #667eea;
+            animation: pulse 2s infinite;
+        }
+        
+        .marker-pending {
+            background: #95a5a6;
+        }
+        
+        .marker-blocked {
+            background: #ff4757;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(102, 126, 234, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0); }
+        }
+        
+        .timeline-content {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #e9ecef;
+        }
+        
+        .timeline-content.completed {
+            border-left-color: #2ed573;
+        }
+        
+        .timeline-content.active {
+            border-left-color: #667eea;
+            background: #f8f9ff;
+        }
+        
+        .timeline-content.blocked {
+            border-left-color: #ff4757;
+        }
+        
+        .timeline-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+        
+        .timeline-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .timeline-description {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 1rem;
+        }
+        
+        .timeline-tasks {
+            margin-top: 1rem;
+        }
+        
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 14px;
+        }
+        
+        .task-checkbox {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: white;
+            cursor: pointer;
+        }
+        
+        .task-checkbox.checked {
+            background: #2ed573;
+            border-color: #2ed573;
+        }
+        
+        .task-assignee {
+            margin-left: auto;
+            padding: 0.25rem 0.5rem;
+            background: #e9ecef;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+        
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .progress-panel {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .progress-circle {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 1rem;
+            position: relative;
+        }
+        
+        .progress-chart {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+        
+        .progress-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .progress-label {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .stat-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.25rem;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .team-panel {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .team-member {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .member-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .member-info {
+            flex: 1;
+        }
+        
+        .member-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .member-role {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .member-workload {
+            width: 60px;
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .workload-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #2ed573, #ffa502, #ff4757);
+            transition: width 0.3s ease;
+        }
+        
+        .alerts-panel {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .alert-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #e9ecef;
+        }
+        
+        .alert-item.warning {
+            border-left-color: #ffa502;
+            background: #fff9e6;
+        }
+        
+        .alert-item.error {
+            border-left-color: #ff4757;
+            background: #fff0f0;
+        }
+        
+        .alert-item.info {
+            border-left-color: #667eea;
+            background: #f8f9ff;
+        }
+        
+        .alert-icon {
+            font-size: 16px;
+        }
+        
+        .alert-content {
+            flex: 1;
+        }
+        
+        .alert-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .alert-message {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .alert-time {
+            font-size: 12px;
+            color: #999;
+            margin-top: 0.25rem;
+        }
+        
+        .templates-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .template-card {
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .template-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .template-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+        
+        .template-description {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+        
+        .template-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .template-duration {
+            background: #f8f9fa;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        
+        .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+        
+        @media (max-width: 1200px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                order: -1;
+                flex-direction: row;
+                overflow-x: auto;
+            }
+            
+            .sidebar > * {
+                min-width: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>Workflow Automation System - Eufy GEO Platform</h1>
+    </nav>
+
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header-section">
+            <div class="header-info">
+                <h2>30-Day SEO Execution Engine</h2>
+                <p>Automated workflow management with intelligent task assignment and progress tracking</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-secondary" onclick="showTemplatesModal()">
+                    📋 Templates
+                </button>
+                <button class="btn btn-primary" onclick="showNewWorkflowModal()">
+                    ⚡ New Workflow
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Dashboard -->
+        <div class="dashboard-grid">
+            <!-- Workflow Timeline -->
+            <div class="workflow-timeline">
+                <div class="timeline-header">
+                    <h3>Current 30-Day Cycle</h3>
+                    <div class="timeline-controls">
+                        <select class="cycle-selector">
+                            <option>Cycle #12 - October 2024</option>
+                            <option>Cycle #11 - September 2024</option>
+                            <option>Cycle #10 - August 2024</option>
+                        </select>
+                        <button class="btn btn-secondary" onclick="exportTimeline()">📊 Export</button>
+                    </div>
+                </div>
+
+                <div class="timeline">
+                    <!-- Week 1: Strategic Preparation -->
+                    <div class="timeline-item">
+                        <div class="timeline-marker marker-completed">✓</div>
+                        <div class="timeline-content completed">
+                            <div class="timeline-title">Week 1: Strategic Preparation</div>
+                            <div class="timeline-meta">
+                                <span>Oct 1-7, 2024</span>
+                                <span style="color: #2ed573; font-weight: 600;">Completed</span>
+                            </div>
+                            <div class="timeline-description">
+                                Foundation phase focusing on keyword research, competitive analysis, and strategy planning.
+                            </div>
+                            <div class="timeline-tasks">
+                                <div class="task-item">
+                                    <div class="task-checkbox checked">✓</div>
+                                    <span>Keyword Library Audit</span>
+                                    <div class="task-assignee">Sarah M.</div>
+                                </div>
+                                <div class="task-item">
+                                    <div class="task-checkbox checked">✓</div>
+                                    <span>Core Keywords Selection</span>
+                                    <div class="task-assignee">Mike T.</div>
+                                </div>
+                                <div class="task-item">
+                                    <div class="task-checkbox checked">✓</div>
+                                    <span>Strategy Report Preparation</span>
+                                    <div class="task-assignee">Lisa K.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Week 2: Content Planning -->
+                    <div class="timeline-item">
+                        <div class="timeline-marker marker-completed">✓</div>
+                        <div class="timeline-content completed">
+                            <div class="timeline-title">Week 2: Content Planning</div>
+                            <div class="timeline-meta">
+                                <span>Oct 8-14, 2024</span>
+                                <span style="color: #2ed573; font-weight: 600;">Completed</span>
+                            </div>
+                            <div class="timeline-description">
+                                Content strategy development with editorial calendars and asset planning.
+                            </div>
+                            <div class="timeline-tasks">
+                                <div class="task-item">
+                                    <div class="task-checkbox checked">✓</div>
+                                    <span>Content Calendar Creation</span>
+                                    <div class="task-assignee">Emma R.</div>
+                                </div>
+                                <div class="task-item">
+                                    <div class="task-checkbox checked">✓</div>
+                                    <span>Video Script Outlines</span>
+                                    <div class="task-assignee">David L.</div>
+                                </div>
+                                <div class="task-item">
+                                    <div class="task-checkbox checked">✓</div>
+                                    <span>Asset Requirements Planning</span>
+                                    <div class="task-assignee">Anna S.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Week 3: Production Execution -->
+                    <div class="timeline-item">
+                        <div class="timeline-marker marker-active">3</div>
+                        <div class="timeline-content active">
+                            <div class="timeline-title">Week 3: Production Execution</div>
+                            <div class="timeline-meta">
+                                <span>Oct 15-21, 2024</span>
+                                <span style="color: #667eea; font-weight: 600;">In Progress (65%)</span>
+                            </div>
+                            <div class="timeline-description">
+                                High-intensity content creation phase with coordinated multi-channel production.
+                            </div>
+                            <div class="timeline-tasks">
+                                <div class="task-item">
+                                    <div class="task-checkbox checked">✓</div>
+                                    <span>Long-form Articles (5/8)</span>
+                                    <div class="task-assignee">Team A</div>
+                                </div>
+                                <div class="task-item">
+                                    <div class="task-checkbox checked">✓</div>
+                                    <span>Video Production (3/5)</span>
+                                    <div class="task-assignee">Video Team</div>
+                                </div>
+                                <div class="task-item">
+                                    <div class="task-checkbox">⭕</div>
+                                    <span>Social Media Content</span>
+                                    <div class="task-assignee">Social Team</div>
+                                </div>
+                                <div class="task-item">
+                                    <div class="task-checkbox">⭕</div>
+                                    <span>Reddit Community Posts</span>
+                                    <div class="task-assignee">Community Team</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Week 4: Optimization & Iteration -->
+                    <div class="timeline-item">
+                        <div class="timeline-marker marker-pending">4</div>
+                        <div class="timeline-content">
+                            <div class="timeline-title">Week 4: Optimization & Iteration</div>
+                            <div class="timeline-meta">
+                                <span>Oct 22-28, 2024</span>
+                                <span style="color: #95a5a6; font-weight: 600;">Pending</span>
+                            </div>
+                            <div class="timeline-description">
+                                Performance analysis, content optimization, and preparation for next cycle.
+                            </div>
+                            <div class="timeline-tasks">
+                                <div class="task-item">
+                                    <div class="task-checkbox">⭕</div>
+                                    <span>Performance Analysis</span>
+                                    <div class="task-assignee">Analytics Team</div>
+                                </div>
+                                <div class="task-item">
+                                    <div class="task-checkbox">⭕</div>
+                                    <span>Content Optimization</span>
+                                    <div class="task-assignee">SEO Team</div>
+                                </div>
+                                <div class="task-item">
+                                    <div class="task-checkbox">⭕</div>
+                                    <span>Next Cycle Planning</span>
+                                    <div class="task-assignee">PM Team</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Progress Panel -->
+                <div class="progress-panel">
+                    <h3>Cycle Progress</h3>
+                    <div class="progress-circle">
+                        <div id="progressChart" class="progress-chart"></div>
+                        <div class="progress-text">
+                            <div class="progress-value">65%</div>
+                            <div class="progress-label">Complete</div>
+                        </div>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value">18</div>
+                            <div class="stat-label">Completed</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">4</div>
+                            <div class="stat-label">In Progress</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">8</div>
+                            <div class="stat-label">Pending</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">0</div>
+                            <div class="stat-label">Blocked</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Team Workload -->
+                <div class="team-panel">
+                    <h3>Team Workload</h3>
+                    <div class="team-member">
+                        <div class="member-avatar">SM</div>
+                        <div class="member-info">
+                            <div class="member-name">Sarah Mitchell</div>
+                            <div class="member-role">SEO Specialist</div>
+                        </div>
+                        <div class="member-workload">
+                            <div class="workload-fill" style="width: 85%;"></div>
+                        </div>
+                    </div>
+                    <div class="team-member">
+                        <div class="member-avatar">MT</div>
+                        <div class="member-info">
+                            <div class="member-name">Mike Torres</div>
+                            <div class="member-role">Content Manager</div>
+                        </div>
+                        <div class="member-workload">
+                            <div class="workload-fill" style="width: 70%;"></div>
+                        </div>
+                    </div>
+                    <div class="team-member">
+                        <div class="member-avatar">LK</div>
+                        <div class="member-info">
+                            <div class="member-name">Lisa Kim</div>
+                            <div class="member-role">Data Analyst</div>
+                        </div>
+                        <div class="member-workload">
+                            <div class="workload-fill" style="width: 55%;"></div>
+                        </div>
+                    </div>
+                    <div class="team-member">
+                        <div class="member-avatar">ER</div>
+                        <div class="member-info">
+                            <div class="member-name">Emma Rodriguez</div>
+                            <div class="member-role">Creative Lead</div>
+                        </div>
+                        <div class="member-workload">
+                            <div class="workload-fill" style="width: 90%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alerts & Notifications -->
+                <div class="alerts-panel">
+                    <h3>Recent Alerts</h3>
+                    <div class="alert-item warning">
+                        <div class="alert-icon">⚠️</div>
+                        <div class="alert-content">
+                            <div class="alert-title">High Workload Alert</div>
+                            <div class="alert-message">Emma Rodriguez at 90% capacity</div>
+                            <div class="alert-time">2 hours ago</div>
+                        </div>
+                    </div>
+                    <div class="alert-item info">
+                        <div class="alert-icon">ℹ️</div>
+                        <div class="alert-content">
+                            <div class="alert-title">Milestone Achieved</div>
+                            <div class="alert-message">Week 2 completed ahead of schedule</div>
+                            <div class="alert-time">1 day ago</div>
+                        </div>
+                    </div>
+                    <div class="alert-item error">
+                        <div class="alert-icon">🚨</div>
+                        <div class="alert-content">
+                            <div class="alert-title">API Rate Limit</div>
+                            <div class="alert-message">YouTube API limit reached</div>
+                            <div class="alert-time">3 days ago</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Workflow Templates -->
+        <div class="templates-section">
+            <h3>Workflow Templates</h3>
+            <div class="templates-grid">
+                <div class="template-card" onclick="useTemplate('30day-standard')">
+                    <div class="template-title">30-Day Standard Cycle</div>
+                    <div class="template-description">Complete SEO execution workflow with keyword research, content creation, and optimization phases.</div>
+                    <div class="template-meta">
+                        <span>30 Days</span>
+                        <span class="template-duration">4 Weeks</span>
+                    </div>
+                </div>
+                <div class="template-card" onclick="useTemplate('content-sprint')">
+                    <div class="template-title">Content Production Sprint</div>
+                    <div class="template-description">Accelerated content creation workflow for high-volume publishing campaigns.</div>
+                    <div class="template-meta">
+                        <span>14 Days</span>
+                        <span class="template-duration">2 Weeks</span>
+                    </div>
+                </div>
+                <div class="template-card" onclick="useTemplate('competitive-analysis')">
+                    <div class="template-title">Competitive Intelligence</div>
+                    <div class="template-description">Deep competitor analysis and market positioning workflow with actionable insights.</div>
+                    <div class="template-meta">
+                        <span>21 Days</span>
+                        <span class="template-duration">3 Weeks</span>
+                    </div>
+                </div>
+                <div class="template-card" onclick="useTemplate('crisis-response')">
+                    <div class="template-title">Crisis Response</div>
+                    <div class="template-description">Rapid response workflow for algorithm updates, ranking drops, or competitive threats.</div>
+                    <div class="template-meta">
+                        <span>7 Days</span>
+                        <span class="template-duration">1 Week</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Workflow Modal -->
+    <div class="modal" id="newWorkflowModal">
+        <div class="modal-content">
+            <h3>Create New Workflow</h3>
+            
+            <div class="form-group">
+                <label class="form-label">Workflow Name</label>
+                <input type="text" class="form-input" placeholder="Enter workflow name">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Template Base</label>
+                <select class="form-select">
+                    <option>30-Day Standard Cycle</option>
+                    <option>Content Production Sprint</option>
+                    <option>Competitive Intelligence</option>
+                    <option>Crisis Response</option>
+                    <option>Custom Workflow</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Project Priority</label>
+                <select class="form-select">
+                    <option>High Priority</option>
+                    <option>Medium Priority</option>
+                    <option>Low Priority</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Start Date</label>
+                <input type="date" class="form-input">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Team Assignment</label>
+                <select class="form-select">
+                    <option>Auto-assign based on workload</option>
+                    <option>SEO Team Alpha</option>
+                    <option>Content Team Beta</option>
+                    <option>Cross-functional Team</option>
+                </select>
+            </div>
+
+            <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+                <button class="btn btn-secondary" onclick="hideModal('newWorkflowModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="createWorkflow()">Create Workflow</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Templates Modal -->
+    <div class="modal" id="templatesModal">
+        <div class="modal-content">
+            <h3>Workflow Templates Library</h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                <div style="border: 1px solid #e9ecef; border-radius: 8px; padding: 1rem; cursor: pointer;" onclick="useTemplate('product-launch')">
+                    <h4>Product Launch Campaign</h4>
+                    <p style="font-size: 14px; color: #666; margin: 0.5rem 0;">Complete go-to-market SEO strategy</p>
+                    <div style="font-size: 12px; color: #999;">45 Days • Advanced</div>
+                </div>
+                <div style="border: 1px solid #e9ecef; border-radius: 8px; padding: 1rem; cursor: pointer;" onclick="useTemplate('local-seo')">
+                    <h4>Local SEO Optimization</h4>
+                    <p style="font-size: 14px; color: #666; margin: 0.5rem 0;">Geographic targeting and local search</p>
+                    <div style="font-size: 12px; color: #999;">21 Days • Intermediate</div>
+                </div>
+                <div style="border: 1px solid #e9ecef; border-radius: 8px; padding: 1rem; cursor: pointer;" onclick="useTemplate('technical-seo')">
+                    <h4>Technical SEO Audit</h4>
+                    <p style="font-size: 14px; color: #666; margin: 0.5rem 0;">Site performance and technical optimization</p>
+                    <div style="font-size: 12px; color: #999;">14 Days • Expert</div>
+                </div>
+                <div style="border: 1px solid #e9ecef; border-radius: 8px; padding: 1rem; cursor: pointer;" onclick="useTemplate('content-refresh')">
+                    <h4>Content Refresh Campaign</h4>
+                    <p style="font-size: 14px; color: #666; margin: 0.5rem 0;">Update and optimize existing content</p>
+                    <div style="font-size: 12px; color: #999;">28 Days • Beginner</div>
+                </div>
+            </div>
+
+            <div style="text-align: right; margin-top: 2rem;">
+                <button class="btn btn-secondary" onclick="hideModal('templatesModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize progress chart
+        function initProgressChart() {
+            const chart = echarts.init(document.getElementById('progressChart'));
+            const option = {
+                series: [{
+                    type: 'pie',
+                    radius: ['75%', '90%'],
+                    avoidLabelOverlap: false,
+                    label: {
+                        show: false
+                    },
+                    emphasis: {
+                        label: {
+                            show: false
+                        }
+                    },
+                    labelLine: {
+                        show: false
+                    },
+                    data: [
+                        {value: 65, itemStyle: {color: '#667eea'}},
+                        {value: 35, itemStyle: {color: '#e9ecef'}}
+                    ]
+                }]
+            };
+            chart.setOption(option);
+
+            // Make chart responsive
+            window.addEventListener('resize', function() {
+                chart.resize();
+            });
+        }
+
+        // Modal functions
+        function showNewWorkflowModal() {
+            document.getElementById('newWorkflowModal').style.display = 'flex';
+        }
+
+        function showTemplatesModal() {
+            document.getElementById('templatesModal').style.display = 'flex';
+        }
+
+        function hideModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Workflow functions
+        function createWorkflow() {
+            alert('New workflow created successfully!');
+            hideModal('newWorkflowModal');
+        }
+
+        function useTemplate(templateType) {
+            alert(`Using template: ${templateType}`);
+            hideModal('templatesModal');
+        }
+
+        function exportTimeline() {
+            alert('Exporting timeline data...');
+        }
+
+        // Task interaction
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize progress chart
+            initProgressChart();
+
+            // Task checkbox interactions
+            const taskCheckboxes = document.querySelectorAll('.task-checkbox:not(.checked)');
+            taskCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('click', function() {
+                    if (!this.classList.contains('checked')) {
+                        this.classList.add('checked');
+                        this.textContent = '✓';
+                        
+                        // Simulate progress update
+                        setTimeout(() => {
+                            updateProgress();
+                        }, 500);
+                    }
+                });
+            });
+        });
+
+        // Update progress
+        function updateProgress() {
+            const progressValue = document.querySelector('.progress-value');
+            const currentProgress = parseInt(progressValue.textContent);
+            const newProgress = Math.min(100, currentProgress + 5);
+            progressValue.textContent = newProgress + '%';
+            
+            // Update chart
+            initProgressChart();
+        }
+
+        // Close modals when clicking outside
+        document.addEventListener('click', function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

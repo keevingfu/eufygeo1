@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eufy GEO Content Strategy Mindmap - EufyGeoGem Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 1rem 2rem;
+            color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .navbar h1 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .mindmap-container {
+            position: relative;
+            width: 100vw;
+            height: calc(100vh - 60px);
+            margin-top: 60px;
+            overflow: hidden;
+            cursor: grab;
+        }
+
+        .mindmap-container.dragging {
+            cursor: grabbing;
+        }
+
+        .mindmap-svg {
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, #ffffff 0%, #f8faff 100%);
+        }
+
+        /* Core Node */
+        .core-node {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .core-node:hover {
+            transform: scale(1.05);
+        }
+
+        .core-circle {
+            fill: url(#coreGradient);
+            stroke: #667eea;
+            stroke-width: 3;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+        }
+
+        .core-text {
+            fill: white;
+            font-weight: 700;
+            font-size: 16px;
+            text-anchor: middle;
+            dominant-baseline: middle;
+        }
+
+        /* Level 2 Nodes */
+        .level2-node {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: fadeInNode 0.5s ease forwards;
+        }
+
+        .level2-node:hover {
+            transform: scale(1.1);
+        }
+
+        .level2-onsite {
+            fill: url(#onsiteGradient);
+            stroke: #2ed573;
+            stroke-width: 2;
+        }
+
+        .level2-offsite {
+            fill: url(#offsiteGradient);
+            stroke: #ff6b6b;
+            stroke-width: 2;
+        }
+
+        .level2-text {
+            fill: white;
+            font-weight: 600;
+            font-size: 14px;
+            text-anchor: middle;
+            dominant-baseline: middle;
+        }
+
+        /* Level 3 Nodes */
+        .level3-node {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+
+        .level3-node.active {
+            animation: fadeInNode 0.4s ease forwards;
+        }
+
+        .level3-node:hover {
+            transform: scale(1.1);
+        }
+
+        .level3-circle {
+            fill: url(#level3Gradient);
+            stroke: #ffa502;
+            stroke-width: 2;
+        }
+
+        .level3-text {
+            fill: #333;
+            font-weight: 500;
+            font-size: 12px;
+            text-anchor: middle;
+            dominant-baseline: middle;
+        }
+
+        /* Connections */
+        .connection {
+            stroke: #667eea;
+            stroke-width: 2;
+            fill: none;
+            opacity: 0.6;
+            stroke-dasharray: 5,5;
+            animation: dash 2s linear infinite;
+        }
+
+        .connection.level3 {
+            stroke: #ffa502;
+            stroke-width: 1.5;
+        }
+
+        @keyframes dash {
+            to {
+                stroke-dashoffset: -10;
+            }
+        }
+
+        @keyframes fadeInNode {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f0f2f5;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: #f0f2f5;
+            color: #333;
+        }
+
+        .priority-section {
+            margin-bottom: 2rem;
+        }
+
+        .priority-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #f8f9ff 0%, #e8eaff 100%);
+        }
+
+        .priority-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 12px;
+            color: white;
+        }
+
+        .priority-p0 { background: linear-gradient(135deg, #ff4757 0%, #c44569 100%); }
+        .priority-p1 { background: linear-gradient(135deg, #ffa502 0%, #ff6348 100%); }
+        .priority-p2 { background: linear-gradient(135deg, #3742fa 0%, #2f3542 100%); }
+        .priority-p3 { background: linear-gradient(135deg, #2ed573 0%, #1e90ff 100%); }
+        .priority-p4 { background: linear-gradient(135deg, #747d8c 0%, #57606f 100%); }
+
+        .keywords-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .keyword-card {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .keyword-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-color: #667eea;
+        }
+
+        .keyword-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .keyword-metrics {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .content-suggestion {
+            background: #f8f9ff;
+            border-left: 4px solid #667eea;
+            padding: 1rem;
+            margin-top: 0.5rem;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .suggestion-text {
+            font-size: 14px;
+            color: #555;
+            font-style: italic;
+        }
+
+        /* Control Panel */
+        .control-panel {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: white;
+            padding: 1rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            z-index: 1500;
+        }
+
+        .control-btn {
+            display: block;
+            width: 100%;
+            padding: 0.5rem 1rem;
+            margin: 0.5rem 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        /* Legend */
+        .legend {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: white;
+            padding: 1rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            z-index: 1500;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0.5rem 0;
+            font-size: 14px;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+        }
+
+        @media (max-width: 768px) {
+            .modal-content {
+                width: 95%;
+                padding: 1rem;
+            }
+            
+            .keywords-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .control-panel {
+                right: 10px;
+                top: 70px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>🧠 Eufy GEO Content Strategy Mindmap</h1>
+        <div style="font-size: 14px; opacity: 0.9;">
+            Click nodes to explore • Drag to pan • Zoom with scroll
+        </div>
+    </nav>
+
+    <div class="control-panel">
+        <button class="control-btn" onclick="resetView()">🏠 Reset View</button>
+        <button class="control-btn" onclick="expandAll()">📂 Expand All</button>
+        <button class="control-btn" onclick="collapseAll()">📁 Collapse All</button>
+        <button class="control-btn" onclick="showHelp()">❓ Help</button>
+    </div>
+
+    <div class="legend">
+        <div style="font-weight: 600; margin-bottom: 0.5rem;">Legend</div>
+        <div class="legend-item">
+            <div class="legend-color" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"></div>
+            <span>GEO Core</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background: linear-gradient(135deg, #2ed573 0%, #27ae60 100%);"></div>
+            <span>On-Site Content</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);"></div>
+            <span>Off-Site Content</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background: linear-gradient(135deg, #ffa502 0%, #ff6348 100%);"></div>
+            <span>Content Templates</span>
+        </div>
+    </div>
+
+    <div class="mindmap-container" id="mindmapContainer">
+        <svg class="mindmap-svg" id="mindmapSvg" viewBox="0 0 1200 800">
+            <!-- Gradients -->
+            <defs>
+                <radialGradient id="coreGradient" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" style="stop-color:#667eea"/>
+                    <stop offset="100%" style="stop-color:#764ba2"/>
+                </radialGradient>
+                <radialGradient id="onsiteGradient" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" style="stop-color:#2ed573"/>
+                    <stop offset="100%" style="stop-color:#27ae60"/>
+                </radialGradient>
+                <radialGradient id="offsiteGradient" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" style="stop-color:#ff6b6b"/>
+                    <stop offset="100%" style="stop-color:#ee5a52"/>
+                </radialGradient>
+                <radialGradient id="level3Gradient" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" style="stop-color:#ffffff"/>
+                    <stop offset="100%" style="stop-color:#f8f9fa"/>
+                </radialGradient>
+            </defs>
+
+            <!-- Core Node -->
+            <g class="core-node" onclick="toggleLevel2()">
+                <circle class="core-circle" cx="600" cy="400" r="80"/>
+                <text class="core-text" x="600" y="390">Eufy GEO</text>
+                <text class="core-text" x="600" y="410" style="font-size: 14px;">Content Strategy</text>
+            </g>
+
+            <!-- Level 2 Nodes (Hidden by default) -->
+            <g id="level2Nodes" style="display: none;">
+                <!-- On-Site Content -->
+                <path class="connection" d="M 680 400 Q 750 350 820 320"/>
+                <g class="level2-node" onclick="toggleLevel3('onsite')" data-type="onsite">
+                    <circle class="level2-onsite" cx="850" cy="300" r="60"/>
+                    <text class="level2-text" x="850" y="295">On-Site</text>
+                    <text class="level2-text" x="850" y="310" style="font-size: 12px;">Content</text>
+                </g>
+
+                <!-- Off-Site Content -->
+                <path class="connection" d="M 680 400 Q 750 450 820 480"/>
+                <g class="level2-node" onclick="toggleLevel3('offsite')" data-type="offsite">
+                    <circle class="level2-offsite" cx="850" cy="500" r="60"/>
+                    <text class="level2-text" x="850" y="495">Off-Site</text>
+                    <text class="level2-text" x="850" y="510" style="font-size: 12px;">Content</text>
+                </g>
+            </g>
+
+            <!-- Level 3 Nodes (On-Site) -->
+            <g id="level3OnsiteNodes" style="display: none;">
+                <!-- Official Website -->
+                <path class="connection level3" d="M 910 300 Q 970 250 1020 220"/>
+                <g class="level3-node" onclick="showContentModal('website')" data-parent="onsite">
+                    <circle class="level3-circle" cx="1040" cy="200" r="40"/>
+                    <text class="level3-text" x="1040" y="195">Official</text>
+                    <text class="level3-text" x="1040" y="208" style="font-size: 10px;">Website</text>
+                </g>
+
+                <!-- Shopify Store -->
+                <path class="connection level3" d="M 910 300 Q 970 300 1020 300"/>
+                <g class="level3-node" onclick="showContentModal('shopify')" data-parent="onsite">
+                    <circle class="level3-circle" cx="1040" cy="300" r="40"/>
+                    <text class="level3-text" x="1040" y="295">Shopify</text>
+                    <text class="level3-text" x="1040" y="308" style="font-size: 10px;">Store</text>
+                </g>
+
+                <!-- Amazon Store -->
+                <path class="connection level3" d="M 910 300 Q 970 350 1020 380"/>
+                <g class="level3-node" onclick="showContentModal('amazon')" data-parent="onsite">
+                    <circle class="level3-circle" cx="1040" cy="400" r="40"/>
+                    <text class="level3-text" x="1040" y="395">Amazon</text>
+                    <text class="level3-text" x="1040" y="408" style="font-size: 10px;">Store</text>
+                </g>
+            </g>
+
+            <!-- Level 3 Nodes (Off-Site) -->
+            <g id="level3OffsiteNodes" style="display: none;">
+                <!-- YouTube -->
+                <path class="connection level3" d="M 910 500 Q 970 420 1020 380"/>
+                <g class="level3-node" onclick="showContentModal('youtube')" data-parent="offsite">
+                    <circle class="level3-circle" cx="1040" cy="360" r="40"/>
+                    <text class="level3-text" x="1040" y="365">YouTube</text>
+                </g>
+
+                <!-- Reddit -->
+                <path class="connection level3" d="M 910 500 Q 970 470 1020 450"/>
+                <g class="level3-node" onclick="showContentModal('reddit')" data-parent="offsite">
+                    <circle class="level3-circle" cx="1040" cy="430" r="40"/>
+                    <text class="level3-text" x="1040" y="435">Reddit</text>
+                </g>
+
+                <!-- Social Media -->
+                <path class="connection level3" d="M 910 500 Q 970 520 1020 520"/>
+                <g class="level3-node" onclick="showContentModal('social')" data-parent="offsite">
+                    <circle class="level3-circle" cx="1040" cy="500" r="40"/>
+                    <text class="level3-text" x="1040" y="495">Social</text>
+                    <text class="level3-text" x="1040" y="508" style="font-size: 10px;">Media</text>
+                </g>
+
+                <!-- Forums & Q&A -->
+                <path class="connection level3" d="M 910 500 Q 970 570 1020 590"/>
+                <g class="level3-node" onclick="showContentModal('forums')" data-parent="offsite">
+                    <circle class="level3-circle" cx="1040" cy="570" r="40"/>
+                    <text class="level3-text" x="1040" y="565">Forums</text>
+                    <text class="level3-text" x="1040" y="578" style="font-size: 10px;">& Q&A</text>
+                </g>
+            </g>
+        </svg>
+    </div>
+
+    <!-- Content Modal -->
+    <div class="modal" id="contentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Content Templates & Keywords</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div id="modalBody">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentLevel = 1;
+        let activeLevel3 = null;
+        let viewBox = { x: 0, y: 0, width: 1200, height: 800, scale: 1 };
+
+        // Sample data based on the PDF content
+        const contentData = {
+            website: {
+                title: "Official Website Content Templates",
+                description: "SEO-optimized content for eufy.com",
+                templates: [
+                    {
+                        name: "Product Landing Pages",
+                        keywords: ["eufy security camera", "best home security system", "eufy outdoor camera"],
+                        priority: "P0-P1",
+                        content: "Comprehensive product showcase with AIO optimization"
+                    },
+                    {
+                        name: "How-to Guides",
+                        keywords: ["how to install security camera", "eufy setup guide", "smart home installation"],
+                        priority: "P2-P3",
+                        content: "Step-by-step installation and usage tutorials"
+                    },
+                    {
+                        name: "Comparison Pages",
+                        keywords: ["eufy vs ring", "best security camera 2024", "security system comparison"],
+                        priority: "P1-P2",
+                        content: "Feature comparisons and buying guides"
+                    }
+                ]
+            },
+            shopify: {
+                title: "Shopify Store Content Templates",
+                description: "E-commerce optimized product content",
+                templates: [
+                    {
+                        name: "Product Descriptions",
+                        keywords: ["eufy doorbell", "smart lock", "security camera"],
+                        priority: "P0-P2",
+                        content: "Conversion-focused product descriptions with SEO"
+                    },
+                    {
+                        name: "Collection Pages",
+                        keywords: ["smart home security", "eufy camera collection", "home automation"],
+                        priority: "P2-P3",
+                        content: "Category and collection optimization"
+                    }
+                ]
+            },
+            amazon: {
+                title: "Amazon Store Content Templates",
+                description: "Amazon-specific SEO and A+ content",
+                templates: [
+                    {
+                        name: "A+ Content Modules",
+                        keywords: ["eufy homebase 3", "eufy s340", "eufy security system"],
+                        priority: "P0-P1",
+                        content: "Rich media A+ content for enhanced listings"
+                    },
+                    {
+                        name: "Listing Optimization",
+                        keywords: ["security camera", "video doorbell", "smart home device"],
+                        priority: "P1-P2",
+                        content: "Backend keyword optimization and bullet points"
+                    }
+                ]
+            },
+            youtube: {
+                title: "YouTube Content Templates",
+                description: "Video content strategy based on 840 keywords analysis",
+                templates: [
+                    {
+                        name: "Long-form Reviews (10-20 min)",
+                        keywords: ["eufy security camera", "eufy outdoor camera"],
+                        priority: "P0-P1",
+                        content: "Deep reviews, unboxing, comparison analysis (80% resource allocation)"
+                    },
+                    {
+                        name: "Tutorial Videos (5-10 min)",
+                        keywords: ["eufy homebase 3", "eufy doorbell installation", "eufy smart lock"],
+                        priority: "P2",
+                        content: "Installation guides, setup tutorials, troubleshooting"
+                    },
+                    {
+                        name: "YouTube Shorts (<60s)",
+                        keywords: ["eufy vs ring", "smart home tips", "security camera comparison"],
+                        priority: "P3-P4",
+                        content: "Quick tips, comparisons, FAQ answers (bulk production)"
+                    }
+                ]
+            },
+            reddit: {
+                title: "Reddit Content Templates",
+                description: "Community-driven content strategy",
+                templates: [
+                    {
+                        name: "r/homesecurity Posts",
+                        keywords: ["best security system", "home security advice", "security camera recommendations"],
+                        priority: "P1-P2",
+                        content: "Expert advice, troubleshooting, community support"
+                    },
+                    {
+                        name: "r/smarthome Content",
+                        keywords: ["smart home setup", "IoT security", "home automation"],
+                        priority: "P2-P3",
+                        content: "Integration guides, smart home ecosystems"
+                    },
+                    {
+                        name: "AMA & Reviews",
+                        keywords: ["eufy camera review", "security system experience"],
+                        priority: "P3-P4",
+                        content: "User experiences, honest reviews, Q&A sessions"
+                    }
+                ]
+            },
+            social: {
+                title: "Social Media Content Templates",
+                description: "Multi-platform social content strategy",
+                templates: [
+                    {
+                        name: "Instagram Stories/Reels",
+                        keywords: ["smart home", "home security", "tech gadgets"],
+                        priority: "P2-P3",
+                        content: "Visual product showcases, lifestyle integration"
+                    },
+                    {
+                        name: "Facebook Posts",
+                        keywords: ["home safety tips", "security solutions", "family protection"],
+                        priority: "P3-P4",
+                        content: "Educational content, community engagement"
+                    },
+                    {
+                        name: "Twitter Threads",
+                        keywords: ["tech news", "smart home trends", "security updates"],
+                        priority: "P3-P4",
+                        content: "Industry insights, product announcements"
+                    }
+                ]
+            },
+            forums: {
+                title: "Forums & Q&A Content Templates",
+                description: "Expert positioning on knowledge platforms",
+                templates: [
+                    {
+                        name: "Quora Answers",
+                        keywords: ["what is the best security camera", "how to secure your home", "smart home advice"],
+                        priority: "P2-P3",
+                        content: "Expert answers, detailed explanations, product recommendations"
+                    },
+                    {
+                        name: "Tech Forums",
+                        keywords: ["security camera setup", "network configuration", "technical support"],
+                        priority: "P3-P4",
+                        content: "Technical discussions, troubleshooting, expert advice"
+                    }
+                ]
+            }
+        };
+
+        function toggleLevel2() {
+            const level2Nodes = document.getElementById('level2Nodes');
+            if (currentLevel === 1) {
+                level2Nodes.style.display = 'block';
+                currentLevel = 2;
+                // Animate nodes
+                setTimeout(() => {
+                    const nodes = level2Nodes.querySelectorAll('.level2-node');
+                    nodes.forEach((node, index) => {
+                        setTimeout(() => {
+                            node.style.animationDelay = `${index * 0.1}s`;
+                        }, index * 100);
+                    });
+                }, 100);
+            }
+        }
+
+        function toggleLevel3(type) {
+            // Hide all level 3 nodes first
+            document.getElementById('level3OnsiteNodes').style.display = 'none';
+            document.getElementById('level3OffsiteNodes').style.display = 'none';
+            
+            // Remove active class from all level 3 nodes
+            document.querySelectorAll('.level3-node').forEach(node => {
+                node.classList.remove('active');
+            });
+
+            if (activeLevel3 === type) {
+                activeLevel3 = null;
+                return;
+            }
+
+            activeLevel3 = type;
+            currentLevel = 3;
+
+            // Show appropriate level 3 nodes
+            if (type === 'onsite') {
+                document.getElementById('level3OnsiteNodes').style.display = 'block';
+                const nodes = document.querySelectorAll('#level3OnsiteNodes .level3-node');
+                nodes.forEach((node, index) => {
+                    setTimeout(() => {
+                        node.classList.add('active');
+                    }, index * 150);
+                });
+            } else if (type === 'offsite') {
+                document.getElementById('level3OffsiteNodes').style.display = 'block';
+                const nodes = document.querySelectorAll('#level3OffsiteNodes .level3-node');
+                nodes.forEach((node, index) => {
+                    setTimeout(() => {
+                        node.classList.add('active');
+                    }, index * 150);
+                });
+            }
+        }
+
+        function showContentModal(contentType) {
+            const modal = document.getElementById('contentModal');
+            const title = document.getElementById('modalTitle');
+            const body = document.getElementById('modalBody');
+            
+            const data = contentData[contentType];
+            if (!data) return;
+
+            title.textContent = data.title;
+            
+            let html = `
+                <div style="margin-bottom: 1.5rem;">
+                    <p style="color: #666; font-size: 16px;">${data.description}</p>
+                </div>
+            `;
+
+            data.templates.forEach(template => {
+                html += `
+                    <div class="priority-section">
+                        <div class="priority-header">
+                            <h4 style="margin: 0; color: #333;">${template.name}</h4>
+                            <span class="priority-badge priority-${template.priority.toLowerCase().replace('-', '')}">${template.priority}</span>
+                        </div>
+                        <div class="content-suggestion">
+                            <div class="suggestion-text">${template.content}</div>
+                        </div>
+                        <div class="keywords-grid" style="margin-top: 1rem;">
+                `;
+                
+                template.keywords.forEach(keyword => {
+                    html += `
+                        <div class="keyword-card">
+                            <div class="keyword-name">${keyword}</div>
+                            <div class="keyword-metrics">
+                                <span>Priority: ${template.priority}</span>
+                                <span>Content Type: ${template.name}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += `
+                        </div>
+                    </div>
+                `;
+            });
+
+            body.innerHTML = html;
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('contentModal').style.display = 'none';
+        }
+
+        function resetView() {
+            currentLevel = 1;
+            activeLevel3 = null;
+            document.getElementById('level2Nodes').style.display = 'none';
+            document.getElementById('level3OnsiteNodes').style.display = 'none';
+            document.getElementById('level3OffsiteNodes').style.display = 'none';
+            document.querySelectorAll('.level3-node').forEach(node => {
+                node.classList.remove('active');
+            });
+        }
+
+        function expandAll() {
+            toggleLevel2();
+            setTimeout(() => {
+                toggleLevel3('onsite');
+            }, 500);
+            setTimeout(() => {
+                toggleLevel3('offsite');
+            }, 1000);
+        }
+
+        function collapseAll() {
+            resetView();
+        }
+
+        function showHelp() {
+            alert(`Eufy GEO Content Strategy Mindmap Help:
+
+🎯 Level 1: GEO Core - Click to expand content channels
+🌐 Level 2: Content Channels - On-Site vs Off-Site platforms  
+📝 Level 3: Platform Templates - Specific content templates
+🔍 Level 4: Click templates to see detailed keyword strategies
+
+Navigation:
+• Click nodes to expand/collapse
+• Use control panel for quick actions
+• Modal windows show detailed content strategies
+• Based on 840+ YouTube keywords and AIO analysis
+
+Priority System:
+P0-P1: High-value keywords (>15K monthly searches)
+P2-P3: Medium-value keywords (1.5K-15K searches)
+P4: Long-tail keywords (<1.5K searches)`);
+        }
+
+        // Pan and zoom functionality
+        let isPanning = false;
+        let startX, startY;
+
+        document.getElementById('mindmapContainer').addEventListener('mousedown', (e) => {
+            if (e.target.closest('.core-node, .level2-node, .level3-node')) return;
+            isPanning = true;
+            startX = e.clientX;
+            startY = e.clientY;
+            e.target.style.cursor = 'grabbing';
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isPanning) return;
+            const deltaX = e.clientX - startX;
+            const deltaY = e.clientY - startY;
+            viewBox.x -= deltaX / viewBox.scale;
+            viewBox.y -= deltaY / viewBox.scale;
+            document.getElementById('mindmapSvg').setAttribute('viewBox', 
+                `${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`);
+            startX = e.clientX;
+            startY = e.clientY;
+        });
+
+        document.addEventListener('mouseup', () => {
+            isPanning = false;
+            document.getElementById('mindmapContainer').style.cursor = 'grab';
+        });
+
+        // Zoom functionality
+        document.getElementById('mindmapContainer').addEventListener('wheel', (e) => {
+            e.preventDefault();
+            const zoom = e.deltaY > 0 ? 1.1 : 0.9;
+            viewBox.scale *= zoom;
+            viewBox.width *= zoom;
+            viewBox.height *= zoom;
+            document.getElementById('mindmapSvg').setAttribute('viewBox', 
+                `${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`);
+        });
+
+        // Close modal on outside click
+        document.getElementById('contentModal').addEventListener('click', (e) => {
+            if (e.target.id === 'contentModal') {
+                closeModal();
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Eufy GEO Content Strategy Mindmap loaded');
+        });
+    </script>
+</body>
+</html>
