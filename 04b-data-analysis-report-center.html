@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Center - Comprehensive Data Analysis Platform</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        /* Navigation Bar */
+        .navbar {
+            background: white;
+            padding: 15px 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #FF6900 0%, #FF8C00 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+        
+        /* Executive Summary */
+        .executive-summary {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .summary-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .summary-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .summary-period {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .period-selector {
+            padding: 8px 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        
+        .key-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .metric-card {
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #f0f2f5 100%);
+            border-radius: 12px;
+            border-left: 4px solid #FF6900;
+        }
+        
+        .metric-label {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        .metric-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .metric-change {
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .positive {
+            color: #52C41A;
+        }
+        
+        .negative {
+            color: #F5222D;
+        }
+        
+        /* KPI Dashboard */
+        .kpi-dashboard {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .dashboard-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+        
+        .kpi-chart {
+            height: 300px;
+        }
+        
+        /* Detailed Reports */
+        .detailed-reports {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .report-tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .report-tab {
+            padding: 12px 20px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.2s;
+        }
+        
+        .report-tab.active {
+            color: #FF6900;
+            border-bottom-color: #FF6900;
+        }
+        
+        .report-content {
+            padding: 20px 0;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .data-table th {
+            background: #f9f9f9;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #666;
+            font-size: 13px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .data-table td {
+            padding: 15px 12px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+        }
+        
+        .data-table tr:hover {
+            background: #fafafa;
+        }
+        
+        /* SLA Monitoring */
+        .sla-monitoring {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .sla-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .sla-item {
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .sla-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 10px;
+            background: linear-gradient(135deg, #52C41A 0%, #73D13D 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+        
+        .sla-name {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .sla-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #52C41A;
+            margin-bottom: 5px;
+        }
+        
+        .sla-target {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        /* Custom Reports */
+        .custom-reports {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .report-builder {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .builder-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .builder-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .builder-select {
+            padding: 8px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 13px;
+            background: white;
+        }
+        
+        /* Export Options */
+        .export-section {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .export-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .export-card {
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .export-card:hover {
+            border-color: #FF6900;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255,105,0,0.15);
+        }
+        
+        .export-icon {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        
+        .export-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .export-desc {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        /* Alert Configuration */
+        .alert-config {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .alert-list {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .alert-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+        
+        .alert-info {
+            flex: 1;
+        }
+        
+        .alert-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .alert-condition {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .alert-toggle {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 24px;
+        }
+        
+        .alert-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .alert-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .alert-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .alert-slider {
+            background-color: #52C41A;
+        }
+        
+        input:checked + .alert-slider:before {
+            transform: translateX(24px);
+        }
+        
+        /* Button Styles */
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #FF6900 0%, #FF8C00 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255,105,0,0.3);
+        }
+        
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #333;
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #52C41A 0%, #73D13D 100%);
+            color: white;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-left">
+            <div class="logo">📊</div>
+            <h2 style="font-size: 20px; color: #333;">Report Center</h2>
+            <span style="padding: 4px 12px; background: linear-gradient(135deg, #FF690020, #FF8C0020); color: #FF6900; border-radius: 20px; font-size: 12px; font-weight: 500;">
+                Full-chain Analysis
+            </span>
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-secondary">📅 Scheduled Reports</button>
+            <button class="btn btn-primary">📤 Export Report</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Executive Summary -->
+        <div class="executive-summary">
+            <div class="summary-header">
+                <h2 class="summary-title">📈 Executive Summary - Eufy E28 Project</h2>
+                <div class="summary-period">
+                    <select class="period-selector">
+                        <option>Today</option>
+                        <option>This Week</option>
+                        <option selected>This Month</option>
+                        <option>This Quarter</option>
+                    </select>
+                    <span style="font-size: 13px; color: #666;">September 1 - September 8, 2025</span>
+                </div>
+            </div>
+            
+            <div class="key-metrics">
+                <div class="metric-card">
+                    <div class="metric-label">📍 AOV Evidence Position Acquisition</div>
+                    <div class="metric-value">73%</div>
+                    <div class="metric-change positive">
+                        <span>↑</span> 5% vs Last Week
+                    </div>
+                </div>
+                <div class="metric-card" style="border-left-color: #1890FF;">
+                    <div class="metric-label">🎯 AODV (AI Arrival)</div>
+                    <div class="metric-value">28,456</div>
+                    <div class="metric-change positive">
+                        <span>↑</span> 18% Growth
+                    </div>
+                </div>
+                <div class="metric-card" style="border-left-color: #52C41A;">
+                    <div class="metric-label">🛒 ALC (Conversion Rate)</div>
+                    <div class="metric-value">8.7%</div>
+                    <div class="metric-change positive">
+                        <span>↑</span> 0.5% Increase
+                    </div>
+                </div>
+                <div class="metric-card" style="border-left-color: #FAAD14;">
+                    <div class="metric-label">📦 Attributed Orders</div>
+                    <div class="metric-value">1,823</div>
+                    <div class="metric-change positive">
+                        <span>↑</span> 23% Growth
+                    </div>
+                </div>
+                <div class="metric-card" style="border-left-color: #764ba2;">
+                    <div class="metric-label">💰 GMV</div>
+                    <div class="metric-value">$547K</div>
+                    <div class="metric-change positive">
+                        <span>↑</span> 31% Growth
+                    </div>
+                </div>
+                <div class="metric-card" style="border-left-color: #FF6900;">
+                    <div class="metric-label">📊 ROAS</div>
+                    <div class="metric-value">3.8x</div>
+                    <div class="metric-change positive">
+                        <span>↑</span> 0.6 Increase
+                    </div>
+                </div>
+            </div>
+            
+            <div style="padding: 20px; background: linear-gradient(135deg, #52C41A10, #73D13D10); border-radius: 12px; border-left: 4px solid #52C41A;">
+                <h4 style="margin-bottom: 10px; color: #52C41A;">✨ Key Insights</h4>
+                <ul style="list-style: none; padding: 0; font-size: 14px; line-height: 1.8; color: #333;">
+                    <li>• Pet hair cleaning scenario performs best with 12.3% conversion rate, recommend increasing content investment</li>
+                    <li>• Meta channel ROAS reached 4.2x, exceeding expectations, recommend 20% budget increase</li>
+                    <li>• Mobile conversion rate still 40% lower than desktop, need to optimize A/O page loading speed</li>
+                    <li>• Competitor iRobot gaining more evidence positions for silent mode keywords, need to strengthen content</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- KPI Dashboard -->
+        <div class="kpi-dashboard">
+            <div class="dashboard-header">
+                <h3 class="dashboard-title">🎯 Core KPI Tracking</h3>
+                <button class="btn btn-secondary">Custom Metrics</button>
+            </div>
+            <div class="kpi-grid">
+                <div class="kpi-chart" id="funnelChart"></div>
+                <div class="kpi-chart" id="trendChart"></div>
+                <div class="kpi-chart" id="channelChart"></div>
+                <div class="kpi-chart" id="heatmapChart"></div>
+            </div>
+        </div>
+
+        <!-- Detailed Reports -->
+        <div class="detailed-reports">
+            <div class="dashboard-header">
+                <h3 class="dashboard-title">📋 Detailed Data Reports</h3>
+                <button class="btn btn-secondary">Download Excel</button>
+            </div>
+            
+            <div class="report-tabs">
+                <button class="report-tab active">Channel Performance</button>
+                <button class="report-tab">Content Performance</button>
+                <button class="report-tab">Audience Analysis</button>
+                <button class="report-tab">Attribution Analysis</button>
+                <button class="report-tab">Financial Reconciliation</button>
+            </div>
+            
+            <div class="report-content">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Channel</th>
+                            <th>Impressions</th>
+                            <th>AODV</th>
+                            <th>Valid Clicks</th>
+                            <th>Conversion</th>
+                            <th>Orders</th>
+                            <th>GMV</th>
+                            <th>Cost</th>
+                            <th>ROAS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Google AOV</strong></td>
+                            <td>125,678</td>
+                            <td>12,456</td>
+                            <td>10,234</td>
+                            <td>8.5%</td>
+                            <td>869</td>
+                            <td>$260,700</td>
+                            <td>$68,456</td>
+                            <td style="color: #52C41A; font-weight: 600;">3.8x</td>
+                        </tr>
+                        <tr>
+                            <td><strong>YouTube</strong></td>
+                            <td>89,234</td>
+                            <td>6,789</td>
+                            <td>5,234</td>
+                            <td>7.2%</td>
+                            <td>377</td>
+                            <td>$113,100</td>
+                            <td>$32,100</td>
+                            <td style="color: #52C41A; font-weight: 600;">3.5x</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Meta</strong></td>
+                            <td>67,890</td>
+                            <td>5,432</td>
+                            <td>4,567</td>
+                            <td>9.8%</td>
+                            <td>447</td>
+                            <td>$134,100</td>
+                            <td>$31,900</td>
+                            <td style="color: #52C41A; font-weight: 600;">4.2x</td>
+                        </tr>
+                        <tr>
+                            <td><strong>TikTok</strong></td>
+                            <td>45,678</td>
+                            <td>2,345</td>
+                            <td>1,890</td>
+                            <td>5.6%</td>
+                            <td>106</td>
+                            <td>$31,800</td>
+                            <td>$15,600</td>
+                            <td style="color: #FAAD14; font-weight: 600;">2.0x</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Amazon DSP</strong></td>
+                            <td>34,567</td>
+                            <td>1,434</td>
+                            <td>1,234</td>
+                            <td>2.1%</td>
+                            <td>24</td>
+                            <td>$7,200</td>
+                            <td>$8,900</td>
+                            <td style="color: #F5222D; font-weight: 600;">0.8x</td>
+                        </tr>
+                        <tr style="background: #f9f9f9; font-weight: 600;">
+                            <td>Total</td>
+                            <td>363,047</td>
+                            <td>28,456</td>
+                            <td>23,159</td>
+                            <td>8.1%</td>
+                            <td>1,823</td>
+                            <td>$546,900</td>
+                            <td>$156,956</td>
+                            <td style="color: #52C41A;">3.5x</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- SLA Monitoring -->
+        <div class="sla-monitoring">
+            <div class="dashboard-header">
+                <h3 class="dashboard-title">⚡ SLA Service Level Monitoring</h3>
+                <button class="btn btn-secondary">View History</button>
+            </div>
+            <div class="sla-items">
+                <div class="sla-item">
+                    <div class="sla-icon">✓</div>
+                    <div class="sla-name">System Availability</div>
+                    <div class="sla-value">99.98%</div>
+                    <div class="sla-target">Target: ≥99.9%</div>
+                </div>
+                <div class="sla-item">
+                    <div class="sla-icon">⚡</div>
+                    <div class="sla-name">Data Latency</div>
+                    <div class="sla-value">1.2h</div>
+                    <div class="sla-target">Target: <2h</div>
+                </div>
+                <div class="sla-item">
+                    <div class="sla-icon">📊</div>
+                    <div class="sla-name">Report Generation</div>
+                    <div class="sla-value">45s</div>
+                    <div class="sla-target">Target: <60s</div>
+                </div>
+                <div class="sla-item">
+                    <div class="sla-icon">🎯</div>
+                    <div class="sla-name">Data Accuracy</div>
+                    <div class="sla-value">99.2%</div>
+                    <div class="sla-target">Target: >99%</div>
+                </div>
+                <div class="sla-item">
+                    <div class="sla-icon">🔄</div>
+                    <div class="sla-name">API Response</div>
+                    <div class="sla-value">186ms</div>
+                    <div class="sla-target">P95: <500ms</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Custom Reports -->
+        <div class="custom-reports">
+            <div class="dashboard-header">
+                <h3 class="dashboard-title">🔧 Custom Report Builder</h3>
+                <button class="btn btn-primary">Generate Report</button>
+            </div>
+            <div class="report-builder">
+                <div class="builder-group">
+                    <label class="builder-label">Dimension</label>
+                    <select class="builder-select">
+                        <option>Channel</option>
+                        <option>Content Type</option>
+                        <option>Device</option>
+                        <option>Region</option>
+                        <option>Time</option>
+                    </select>
+                </div>
+                <div class="builder-group">
+                    <label class="builder-label">Metrics</label>
+                    <select class="builder-select">
+                        <option>AODV</option>
+                        <option>Conversion Rate</option>
+                        <option>Order Count</option>
+                        <option>GMV</option>
+                        <option>ROAS</option>
+                    </select>
+                </div>
+                <div class="builder-group">
+                    <label class="builder-label">Time Range</label>
+                    <select class="builder-select">
+                        <option>Last 7 Days</option>
+                        <option>Last 30 Days</option>
+                        <option>This Month</option>
+                        <option>Last Month</option>
+                        <option>Custom</option>
+                    </select>
+                </div>
+                <div class="builder-group">
+                    <label class="builder-label">Comparison</label>
+                    <select class="builder-select">
+                        <option>No Comparison</option>
+                        <option>Month-over-Month</option>
+                        <option>Year-over-Year</option>
+                        <option>vs Target</option>
+                    </select>
+                </div>
+                <div class="builder-group">
+                    <label class="builder-label">Filter</label>
+                    <select class="builder-select">
+                        <option>All</option>
+                        <option>Pet Scenario</option>
+                        <option>Carpet Scenario</option>
+                        <option>Silent Mode Scenario</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Export Options -->
+        <div class="export-section">
+            <div class="dashboard-header">
+                <h3 class="dashboard-title">📤 Report Export & Distribution</h3>
+                <button class="btn btn-secondary">Scheduled Tasks</button>
+            </div>
+            <div class="export-options">
+                <div class="export-card">
+                    <div class="export-icon">📧</div>
+                    <div class="export-name">Email Delivery</div>
+                    <div class="export-desc">Auto send every Monday 9:00</div>
+                </div>
+                <div class="export-card">
+                    <div class="export-icon">📊</div>
+                    <div class="export-name">Excel Download</div>
+                    <div class="export-desc">Complete data spreadsheet</div>
+                </div>
+                <div class="export-card">
+                    <div class="export-icon">📑</div>
+                    <div class="export-name">PDF Report</div>
+                    <div class="export-desc">Brand formatted report</div>
+                </div>
+                <div class="export-card">
+                    <div class="export-icon">🔗</div>
+                    <div class="export-name">API Interface</div>
+                    <div class="export-desc">Real-time data access</div>
+                </div>
+                <div class="export-card">
+                    <div class="export-icon">💬</div>
+                    <div class="export-name">Slack Notifications</div>
+                    <div class="export-desc">Key metrics push</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alert Configuration -->
+        <div class="alert-config">
+            <div class="dashboard-header">
+                <h3 class="dashboard-title">🔔 Smart Alert Configuration</h3>
+                <button class="btn btn-secondary">Test Alert</button>
+            </div>
+            <div class="alert-list">
+                <div class="alert-item">
+                    <div class="alert-info">
+                        <div class="alert-name">AODV Abnormal Drop</div>
+                        <div class="alert-condition">Triggered when AODV drops >20% from previous day</div>
+                    </div>
+                    <label class="alert-toggle">
+                        <input type="checkbox" checked>
+                        <span class="alert-slider"></span>
+                    </label>
+                </div>
+                <div class="alert-item">
+                    <div class="alert-info">
+                        <div class="alert-name">Conversion Rate Below Threshold</div>
+                        <div class="alert-condition">Triggered when ALC conversion rate <5%</div>
+                    </div>
+                    <label class="alert-toggle">
+                        <input type="checkbox" checked>
+                        <span class="alert-slider"></span>
+                    </label>
+                </div>
+                <div class="alert-item">
+                    <div class="alert-info">
+                        <div class="alert-name">Tracking Interruption</div>
+                        <div class="alert-condition">Triggered when no event data for 10 minutes</div>
+                    </div>
+                    <label class="alert-toggle">
+                        <input type="checkbox" checked>
+                        <span class="alert-slider"></span>
+                    </label>
+                </div>
+                <div class="alert-item">
+                    <div class="alert-info">
+                        <div class="alert-name">SLO Not Met</div>
+                        <div class="alert-condition">Triggered when any SLO metric below 90% target</div>
+                    </div>
+                    <label class="alert-toggle">
+                        <input type="checkbox" checked>
+                        <span class="alert-slider"></span>
+                    </label>
+                </div>
+                <div class="alert-item">
+                    <div class="alert-info">
+                        <div class="alert-name">Abnormal Traffic</div>
+                        <div class="alert-condition">Triggered when invalid click rate >20%</div>
+                    </div>
+                    <label class="alert-toggle">
+                        <input type="checkbox">
+                        <span class="alert-slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize conversion funnel chart
+        function initFunnelChart() {
+            const chart = echarts.init(document.getElementById('funnelChart'));
+            const option = {
+                title: { text: 'Conversion Funnel', textStyle: { fontSize: 14 } },
+                tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
+                series: [{
+                    type: 'funnel',
+                    left: '10%',
+                    width: '80%',
+                    label: { formatter: '{b}\n{c}' },
+                    data: [
+                        {value: 363047, name: 'AOV Display', itemStyle: {color: '#5470c6'}},
+                        {value: 28456, name: 'AODV Arrival', itemStyle: {color: '#91cc75'}},
+                        {value: 23159, name: 'Valid Clicks', itemStyle: {color: '#fac858'}},
+                        {value: 8456, name: 'Form/ATC', itemStyle: {color: '#ee6666'}},
+                        {value: 1823, name: 'Order Conversion', itemStyle: {color: '#73c0de'}}
+                    ]
+                }]
+            };
+            chart.setOption(option);
+            window.addEventListener('resize', () => chart.resize());
+        }
+
+        // Initialize trend chart
+        function initTrendChart() {
+            const chart = echarts.init(document.getElementById('trendChart'));
+            const option = {
+                title: { text: 'Key Metrics Trend', textStyle: { fontSize: 14 } },
+                tooltip: { trigger: 'axis' },
+                legend: { data: ['AODV', 'Conversion Rate', 'ROAS'], top: 25 },
+                grid: { top: 60, bottom: 30 },
+                xAxis: {
+                    type: 'category',
+                    data: ['9-1', '9-2', '9-3', '9-4', '9-5', '9-6', '9-7', '9-8']
+                },
+                yAxis: [
+                    { type: 'value', name: 'AODV' },
+                    { type: 'value', name: 'ROAS', position: 'right' }
+                ],
+                series: [
+                    {
+                        name: 'AODV',
+                        type: 'bar',
+                        data: [3200, 3456, 3678, 3890, 3567, 3789, 3456, 3847],
+                        itemStyle: { color: '#FF6900' }
+                    },
+                    {
+                        name: 'Conversion Rate',
+                        type: 'line',
+                        data: [7.8, 8.1, 8.3, 8.5, 8.2, 8.6, 8.4, 8.7],
+                        itemStyle: { color: '#52C41A' }
+                    },
+                    {
+                        name: 'ROAS',
+                        type: 'line',
+                        yAxisIndex: 1,
+                        data: [3.2, 3.3, 3.5, 3.6, 3.4, 3.7, 3.6, 3.8],
+                        itemStyle: { color: '#1890FF' }
+                    }
+                ]
+            };
+            chart.setOption(option);
+            window.addEventListener('resize', () => chart.resize());
+        }
+
+        // Initialize channel distribution chart
+        function initChannelChart() {
+            const chart = echarts.init(document.getElementById('channelChart'));
+            const option = {
+                title: { text: 'Channel Contribution Distribution', textStyle: { fontSize: 14 } },
+                tooltip: { trigger: 'item' },
+                legend: { orient: 'vertical', right: 10, top: 'center' },
+                series: [{
+                    type: 'pie',
+                    radius: ['40%', '70%'],
+                    center: ['40%', '50%'],
+                    data: [
+                        {value: 260700, name: 'Google AOV'},
+                        {value: 113100, name: 'YouTube'},
+                        {value: 134100, name: 'Meta'},
+                        {value: 31800, name: 'TikTok'},
+                        {value: 7200, name: 'Amazon DSP'}
+                    ]
+                }]
+            };
+            chart.setOption(option);
+            window.addEventListener('resize', () => chart.resize());
+        }
+
+        // Initialize heatmap
+        function initHeatmapChart() {
+            const chart = echarts.init(document.getElementById('heatmapChart'));
+            const hours = ['00', '03', '06', '09', '12', '15', '18', '21'];
+            const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+            const data = [];
+            for (let i = 0; i < days.length; i++) {
+                for (let j = 0; j < hours.length; j++) {
+                    data.push([j, i, Math.floor(Math.random() * 100)]);
+                }
+            }
+            
+            const option = {
+                title: { text: 'Conversion Heatmap', textStyle: { fontSize: 14 } },
+                tooltip: { position: 'top' },
+                grid: { height: '70%', top: '15%' },
+                xAxis: { type: 'category', data: hours },
+                yAxis: { type: 'category', data: days },
+                visualMap: {
+                    min: 0,
+                    max: 100,
+                    calculable: true,
+                    orient: 'horizontal',
+                    left: 'center',
+                    bottom: '5%',
+                    inRange: { color: ['#f0f0f0', '#FF6900'] }
+                },
+                series: [{
+                    type: 'heatmap',
+                    data: data,
+                    label: { show: true }
+                }]
+            };
+            chart.setOption(option);
+            window.addEventListener('resize', () => chart.resize());
+        }
+
+        // Report tab switching
+        document.querySelectorAll('.report-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.report-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initFunnelChart();
+            initTrendChart();
+            initChannelChart();
+            initHeatmapChart();
+        });
+
+        // Export card click
+        document.querySelectorAll('.export-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const name = this.querySelector('.export-name').textContent;
+                alert(`Preparing ${name}...\n\nExport content includes:\n- Executive Summary\n- KPI Data\n- Detailed Reports\n- Chart Analysis\n- Recommendations & Insights`);
+            });
+        });
+    </script>
+</body>
+</html>

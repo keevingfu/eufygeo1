@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEO Content Factory - AI-Driven Content Production System</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        
+        /* Navigation Bar */
+        .navbar {
+            background: white;
+            padding: 15px 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+        
+        /* Intent Pool Management */
+        .intent-pool {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .pool-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .pool-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .intent-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .intent-tag {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            border: 2px solid #667eea30;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .intent-tag:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102,126,234,0.2);
+            border-color: #667eea;
+        }
+        
+        .intent-tag.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+        }
+        
+        .tag-label {
+            font-weight: 500;
+        }
+        
+        .tag-count {
+            padding: 2px 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 12px;
+            font-size: 12px;
+        }
+        
+        /* Template Selector */
+        .template-selector {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .template-card {
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .template-card:hover {
+            border-color: #667eea;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(102,126,234,0.15);
+        }
+        
+        .template-card.selected {
+            background: linear-gradient(135deg, #667eea10 0%, #764ba210 100%);
+            border-color: #667eea;
+        }
+        
+        .template-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        
+        .template-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .template-desc {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        /* Content Editor */
+        .content-editor {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .editor-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .editor-tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .editor-tab {
+            padding: 10px 20px;
+            background: #f5f5f5;
+            border: none;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .editor-tab.active {
+            background: white;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .editor-content {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 400px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        /* Schema Validator */
+        .schema-validator {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .validation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .validation-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .validation-score {
+            font-size: 36px;
+            font-weight: bold;
+            color: #52C41A;
+        }
+        
+        .validation-items {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .validation-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+        
+        .validation-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+        
+        .validation-pass {
+            background: #52C41A20;
+            color: #52C41A;
+        }
+        
+        .validation-fail {
+            background: #F5222D20;
+            color: #F5222D;
+        }
+        
+        .validation-warning {
+            background: #FAAD1420;
+            color: #FAAD14;
+        }
+        
+        .validation-text {
+            flex: 1;
+        }
+        
+        .validation-name {
+            font-weight: 500;
+            margin-bottom: 3px;
+        }
+        
+        .validation-desc {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        /* Video Management */
+        .video-manager {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .video-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+        
+        .video-preview {
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 36px;
+        }
+        
+        .video-info {
+            padding: 15px;
+        }
+        
+        .video-title {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        
+        .video-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        /* Publish Management */
+        .publish-panel {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .publish-header {
+            margin-bottom: 25px;
+        }
+        
+        .publish-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .publish-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .publish-option {
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .publish-option:hover {
+            border-color: #667eea;
+        }
+        
+        .publish-option.selected {
+            background: #667eea10;
+            border-color: #667eea;
+        }
+        
+        .option-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .option-desc {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        /* Button Styles */
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102,126,234,0.3);
+        }
+        
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #333;
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #52C41A 0%, #73D13D 100%);
+            color: white;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+        
+        /* JSON-LD Preview */
+        .jsonld-preview {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+        
+        /* Statistics Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .stat-label {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .stat-change {
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .positive {
+            color: #52C41A;
+        }
+        
+        .negative {
+            color: #F5222D;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-left">
+            <div class="logo">GEO</div>
+            <h2 style="font-size: 20px; color: #333;">Content Factory</h2>
+            <span style="padding: 4px 12px; background: linear-gradient(135deg, #52C41A20, #73D13D20); color: #52C41A; border-radius: 20px; font-size: 12px; font-weight: 500;">
+                AI-Driven
+            </span>
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-secondary">📊 Content Performance</button>
+            <button class="btn btn-primary" onclick="createContent()">+ Create Content</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Statistics Overview -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">📝 Total Content</div>
+                <div class="stat-value">186</div>
+                <div class="stat-change positive">
+                    <span>↑</span> 12 Added This Week
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">🎯 AOV Coverage</div>
+                <div class="stat-value">73%</div>
+                <div class="stat-change positive">
+                    <span>↑</span> 5% vs Last Week
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">⚡ Schema Score</div>
+                <div class="stat-value">92</div>
+                <div class="stat-change positive">
+                    <span>↑</span> 3 Points Improved
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">🎬 Video Assets</div>
+                <div class="stat-value">45</div>
+                <div class="stat-change negative">
+                    <span>↓</span> Need 15 More
+                </div>
+            </div>
+        </div>
+
+        <!-- Intent Pool Management -->
+        <div class="intent-pool">
+            <div class="pool-header">
+                <h3 class="pool-title">
+                    <span>🎯</span> Intent Pool Management
+                </h3>
+                <button class="btn btn-secondary">Import Keywords</button>
+            </div>
+            <div class="intent-tags">
+                <div class="intent-tag active">
+                    <span class="tag-label">Pet Hair Cleaning</span>
+                    <span class="tag-count">28</span>
+                </div>
+                <div class="intent-tag">
+                    <span class="tag-label">Carpet Cleaning</span>
+                    <span class="tag-count">19</span>
+                </div>
+                <div class="intent-tag">
+                    <span class="tag-label">Silent Mode</span>
+                    <span class="tag-count">15</span>
+                </div>
+                <div class="intent-tag">
+                    <span class="tag-label">Maintenance Cost</span>
+                    <span class="tag-count">12</span>
+                </div>
+                <div class="intent-tag">
+                    <span class="tag-label">Stair Cleaning</span>
+                    <span class="tag-count">8</span>
+                </div>
+                <div class="intent-tag">
+                    <span class="tag-label">Allergen Treatment</span>
+                    <span class="tag-count">11</span>
+                </div>
+                <div class="intent-tag">
+                    <span class="tag-label">Smart Obstacle Avoidance</span>
+                    <span class="tag-count">14</span>
+                </div>
+                <div class="intent-tag">
+                    <span class="tag-label">Battery Life</span>
+                    <span class="tag-count">9</span>
+                </div>
+                <div class="intent-tag">
+                    <span style="color: #667eea;">+ Add Intent</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Template Selector -->
+        <div class="template-selector">
+            <h3 style="font-size: 20px; font-weight: bold; margin-bottom: 20px;">Select Content Template</h3>
+            <div class="template-grid">
+                <div class="template-card selected">
+                    <div class="template-icon">❓</div>
+                    <div class="template-name">FAQ Page</div>
+                    <div class="template-desc">5-20 Common Questions</div>
+                </div>
+                <div class="template-card">
+                    <div class="template-icon">📋</div>
+                    <div class="template-name">How-To Guide</div>
+                    <div class="template-desc">Step-by-Step Tutorial</div>
+                </div>
+                <div class="template-card">
+                    <div class="template-icon">⚖️</div>
+                    <div class="template-name">Product Comparison</div>
+                    <div class="template-desc">Competitor Comparison Table</div>
+                </div>
+                <div class="template-card">
+                    <div class="template-icon">✔️</div>
+                    <div class="template-name">Pros & Cons</div>
+                    <div class="template-desc">Pros and Cons List</div>
+                </div>
+                <div class="template-card">
+                    <div class="template-icon">⭐</div>
+                    <div class="template-name">Review Article</div>
+                    <div class="template-desc">In-depth Review</div>
+                </div>
+                <div class="template-card">
+                    <div class="template-icon">🎬</div>
+                    <div class="template-name">Video Script</div>
+                    <div class="template-desc">60-Second Highlights</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Editor -->
+        <div class="content-editor">
+            <div class="editor-header">
+                <h3 class="editor-title">Content Editor</h3>
+                <div class="btn-group">
+                    <button class="btn btn-secondary">AI Generate</button>
+                    <button class="btn btn-secondary">Preview</button>
+                    <button class="btn btn-primary">Save Draft</button>
+                </div>
+            </div>
+            
+            <div class="editor-tabs">
+                <button class="editor-tab active">Basic Info</button>
+                <button class="editor-tab">Content Edit</button>
+                <button class="editor-tab">Schema Markup</button>
+                <button class="editor-tab">SEO Optimization</button>
+            </div>
+            
+            <div class="editor-content">
+                <div class="form-group">
+                    <label class="form-label">Page Title</label>
+                    <input type="text" class="form-input" value="Eufy E28 Robot Vacuum Pet Hair Cleaning FAQ - 2025 Latest Answers">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Meta Description (Within 150 Characters)</label>
+                    <textarea class="form-textarea">Learn how Eufy E28 efficiently cleans pet hair. Includes solutions for pet hair tangling, HEPA filtration system, anti-tangle technology and other FAQ answers.</textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Target Keywords</label>
+                    <input type="text" class="form-input" value="robot vacuum pet hair, E28 pet cleaning, anti-tangle vacuum">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Content Summary (Above-fold Display)</label>
+                    <textarea class="form-textarea" style="min-height: 120px;">Eufy E28 robot vacuum is designed for pet households, equipped with 3000Pa strong suction and anti-tangle brush, effectively cleaning all types of pet hair. HEPA filtration system captures 99.97% allergens, making home environment healthier.</textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Schema Validator -->
+        <div class="schema-validator">
+            <div class="validation-header">
+                <h3 class="validation-title">Schema Structured Data Validation</h3>
+                <div class="validation-score">92/100</div>
+            </div>
+            
+            <div class="validation-items">
+                <div class="validation-item">
+                    <div class="validation-icon validation-pass">✓</div>
+                    <div class="validation-text">
+                        <div class="validation-name">FAQPage Schema</div>
+                        <div class="validation-desc">Correctly implemented, includes 8 Q&A pairs</div>
+                    </div>
+                </div>
+                
+                <div class="validation-item">
+                    <div class="validation-icon validation-pass">✓</div>
+                    <div class="validation-text">
+                        <div class="validation-name">VideoObject Schema</div>
+                        <div class="validation-desc">Above-fold video marked, includes thumbnail and duration</div>
+                    </div>
+                </div>
+                
+                <div class="validation-item">
+                    <div class="validation-icon validation-warning">!</div>
+                    <div class="validation-text">
+                        <div class="validation-name">Product Schema</div>
+                        <div class="validation-desc">Suggest adding product price and availability info</div>
+                    </div>
+                </div>
+                
+                <div class="validation-item">
+                    <div class="validation-icon validation-pass">✓</div>
+                    <div class="validation-text">
+                        <div class="validation-name">BreadcrumbList</div>
+                        <div class="validation-desc">Breadcrumb navigation correctly marked</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="jsonld-preview">
+                <pre><code>{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "Can Eufy E28 handle long-haired pet fur?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. E28 is equipped with anti-tangle brush design, 3000Pa strong suction, specifically optimized for long hair handling..."
+    }
+  }, {
+    "@type": "Question",
+    "name": "How often should I clean the dust box after cleaning pet hair?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Based on the number of pets and shedding level, recommend cleaning every 2-3 days. E28's 600ml large capacity dust box..."
+    }
+  }]
+}</code></pre>
+            </div>
+        </div>
+
+        <!-- Video Management -->
+        <div class="video-manager">
+            <div class="pool-header">
+                <h3 class="pool-title">
+                    <span>🎬</span> Video Asset Management
+                </h3>
+                <button class="btn btn-primary">+ Upload Video</button>
+            </div>
+            
+            <div class="video-grid">
+                <div class="video-card">
+                    <div class="video-preview">▶️</div>
+                    <div class="video-info">
+                        <div class="video-title">E28 Pet Hair Cleaning Demo</div>
+                        <div class="video-meta">
+                            <span>60 sec</span>
+                            <span>1080p</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="video-card">
+                    <div class="video-preview" style="background: linear-gradient(135deg, #52C41A 0%, #73D13D 100%);">▶️</div>
+                    <div class="video-info">
+                        <div class="video-title">Anti-tangle Technology Demo</div>
+                        <div class="video-meta">
+                            <span>45 sec</span>
+                            <span>4K</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="video-card">
+                    <div class="video-preview" style="background: linear-gradient(135deg, #FF6900 0%, #FF8C00 100%);">▶️</div>
+                    <div class="video-info">
+                        <div class="video-title">HEPA Filtration System Explanation</div>
+                        <div class="video-meta">
+                            <span>30 sec</span>
+                            <span>1080p</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="video-card">
+                    <div class="video-preview" style="background: linear-gradient(135deg, #1890FF 0%, #40A9FF 100%);">▶️</div>
+                    <div class="video-info">
+                        <div class="video-title">User Real Reviews Collection</div>
+                        <div class="video-meta">
+                            <span>90 sec</span>
+                            <span>1080p</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Publish Management -->
+        <div class="publish-panel">
+            <div class="publish-header">
+                <h3 class="publish-title">Publish Settings</h3>
+                <p style="color: #666; font-size: 14px;">Select publish method and target environment</p>
+            </div>
+            
+            <div class="publish-options">
+                <div class="publish-option selected">
+                    <div class="option-title">🚀 Publish Now</div>
+                    <div class="option-desc">Publish directly to production, effective immediately</div>
+                </div>
+                <div class="publish-option">
+                    <div class="option-title">🕐 Scheduled Publish</div>
+                    <div class="option-desc">Set specific time for automatic publishing</div>
+                </div>
+                <div class="publish-option">
+                    <div class="option-title">🔄 Canary Release</div>
+                    <div class="option-desc">Release to a subset of users for testing first</div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Target Page URL</label>
+                <input type="text" class="form-input" value="https://eufy.com/faq/e28-pet-hair-cleaning">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Backlink Settings</label>
+                <div style="display: grid; gap: 10px; margin-top: 10px;">
+                    <label style="display: flex; align-items: center; gap: 10px;">
+                        <input type="checkbox" checked> Add to A/O page links (append aov=1 parameter)
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 10px;">
+                        <input type="checkbox" checked> Add to product detail page links
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 10px;">
+                        <input type="checkbox"> Add to related content recommendations
+                    </label>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 10px; margin-top: 30px;">
+                <button class="btn btn-success" style="flex: 1;">Publish Content</button>
+                <button class="btn btn-secondary" style="flex: 1;">Save as Draft</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Create content
+        function createContent() {
+            alert('Opening content creation wizard...\n\nSteps:\n1. Select intent keywords\n2. Choose content template\n3. AI-assisted generation\n4. Schema optimization\n5. Video configuration\n6. Publish settings');
+        }
+
+        // Intent tag switching
+        document.querySelectorAll('.intent-tag').forEach(tag => {
+            tag.addEventListener('click', function() {
+                document.querySelectorAll('.intent-tag').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Template card selection
+        document.querySelectorAll('.template-card').forEach(card => {
+            card.addEventListener('click', function() {
+                document.querySelectorAll('.template-card').forEach(c => c.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+
+        // Editor tab switching
+        document.querySelectorAll('.editor-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.editor-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Publish option switching
+        document.querySelectorAll('.publish-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.publish-option').forEach(o => o.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+    </script>
+</body>
+</html>

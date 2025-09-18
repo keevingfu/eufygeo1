@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Billing Engine - Intelligent Pricing and Settlement Center</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        /* Navigation Bar */
+        .navbar {
+            background: white;
+            padding: 15px 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #52C41A 0%, #73D13D 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+        
+        /* Billing Overview */
+        .billing-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .overview-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .card-title {
+            font-size: 14px;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .card-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .card-change {
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .positive {
+            color: #52C41A;
+        }
+        
+        .negative {
+            color: #F5222D;
+        }
+        
+        /* Pricing Configuration */
+        .pricing-section {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .pricing-card {
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #f0f2f5 100%);
+            border-radius: 12px;
+            border-left: 4px solid #52C41A;
+        }
+        
+        .pricing-type {
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .pricing-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .pricing-table td {
+            padding: 8px 0;
+            font-size: 13px;
+        }
+        
+        .pricing-table td:first-child {
+            color: #666;
+        }
+        
+        .pricing-table td:last-child {
+            text-align: right;
+            font-weight: 600;
+        }
+        
+        .tier-discount {
+            color: #52C41A;
+            font-size: 12px;
+        }
+        
+        /* SLO Management */
+        .slo-section {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .slo-rules {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .slo-rule {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+        
+        .slo-info {
+            flex: 1;
+        }
+        
+        .slo-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .slo-desc {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .slo-status {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .slo-progress {
+            width: 120px;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .slo-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #52C41A 0%, #73D13D 100%);
+            transition: width 0.3s;
+        }
+        
+        .slo-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .slo-achieved {
+            background: #52C41A20;
+            color: #52C41A;
+        }
+        
+        .slo-warning {
+            background: #FAAD1420;
+            color: #FAAD14;
+        }
+        
+        .slo-failed {
+            background: #F5222D20;
+            color: #F5222D;
+        }
+        
+        /* Bill Generation */
+        .invoice-section {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .invoice-list {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .invoice-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .invoice-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .invoice-info {
+            flex: 1;
+        }
+        
+        .invoice-number {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .invoice-details {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .invoice-amount {
+            text-align: right;
+        }
+        
+        .amount-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .amount-status {
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        
+        .status-paid {
+            color: #52C41A;
+        }
+        
+        .status-pending {
+            color: #FAAD14;
+        }
+        
+        .status-overdue {
+            color: #F5222D;
+        }
+        
+        /* Billing Details */
+        .details-section {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .details-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .details-table th {
+            background: #f9f9f9;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #666;
+            font-size: 13px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .details-table td {
+            padding: 15px 12px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+        }
+        
+        .details-table tr:hover {
+            background: #fafafa;
+        }
+        
+        .item-type {
+            display: inline-block;
+            padding: 4px 8px;
+            background: #f5f5f5;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        /* Real-time Billing Monitor */
+        .monitoring-section {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        /* Adjustment Rules */
+        .adjustment-section {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .adjustment-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .adjustment-info {
+            flex: 1;
+        }
+        
+        .adjustment-type {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .adjustment-desc {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .adjustment-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #52C41A;
+        }
+        
+        /* Button Styles */
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #52C41A 0%, #73D13D 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(82,196,26,0.3);
+        }
+        
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #333;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+        
+        /* Status Indicators */
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+        
+        .status-active {
+            background: #52C41A;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(82, 196, 26, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(82, 196, 26, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(82, 196, 26, 0); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-left">
+            <div class="logo">💰</div>
+            <h2 style="font-size: 20px; color: #333;">Billing Engine</h2>
+            <span style="padding: 4px 12px; background: linear-gradient(135deg, #52C41A20, #73D13D20); color: #52C41A; border-radius: 20px; font-size: 12px; font-weight: 500;">
+                A2O-CPC Mode
+            </span>
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-secondary">📊 Financial Reports</button>
+            <button class="btn btn-primary">💳 Generate Bill</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Billing Overview -->
+        <div class="billing-overview">
+            <div class="overview-card">
+                <div class="card-header">
+                    <span class="card-title">
+                        <span>💵</span> This Month's Billing
+                    </span>
+                    <span style="font-size: 12px; color: #999;">September</span>
+                </div>
+                <div class="card-value">$45,678</div>
+                <div class="card-change positive">
+                    <span>↑</span> 23% vs Last Month
+                </div>
+            </div>
+            
+            <div class="overview-card">
+                <div class="card-header">
+                    <span class="card-title">
+                        <span>✅</span> Valid Clicks
+                    </span>
+                    <span style="font-size: 12px; color: #999;">Total</span>
+                </div>
+                <div class="card-value">58,234</div>
+                <div class="card-change positive">
+                    <span>↑</span> 87.3% Valid Rate
+                </div>
+            </div>
+            
+            <div class="overview-card">
+                <div class="card-header">
+                    <span class="card-title">
+                        <span>🎯</span> SLO Achievement Rate
+                    </span>
+                    <span style="font-size: 12px; color: #999;">This Month</span>
+                </div>
+                <div class="card-value">92%</div>
+                <div class="card-change positive">
+                    <span>✓</span> Target Met
+                </div>
+            </div>
+            
+            <div class="overview-card">
+                <div class="card-header">
+                    <span class="card-title">
+                        <span>💰</span> Average CPC
+                    </span>
+                    <span style="font-size: 12px; color: #999;">Weighted</span>
+                </div>
+                <div class="card-value">$0.78</div>
+                <div class="card-change negative">
+                    <span>↓</span> Optimized 5%
+                </div>
+            </div>
+            
+            <div class="overview-card">
+                <div class="card-header">
+                    <span class="card-title">
+                        <span>🎁</span> Discount Adjustments
+                    </span>
+                    <span style="font-size: 12px; color: #999;">Total</span>
+                </div>
+                <div class="card-value">-$3,456</div>
+                <div class="card-change">
+                    <span>↓</span> Discount 7.6%
+                </div>
+            </div>
+        </div>
+
+        <!-- Pricing Configuration -->
+        <div class="pricing-section">
+            <div class="section-header">
+                <h3 class="section-title">💲 A2O-CPC Pricing Configuration</h3>
+                <button class="btn btn-secondary">Modify Price</button>
+            </div>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="pricing-type">
+                        <span>🏪</span> PDP Click Pricing
+                    </div>
+                    <table class="pricing-table">
+                        <tr>
+                            <td>Base Price</td>
+                            <td>$0.90</td>
+                        </tr>
+                        <tr>
+                            <td>5K Tier Price</td>
+                            <td>$0.80 <span class="tier-discount">(-11%)</span></td>
+                        </tr>
+                        <tr>
+                            <td>10K Tier Price</td>
+                            <td>$0.70 <span class="tier-discount">(-22%)</span></td>
+                        </tr>
+                        <tr>
+                            <td>25K Tier Price</td>
+                            <td>$0.60 <span class="tier-discount">(-33%)</span></td>
+                        </tr>
+                        <tr>
+                            <td style="padding-top: 10px; border-top: 1px solid #e0e0e0;">Current Effective Price</td>
+                            <td style="padding-top: 10px; border-top: 1px solid #e0e0e0; color: #52C41A;">$0.70</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="pricing-card" style="border-left-color: #1890FF;">
+                    <div class="pricing-type">
+                        <span>📄</span> A/O Click Pricing
+                    </div>
+                    <table class="pricing-table">
+                        <tr>
+                            <td>Base Price</td>
+                            <td>$0.60</td>
+                        </tr>
+                        <tr>
+                            <td>5K Tier Price</td>
+                            <td>$0.55 <span class="tier-discount">(-8%)</span></td>
+                        </tr>
+                        <tr>
+                            <td>10K Tier Price</td>
+                            <td>$0.50 <span class="tier-discount">(-17%)</span></td>
+                        </tr>
+                        <tr>
+                            <td>25K Tier Price</td>
+                            <td>$0.45 <span class="tier-discount">(-25%)</span></td>
+                        </tr>
+                        <tr>
+                            <td style="padding-top: 10px; border-top: 1px solid #e0e0e0;">Current Effective Price</td>
+                            <td style="padding-top: 10px; border-top: 1px solid #e0e0e0; color: #1890FF;">$0.50</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="pricing-card" style="border-left-color: #FAAD14;">
+                    <div class="pricing-type">
+                        <span>🎬</span> Video View Pricing
+                    </div>
+                    <table class="pricing-table">
+                        <tr>
+                            <td>Watch25</td>
+                            <td>$0.10</td>
+                        </tr>
+                        <tr>
+                            <td>Watch50</td>
+                            <td>$0.20</td>
+                        </tr>
+                        <tr>
+                            <td>Watch75</td>
+                            <td>$0.30</td>
+                        </tr>
+                        <tr>
+                            <td>Watch100</td>
+                            <td>$0.40</td>
+                        </tr>
+                        <tr>
+                            <td style="padding-top: 10px; border-top: 1px solid #e0e0e0;">Monthly Total</td>
+                            <td style="padding-top: 10px; border-top: 1px solid #e0e0e0; color: #FAAD14;">$2,345</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLO Management -->
+        <div class="slo-section">
+            <div class="section-header">
+                <h3 class="section-title">📊 Session-SLO Management</h3>
+                <button class="btn btn-secondary">SLO Settings</button>
+            </div>
+            <div class="slo-rules">
+                <div class="slo-rule">
+                    <div class="slo-info">
+                        <div class="slo-name">AI Source Session Volume Guarantee</div>
+                        <div class="slo-desc">Target: Monthly AI Sessions ≥ 10,000 • Current: 9,234</div>
+                    </div>
+                    <div class="slo-status">
+                        <div class="slo-progress">
+                            <div class="slo-fill" style="width: 92%;"></div>
+                        </div>
+                        <span class="slo-badge slo-achieved">92%</span>
+                    </div>
+                </div>
+                
+                <div class="slo-rule">
+                    <div class="slo-info">
+                        <div class="slo-name">Valid Click Rate Guarantee</div>
+                        <div class="slo-desc">Target: Valid Click Rate ≥ 85% • Current: 87.3%</div>
+                    </div>
+                    <div class="slo-status">
+                        <div class="slo-progress">
+                            <div class="slo-fill" style="width: 100%;"></div>
+                        </div>
+                        <span class="slo-badge slo-achieved">Achieved</span>
+                    </div>
+                </div>
+                
+                <div class="slo-rule">
+                    <div class="slo-info">
+                        <div class="slo-name">Conversion Rate Guarantee</div>
+                        <div class="slo-desc">Target: ALC Conversion Rate ≥ 8% • Current: 7.2%</div>
+                    </div>
+                    <div class="slo-status">
+                        <div class="slo-progress">
+                            <div class="slo-fill" style="width: 90%; background: linear-gradient(90deg, #FAAD14 0%, #FFC53D 100%);"></div>
+                        </div>
+                        <span class="slo-badge slo-warning">90%</span>
+                    </div>
+                </div>
+                
+                <div class="slo-rule">
+                    <div class="slo-info">
+                        <div class="slo-name">Response Time Guarantee</div>
+                        <div class="slo-desc">Target: P95 < 2s • Current: 1.8s</div>
+                    </div>
+                    <div class="slo-status">
+                        <div class="slo-progress">
+                            <div class="slo-fill" style="width: 100%;"></div>
+                        </div>
+                        <span class="slo-badge slo-achieved">Achieved</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Adjustment Rules -->
+        <div class="adjustment-section">
+            <div class="section-header">
+                <h3 class="section-title">🎯 Price Adjustments & Discounts</h3>
+                <button class="btn btn-secondary">Configure Rules</button>
+            </div>
+            <div class="adjustment-item">
+                <div class="adjustment-info">
+                    <div class="adjustment-type">SLO Non-Achievement Discount</div>
+                    <div class="adjustment-desc">10% CPC reduction when AI session volume < 90% target</div>
+                </div>
+                <div class="adjustment-value">-10%</div>
+            </div>
+            <div class="adjustment-item">
+                <div class="adjustment-info">
+                    <div class="adjustment-type">Volume Tier Discount</div>
+                    <div class="adjustment-desc">Auto price reduction to $0.70 when monthly clicks reach 10K</div>
+                </div>
+                <div class="adjustment-value">-$0.20</div>
+            </div>
+            <div class="adjustment-item">
+                <div class="adjustment-info">
+                    <div class="adjustment-type">New Customer Discount</div>
+                    <div class="adjustment-desc">15% off for the first month</div>
+                </div>
+                <div class="adjustment-value">-15%</div>
+            </div>
+            <div class="adjustment-item">
+                <div class="adjustment-info">
+                    <div class="adjustment-type">Quarterly Contract Discount</div>
+                    <div class="adjustment-desc">Additional 5% off for quarterly contracts</div>
+                </div>
+                <div class="adjustment-value">-5%</div>
+            </div>
+        </div>
+
+        <!-- Bill Generation -->
+        <div class="invoice-section">
+            <div class="section-header">
+                <h3 class="section-title">📋 Bill Management</h3>
+                <button class="btn btn-primary">Generate Monthly Bill</button>
+            </div>
+            <div class="invoice-list">
+                <div class="invoice-item">
+                    <div class="invoice-info">
+                        <div class="invoice-number">INV-2025-09-001</div>
+                        <div class="invoice-details">
+                            Billing Period: Sept 1-8, 2025 • Anker Eufy E28 Project • Valid Clicks: 15,234
+                        </div>
+                    </div>
+                    <div class="invoice-amount">
+                        <div class="amount-value">$11,234.56</div>
+                        <div class="amount-status status-paid">✓ Paid</div>
+                    </div>
+                </div>
+                
+                <div class="invoice-item">
+                    <div class="invoice-info">
+                        <div class="invoice-number">INV-2025-08-004</div>
+                        <div class="invoice-details">
+                            Billing Period: Aug 22-31, 2025 • Anker Eufy E28 Project • Valid Clicks: 12,456
+                        </div>
+                    </div>
+                    <div class="invoice-amount">
+                        <div class="amount-value">$9,876.32</div>
+                        <div class="amount-status status-paid">✓ Paid</div>
+                    </div>
+                </div>
+                
+                <div class="invoice-item">
+                    <div class="invoice-info">
+                        <div class="invoice-number">INV-2025-08-003</div>
+                        <div class="invoice-details">
+                            Billing Period: Aug 15-21, 2025 • Anker Eufy E28 Project • Valid Clicks: 10,123
+                        </div>
+                    </div>
+                    <div class="invoice-amount">
+                        <div class="amount-value">$8,234.18</div>
+                        <div class="amount-status status-pending">⏳ Pending</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Billing Details -->
+        <div class="details-section">
+            <div class="section-header">
+                <h3 class="section-title">📝 Billing Details (Today)</h3>
+                <button class="btn btn-secondary">Export Details</button>
+            </div>
+            <table class="details-table">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Type</th>
+                        <th>Page</th>
+                        <th>Source</th>
+                        <th>Validity</th>
+                        <th>Unit Price</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>10:15:32</td>
+                        <td><span class="item-type">PDP</span></td>
+                        <td>/products/e28-pro</td>
+                        <td>Google AOV</td>
+                        <td style="color: #52C41A;">✓ Valid</td>
+                        <td>$0.70</td>
+                        <td style="font-weight: 600;">$0.70</td>
+                    </tr>
+                    <tr>
+                        <td>10:14:28</td>
+                        <td><span class="item-type">A/O</span></td>
+                        <td>/ao/e28-pet</td>
+                        <td>Bing AI</td>
+                        <td style="color: #52C41A;">✓ Valid</td>
+                        <td>$0.50</td>
+                        <td style="font-weight: 600;">$0.50</td>
+                    </tr>
+                    <tr>
+                        <td>10:13:15</td>
+                        <td><span class="item-type">Video</span></td>
+                        <td>Watch50</td>
+                        <td>YouTube</td>
+                        <td style="color: #52C41A;">✓ Valid</td>
+                        <td>$0.20</td>
+                        <td style="font-weight: 600;">$0.20</td>
+                    </tr>
+                    <tr>
+                        <td>10:12:45</td>
+                        <td><span class="item-type">PDP</span></td>
+                        <td>/products/e28</td>
+                        <td>Direct</td>
+                        <td style="color: #F5222D;">✗ Invalid</td>
+                        <td>-</td>
+                        <td style="color: #999;">$0.00</td>
+                    </tr>
+                    <tr>
+                        <td>10:11:23</td>
+                        <td><span class="item-type">A/O</span></td>
+                        <td>/ao/e28-carpet</td>
+                        <td>Google AOV</td>
+                        <td style="color: #52C41A;">✓ Valid</td>
+                        <td>$0.50</td>
+                        <td style="font-weight: 600;">$0.50</td>
+                    </tr>
+                    <tr>
+                        <td>10:10:56</td>
+                        <td><span class="item-type">PDP</span></td>
+                        <td>/products/e28-max</td>
+                        <td>Perplexity</td>
+                        <td style="color: #52C41A;">✓ Valid</td>
+                        <td>$0.70</td>
+                        <td style="font-weight: 600;">$0.70</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Real-time Billing Monitor -->
+        <div class="monitoring-section">
+            <div class="section-header">
+                <h3 class="section-title">📈 Real-time Billing Monitor</h3>
+                <select style="padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px;">
+                    <option>Today</option>
+                    <option>This Week</option>
+                    <option>This Month</option>
+                </select>
+            </div>
+            <div id="billingChart" style="height: 350px;"></div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize billing monitor chart
+        function initBillingChart() {
+            const chart = echarts.init(document.getElementById('billingChart'));
+            const option = {
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'cross'
+                    }
+                },
+                legend: {
+                    data: ['Billing Amount', 'Valid Clicks', 'Average CPC']
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: ['00:00', '03:00', '06:00', '09:00', '12:00', '15:00', '18:00', '21:00']
+                },
+                yAxis: [
+                    {
+                        type: 'value',
+                        name: 'Amount ($)',
+                        position: 'left'
+                    },
+                    {
+                        type: 'value',
+                        name: 'CPC($)',
+                        position: 'right'
+                    }
+                ],
+                series: [
+                    {
+                        name: 'Billing Amount',
+                        type: 'line',
+                        smooth: true,
+                        data: [120, 282, 491, 934, 1290, 1530, 1820, 2100],
+                        itemStyle: { color: '#52C41A' },
+                        areaStyle: {
+                            color: {
+                                type: 'linear',
+                                x: 0, y: 0, x2: 0, y2: 1,
+                                colorStops: [
+                                    { offset: 0, color: 'rgba(82,196,26,0.2)' },
+                                    { offset: 1, color: 'rgba(82,196,26,0)' }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        name: 'Valid Clicks',
+                        type: 'bar',
+                        data: [180, 420, 680, 1234, 1650, 1980, 2340, 2680],
+                        itemStyle: { color: 'rgba(24,144,255,0.5)' }
+                    },
+                    {
+                        name: 'Average CPC',
+                        type: 'line',
+                        yAxisIndex: 1,
+                        smooth: true,
+                        data: [0.67, 0.67, 0.72, 0.76, 0.78, 0.77, 0.78, 0.78],
+                        itemStyle: { color: '#FF6900' }
+                    }
+                ]
+            };
+            chart.setOption(option);
+            window.addEventListener('resize', () => chart.resize());
+        }
+
+        // Simulate real-time data update
+        function updateRealTimeData() {
+            const values = document.querySelectorAll('.card-value');
+            // Real-time data update logic can be added here
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initBillingChart();
+            setInterval(updateRealTimeData, 5000);
+        });
+
+        // Invoice item click
+        document.querySelectorAll('.invoice-item').forEach(item => {
+            item.addEventListener('click', function() {
+                alert('View bill details...\n\nIncludes:\n- Billing details\n- AAT/GA4 reconciliation evidence\n- Exclusion logs\n- SLO calculation\n- Discount details');
+            });
+        });
+    </script>
+</body>
+</html>

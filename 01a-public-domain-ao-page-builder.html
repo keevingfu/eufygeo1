@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A/O Micro Landing Page Builder - Intelligent Conversion Page Design System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+        }
+        
+        /* Top Toolbar */
+        .toolbar {
+            background: white;
+            padding: 10px 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .toolbar-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .logo {
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, #FF6900 0%, #FF8C00 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .device-switcher {
+            display: flex;
+            gap: 5px;
+            background: #f0f0f0;
+            padding: 4px;
+            border-radius: 6px;
+        }
+        
+        .device-btn {
+            padding: 6px 12px;
+            background: transparent;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+        
+        .device-btn.active {
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        /* Main Container */
+        .builder-container {
+            display: flex;
+            height: calc(100vh - 60px);
+        }
+        
+        /* Left Component Panel */
+        .components-panel {
+            width: 280px;
+            background: white;
+            border-right: 1px solid #e0e0e0;
+            overflow-y: auto;
+        }
+        
+        .panel-section {
+            padding: 20px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .section-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+        
+        .component-item {
+            padding: 12px;
+            background: #f8f9fa;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: move;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .component-item:hover {
+            border-color: #FF6900;
+            transform: translateX(3px);
+        }
+        
+        .component-icon {
+            width: 30px;
+            height: 30px;
+            background: white;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+        
+        .component-info {
+            flex: 1;
+        }
+        
+        .component-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .component-desc {
+            font-size: 11px;
+            color: #999;
+        }
+        
+        /* Middle Canvas Area */
+        .canvas-area {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+            overflow: auto;
+        }
+        
+        .canvas-device {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            width: 375px;
+            max-height: 812px;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .canvas-device.desktop {
+            width: 100%;
+            max-width: 1200px;
+            max-height: none;
+        }
+        
+        .canvas-device.tablet {
+            width: 768px;
+        }
+        
+        /* A/O Page Preview */
+        .ao-preview {
+            padding: 0;
+        }
+        
+        .ao-hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px 20px;
+            text-align: center;
+            color: white;
+        }
+        
+        .evidence-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 20px;
+            font-size: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .ao-headline {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .ao-subheadline {
+            font-size: 16px;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+        
+        .ao-video {
+            margin: 20px;
+            background: #000;
+            border-radius: 12px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 48px;
+        }
+        
+        .ao-questionnaire {
+            padding: 30px 20px;
+        }
+        
+        .question-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .question-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .question-options {
+            display: grid;
+            gap: 10px;
+        }
+        
+        .option-button {
+            padding: 15px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .option-button:hover {
+            border-color: #FF6900;
+            transform: translateX(3px);
+        }
+        
+        .option-button.selected {
+            background: #FF690010;
+            border-color: #FF6900;
+        }
+        
+        .ao-recommendations {
+            padding: 30px 20px;
+            background: #f8f9fa;
+        }
+        
+        .rec-title {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #FF6900 0%, #FF8C00 100%);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+        
+        .product-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .product-features {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .product-price {
+            font-size: 24px;
+            font-weight: bold;
+            color: #FF6900;
+            margin-bottom: 15px;
+        }
+        
+        .cta-buttons {
+            display: grid;
+            gap: 10px;
+        }
+        
+        .cta-primary {
+            padding: 15px;
+            background: linear-gradient(135deg, #FF6900 0%, #FF8C00 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .cta-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255,105,0,0.3);
+        }
+        
+        .cta-secondary {
+            padding: 15px;
+            background: white;
+            color: #333;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .trust-signals {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        /* Right Properties Panel */
+        .properties-panel {
+            width: 320px;
+            background: white;
+            border-left: 1px solid #e0e0e0;
+            overflow-y: auto;
+        }
+        
+        .prop-section {
+            padding: 20px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .prop-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .prop-group {
+            margin-bottom: 15px;
+        }
+        
+        .prop-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 6px;
+        }
+        
+        .prop-input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+        
+        .prop-select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 13px;
+            background: white;
+        }
+        
+        .prop-textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 13px;
+            min-height: 60px;
+            resize: vertical;
+        }
+        
+        .color-picker {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .color-option {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        
+        .color-option.selected {
+            border-color: #333;
+        }
+        
+        /* Logic Configuration */
+        .logic-builder {
+            padding: 20px;
+        }
+        
+        .logic-flow {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .flow-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .flow-title {
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .flow-condition {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .condition-if {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .condition-then {
+            font-size: 12px;
+            color: #FF6900;
+            font-weight: 500;
+        }
+        
+        /* Event Tracking */
+        .tracking-events {
+            padding: 20px;
+        }
+        
+        .event-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+        
+        .event-name {
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        .event-status {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #52C41A;
+        }
+        
+        .status-text {
+            font-size: 11px;
+            color: #52C41A;
+        }
+        
+        /* Button Styles */
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #FF6900 0%, #FF8C00 100%);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #333;
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #52C41A 0%, #73D13D 100%);
+            color: white;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 8px;
+        }
+        
+        /* Floating Action Button */
+        .fab {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #FF6900 0%, #FF8C00 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            box-shadow: 0 8px 20px rgba(255,105,0,0.3);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 30px rgba(255,105,0,0.4);
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Toolbar -->
+    <div class="toolbar">
+        <div class="toolbar-left">
+            <div class="logo">A/O</div>
+            <h3 style="font-size: 16px; color: #333;">Micro Landing Page Builder</h3>
+            <div class="device-switcher">
+                <button class="device-btn active" onclick="switchDevice('mobile')">📱 Mobile</button>
+                <button class="device-btn" onclick="switchDevice('tablet')">📋 Tablet</button>
+                <button class="device-btn" onclick="switchDevice('desktop')">💻 Desktop</button>
+            </div>
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-secondary">⚙️ Settings</button>
+            <button class="btn btn-secondary">👁️ Preview</button>
+            <button class="btn btn-primary">💾 Save</button>
+            <button class="btn btn-success">🚀 Publish</button>
+        </div>
+    </div>
+
+    <div class="builder-container">
+        <!-- Left Component Panel -->
+        <div class="components-panel">
+            <div class="panel-section">
+                <div class="section-title">Basic Components</div>
+                <div class="component-item" draggable="true">
+                    <div class="component-icon">🎯</div>
+                    <div class="component-info">
+                        <div class="component-name">Hero Block</div>
+                        <div class="component-desc">Title + Evidence Badge</div>
+                    </div>
+                </div>
+                <div class="component-item" draggable="true">
+                    <div class="component-icon">🎬</div>
+                    <div class="component-info">
+                        <div class="component-name">Video Player</div>
+                        <div class="component-desc">60s Highlight Video</div>
+                    </div>
+                </div>
+                <div class="component-item" draggable="true">
+                    <div class="component-icon">📝</div>
+                    <div class="component-info">
+                        <div class="component-name">Text Paragraph</div>
+                        <div class="component-desc">Description Text</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel-section">
+                <div class="section-title">Interactive Components</div>
+                <div class="component-item" draggable="true">
+                    <div class="component-icon">❓</div>
+                    <div class="component-info">
+                        <div class="component-name">Smart Questionnaire</div>
+                        <div class="component-desc">Personalized Recommendations</div>
+                    </div>
+                </div>
+                <div class="component-item" draggable="true">
+                    <div class="component-icon">🎯</div>
+                    <div class="component-info">
+                        <div class="component-name">Product Recommendations</div>
+                        <div class="component-desc">SKU Display Cards</div>
+                    </div>
+                </div>
+                <div class="component-item" draggable="true">
+                    <div class="component-icon">⏰</div>
+                    <div class="component-info">
+                        <div class="component-name">Countdown Timer</div>
+                        <div class="component-desc">Limited Time Offer</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel-section">
+                <div class="section-title">Conversion Components</div>
+                <div class="component-item" draggable="true">
+                    <div class="component-icon">🛒</div>
+                    <div class="component-info">
+                        <div class="component-name">Dual CTA Buttons</div>
+                        <div class="component-desc">Amazon + Official Site</div>
+                    </div>
+                </div>
+                <div class="component-item" draggable="true">
+                    <div class="component-icon">✅</div>
+                    <div class="component-info">
+                        <div class="component-name">Trust Badges</div>
+                        <div class="component-desc">Guarantee Information</div>
+                    </div>
+                </div>
+                <div class="component-item" draggable="true">
+                    <div class="component-icon">⭐</div>
+                    <div class="component-info">
+                        <div class="component-name">User Reviews</div>
+                        <div class="component-desc">Social Proof</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Middle Canvas Area -->
+        <div class="canvas-area">
+            <div class="canvas-device" id="canvasDevice">
+                <div class="ao-preview">
+                    <!-- Hero Block -->
+                    <div class="ao-hero">
+                        <div class="evidence-badge">🏆 AI Recommended Product</div>
+                        <h1 class="ao-headline">Find the Perfect Robot Vacuum for You</h1>
+                        <p class="ao-subheadline">Based on your home environment, we recommend the most suitable Eufy E28 configuration</p>
+                    </div>
+                    
+                    <!-- Video Block -->
+                    <div class="ao-video">▶️</div>
+                    
+                    <!-- Smart Questionnaire -->
+                    <div class="ao-questionnaire">
+                        <div class="question-card">
+                            <div class="question-title">1. What is your home area?</div>
+                            <div class="question-options">
+                                <div class="option-button">Less than 100m²</div>
+                                <div class="option-button selected">100-150m²</div>
+                                <div class="option-button">More than 150m²</div>
+                            </div>
+                        </div>
+                        
+                        <div class="question-card">
+                            <div class="question-title">2. Main floor material in your home?</div>
+                            <div class="question-options">
+                                <div class="option-button">Hard Floor</div>
+                                <div class="option-button selected">Carpet</div>
+                                <div class="option-button">Mixed</div>
+                            </div>
+                        </div>
+                        
+                        <div class="question-card">
+                            <div class="question-title">3. Do you have pets?</div>
+                            <div class="question-options">
+                                <div class="option-button selected">Yes, I have pets</div>
+                                <div class="option-button">No, I don't have pets</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Product Recommendations -->
+                    <div class="ao-recommendations">
+                        <h2 class="rec-title">Recommended for You</h2>
+                        <div class="product-card">
+                            <div class="product-image">E28 Pro</div>
+                            <h3 class="product-name">Eufy E28 Pro - Pet Edition</h3>
+                            <p class="product-features">
+                                • 3000Pa super suction, specially designed for pet hair<br>
+                                • Anti-tangle brush design<br>
+                                • HEPA filtration system, filters 99.97% of allergens<br>
+                                • Smart carpet detection with automatic boost
+                            </p>
+                            <div class="product-price">$299.99</div>
+                            <div class="cta-buttons">
+                                <button class="cta-primary">Buy on Amazon →</button>
+                                <button class="cta-secondary">Buy on Official Site</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Trust Signals -->
+                    <div class="trust-signals">
+                        <span>✓ 30-Day Returns</span>
+                        <span>✓ Free Shipping</span>
+                        <span>✓ 2-Year Warranty</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Properties Panel -->
+        <div class="properties-panel">
+            <!-- Page Settings -->
+            <div class="prop-section">
+                <div class="prop-title">
+                    <span>⚙️</span> Page Settings
+                </div>
+                <div class="prop-group">
+                    <div class="prop-label">Page Title</div>
+                    <input type="text" class="prop-input" value="Eufy E28 - Personalized Recommendations">
+                </div>
+                <div class="prop-group">
+                    <div class="prop-label">Page URL</div>
+                    <input type="text" class="prop-input" value="/ao/e28-pet-recommendation">
+                </div>
+                <div class="prop-group">
+                    <div class="prop-label">Theme Color</div>
+                    <div class="color-picker">
+                        <div class="color-option selected" style="background: #FF6900;"></div>
+                        <div class="color-option" style="background: #667eea;"></div>
+                        <div class="color-option" style="background: #52C41A;"></div>
+                        <div class="color-option" style="background: #1890FF;"></div>
+                        <div class="color-option" style="background: #F5222D;"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Questionnaire Logic -->
+            <div class="prop-section">
+                <div class="prop-title">
+                    <span>🔄</span> Questionnaire Logic Configuration
+                </div>
+                <div class="logic-flow">
+                    <div class="flow-header">
+                        <span class="flow-title">Rule 1</span>
+                        <button style="background: none; border: none; cursor: pointer;">✏️</button>
+                    </div>
+                    <div class="flow-condition">
+                        <span class="condition-if">If: Pet=Yes & Carpet=Yes</span>
+                    </div>
+                    <div class="flow-condition">
+                        <span class="condition-then">Recommend: E28 Pro Pet Edition</span>
+                    </div>
+                </div>
+                <div class="logic-flow">
+                    <div class="flow-header">
+                        <span class="flow-title">Rule 2</span>
+                        <button style="background: none; border: none; cursor: pointer;">✏️</button>
+                    </div>
+                    <div class="flow-condition">
+                        <span class="condition-if">If: Area > 150m²</span>
+                    </div>
+                    <div class="flow-condition">
+                        <span class="condition-then">Recommend: E28 Max Large Home Edition</span>
+                    </div>
+                </div>
+                <button class="btn btn-secondary" style="width: 100%;">+ Add Rule</button>
+            </div>
+            
+            <!-- Event Tracking -->
+            <div class="prop-section">
+                <div class="prop-title">
+                    <span>📊</span> Event Tracking Configuration
+                </div>
+                <div class="event-item">
+                    <span class="event-name">AODV (Page Arrival)</span>
+                    <div class="event-status">
+                        <span class="status-dot"></span>
+                        <span class="status-text">Enabled</span>
+                    </div>
+                </div>
+                <div class="event-item">
+                    <span class="event-name">FormStart (Start Questionnaire)</span>
+                    <div class="event-status">
+                        <span class="status-dot"></span>
+                        <span class="status-text">Enabled</span>
+                    </div>
+                </div>
+                <div class="event-item">
+                    <span class="event-name">FormComplete (Complete Questionnaire)</span>
+                    <div class="event-status">
+                        <span class="status-dot"></span>
+                        <span class="status-text">Enabled</span>
+                    </div>
+                </div>
+                <div class="event-item">
+                    <span class="event-name">ProductView (View Recommendation)</span>
+                    <div class="event-status">
+                        <span class="status-dot"></span>
+                        <span class="status-text">Enabled</span>
+                    </div>
+                </div>
+                <div class="event-item">
+                    <span class="event-name">CTA_Click (Click Purchase)</span>
+                    <div class="event-status">
+                        <span class="status-dot"></span>
+                        <span class="status-text">Enabled</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- CTA Settings -->
+            <div class="prop-section">
+                <div class="prop-title">
+                    <span>🛒</span> CTA Button Settings
+                </div>
+                <div class="prop-group">
+                    <div class="prop-label">Primary Button Text</div>
+                    <input type="text" class="prop-input" value="Buy on Amazon →">
+                </div>
+                <div class="prop-group">
+                    <div class="prop-label">Primary Button Link</div>
+                    <input type="text" class="prop-input" value="https://amazon.com/eufy-e28?tag=aat_pet">
+                </div>
+                <div class="prop-group">
+                    <div class="prop-label">Secondary Button Text</div>
+                    <input type="text" class="prop-input" value="Buy on Official Site">
+                </div>
+                <div class="prop-group">
+                    <div class="prop-label">Secondary Button Link</div>
+                    <input type="text" class="prop-input" value="https://eufy.com/e28?utm_source=aov">
+                </div>
+                <div class="prop-group">
+                    <div class="prop-label">UTM Parameters</div>
+                    <textarea class="prop-textarea">utm_source=aov
+utm_medium=direct
+utm_campaign=e28_pet
+aov=1</textarea>
+                </div>
+            </div>
+            
+            <!-- A/B Testing -->
+            <div class="prop-section">
+                <div class="prop-title">
+                    <span>🔬</span> A/B Testing
+                </div>
+                <div class="prop-group">
+                    <label style="display: flex; align-items: center; gap: 10px;">
+                        <input type="checkbox" checked>
+                        <span style="font-size: 13px;">Enable A/B Testing</span>
+                    </label>
+                </div>
+                <div class="prop-group">
+                    <div class="prop-label">Test Variants</div>
+                    <select class="prop-select">
+                        <option>A - Original Version</option>
+                        <option>B - Simplified Questionnaire (2 questions)</option>
+                        <option>C - Video First</option>
+                    </select>
+                </div>
+                <div class="prop-group">
+                    <div class="prop-label">Traffic Allocation</div>
+                    <input type="range" style="width: 100%;" value="50">
+                    <div style="display: flex; justify-content: space-between; font-size: 11px; color: #999;">
+                        <span>A: 50%</span>
+                        <span>B: 50%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Action Button -->
+    <div class="fab" onclick="showPreview()">👁️</div>
+
+    <script>
+        // Device switching
+        function switchDevice(device) {
+            const canvas = document.getElementById('canvasDevice');
+            document.querySelectorAll('.device-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            canvas.classList.remove('mobile', 'tablet', 'desktop');
+            canvas.classList.add(device);
+        }
+
+        // Show preview
+        function showPreview() {
+            alert('Preview Function\n\nCurrent Configuration:\n- 3 Questions\n- Pet Edition Recommendation\n- Dual CTA Buttons\n- 5 Event Tracking Points\n\nEstimated Conversion Rate: 8-12%');
+        }
+
+        // Drag and drop functionality
+        document.querySelectorAll('.component-item').forEach(item => {
+            item.addEventListener('dragstart', (e) => {
+                e.dataTransfer.effectAllowed = 'copy';
+                e.target.style.opacity = '0.5';
+            });
+            
+            item.addEventListener('dragend', (e) => {
+                e.target.style.opacity = '';
+            });
+        });
+
+        // Color selection
+        document.querySelectorAll('.color-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.color-option').forEach(o => o.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+
+        // Option click effect
+        document.querySelectorAll('.option-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const parent = this.parentElement;
+                parent.querySelectorAll('.option-button').forEach(b => b.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+    </script>
+</body>
+</html>

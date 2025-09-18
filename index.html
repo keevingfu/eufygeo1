@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generative Engine Optimization Content Marketing</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f5f7fa;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* Top Header */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            height: 60px;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .header-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 20px;
+            font-size: 13px;
+        }
+        
+        .pulse {
+            width: 8px;
+            height: 8px;
+            background: #52C41A;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(82, 196, 26, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(82, 196, 26, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(82, 196, 26, 0); }
+        }
+        
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            height: calc(100vh - 60px);
+            margin-top: 60px;
+        }
+        
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 280px;
+            background: white;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #e8e8e8;
+        }
+        
+        .sidebar-title {
+            font-size: 14px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+        
+        /* Menu Styles */
+        .menu-section {
+            padding: 10px 0;
+        }
+        
+        .menu-item {
+            position: relative;
+        }
+        
+        .menu-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: #333;
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .menu-link:hover {
+            background: #f5f7fa;
+            color: #667eea;
+        }
+        
+        .menu-link.active {
+            background: linear-gradient(to right, #667eea10, transparent);
+            color: #667eea;
+            border-left: 3px solid #667eea;
+        }
+        
+        .menu-icon {
+            width: 20px;
+            margin-right: 12px;
+            text-align: center;
+            font-size: 16px;
+        }
+        
+        .menu-text {
+            flex: 1;
+            font-weight: 500;
+        }
+        
+        .menu-arrow {
+            font-size: 12px;
+            transition: transform 0.2s;
+        }
+        
+        .menu-item.expanded .menu-arrow {
+            transform: rotate(90deg);
+        }
+        
+        /* Submenu Styles */
+        .submenu {
+            display: none;
+            background: #f9f9f9;
+        }
+        
+        .menu-item.expanded .submenu {
+            display: block;
+        }
+        
+        .submenu-link {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px 10px 52px;
+            color: #666;
+            text-decoration: none;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+        
+        .submenu-link:hover {
+            background: #f0f2f5;
+            color: #667eea;
+        }
+        
+        .submenu-link.active {
+            color: #667eea;
+            font-weight: 500;
+            background: #f0f2f5;
+        }
+        
+        /* Content Area */
+        .content {
+            flex: 1;
+            background: #f5f7fa;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .content-header {
+            background: white;
+            padding: 20px 30px;
+            border-bottom: 1px solid #e8e8e8;
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        
+        .content-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        #contentFrame {
+            flex: 1;
+            overflow: hidden;
+            background: white;
+        }
+        
+        .content-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: white;
+        }
+        
+        /* Welcome Screen */
+        .welcome-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+            padding: 40px;
+            background: white;
+            overflow-y: auto;
+        }
+        
+        .welcome-icon {
+            font-size: 80px;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .welcome-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .welcome-desc {
+            font-size: 16px;
+            color: #666;
+            max-width: 600px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-top: 40px;
+            width: 100%;
+            max-width: 800px;
+        }
+        
+        .stat-box {
+            background: #f5f7fa;
+            padding: 20px;
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+        
+        .stat-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 13px;
+            color: #999;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: -280px;
+                top: 60px;
+                height: calc(100vh - 60px);
+                transition: left 0.3s;
+                z-index: 999;
+            }
+            
+            .sidebar.mobile-open {
+                left: 0;
+            }
+            
+            .content {
+                margin-left: 0;
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
+        }
+        
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰</button>
+            <div class="logo">EGG</div>
+            <h1 class="header-title">Generative Engine Optimization Content Marketing</h1>
+        </div>
+        <div class="header-right">
+            <div class="status-badge">
+                <span class="pulse"></span>
+                <span>All Systems Operational</span>
+            </div>
+            <div style="font-size: 13px; opacity: 0.9;">
+                <span id="currentTime"></span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">Navigation Menu</div>
+            </div>
+            
+            <div class="menu-section">
+                <!-- Public Domain (种草) -->
+                <div class="menu-item">
+                    <a href="#" class="menu-link" onclick="toggleSubmenu(this)">
+                        <span class="menu-icon">🌱</span>
+                        <span class="menu-text">Public Domain Content</span>
+                        <span class="menu-arrow">▶</span>
+                    </a>
+                    <div class="submenu">
+                        <a href="#" class="submenu-link" onclick="loadPage('01a-geo-search-intent-analytics.html', 'GEO Search Intent Analytics')">
+                            GEO Search Intent Analytics
+                        </a>
+                        <a href="#" class="submenu-link" onclick="loadPage('01a-public-domain-ao-page-builder.html', 'A/O Page Builder')">
+                            A/O Page Builder
+                        </a>
+                        <a href="#" class="submenu-link" onclick="loadPage('01b-public-domain-geo-content-factory.html', 'GEO Content Factory')">
+                            GEO Content Factory
+                        </a>
+                        <a href="#" class="submenu-link" onclick="loadPage('01c-public-domain-geo-social&pr.html', 'GEO Social & PR')">
+                            GEO Social & PR
+                        </a>
+                        <a href="#" class="submenu-link" onclick="loadPage('01d-public-domain-geo-pm.html', 'GEO Product Management')">
+                            GEO Product Management
+                        </a>
+                        <a href="#" class="submenu-link" onclick="loadPage('01e-private-domain-geo-amazon.html', 'Private Domain - Amazon')">
+                            Private Domain - Amazon
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Traffic Acquisition (流量获取) -->
+                <div class="menu-item">
+                    <a href="#" class="menu-link" onclick="toggleSubmenu(this)">
+                        <span class="menu-icon">🚀</span>
+                        <span class="menu-text">Traffic Acquisition</span>
+                        <span class="menu-arrow">▶</span>
+                    </a>
+                    <div class="submenu">
+                        <a href="#" class="submenu-link" onclick="loadPage('02a-traffic-acquisition-gem-campaign.html', 'GEM Campaign')">
+                            GEM Campaign
+                        </a>
+                        <a href="#" class="submenu-link" onclick="loadPage('02b-traffic-acquisition-ci-intelligence-center.html', 'CI Intelligence Center')">
+                            CI Intelligence Center
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Conversion & Operation (转化运营) -->
+                <div class="menu-item">
+                    <a href="#" class="menu-link" onclick="toggleSubmenu(this)">
+                        <span class="menu-icon">💎</span>
+                        <span class="menu-text">Conversion & Operation</span>
+                        <span class="menu-arrow">▶</span>
+                    </a>
+                    <div class="submenu">
+                        <a href="#" class="submenu-link" onclick="loadPage('03a-conversion-operation-decision-sandbox.html', 'Decision Sandbox')">
+                            Decision Sandbox
+                        </a>
+                        <a href="#" class="submenu-link" onclick="loadPage('03b-conversion-operation-dam-asset-management.html', 'DAM Asset Management')">
+                            DAM Asset Management
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Data Analysis & Settlement (数据分析与结算) -->
+                <div class="menu-item">
+                    <a href="#" class="menu-link" onclick="toggleSubmenu(this)">
+                        <span class="menu-icon">📊</span>
+                        <span class="menu-text">Data Analysis & Settlement</span>
+                        <span class="menu-arrow">▶</span>
+                    </a>
+                    <div class="submenu">
+                        <a href="#" class="submenu-link" onclick="loadPage('04a-data-analysis-tracking-attribution.html', 'Tracking & Attribution')">
+                            Tracking & Attribution
+                        </a>
+                        <a href="#" class="submenu-link" onclick="loadPage('04b-data-analysis-report-center.html', 'Report Center')">
+                            Report Center
+                        </a>
+                        <a href="#" class="submenu-link" onclick="loadPage('04c-data-analysis-billing-engine.html', 'Billing Engine')">
+                            Billing Engine
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Resource Management (资源管理) -->
+                <div class="menu-item">
+                    <a href="#" class="menu-link" onclick="toggleSubmenu(this)">
+                        <span class="menu-icon">📦</span>
+                        <span class="menu-text">Resource Management</span>
+                        <span class="menu-arrow">▶</span>
+                    </a>
+                    <div class="submenu">
+                        <a href="#" class="submenu-link" onclick="loadPage('05a-geo-dam-eufy.html', 'GEO DAM - Eufy')">
+                            GEO DAM - Eufy
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Content Area -->
+        <main class="content">
+            <div class="content-header">
+                <h2 class="content-title" id="pageTitle">Welcome</h2>
+            </div>
+            <div id="contentFrame">
+                <!-- Welcome Screen -->
+                <div class="welcome-screen">
+                    <div class="welcome-icon">🚀</div>
+                    <h2 class="welcome-title">Welcome to EufyGeoGem</h2>
+                    <p class="welcome-desc">
+                        AI-Driven Marketing Management Platform for Campaign Orchestration, Content Production, and Performance Analytics. 
+                        Select a module from the left menu to get started.
+                    </p>
+                    
+                    <div class="quick-stats">
+                        <div class="stat-box">
+                            <div class="stat-value">9</div>
+                            <div class="stat-label">Active Modules</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value">186</div>
+                            <div class="stat-label">Active Campaigns</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value">$2.4M</div>
+                            <div class="stat-label">Monthly GMV</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value">4.2x</div>
+                            <div class="stat-label">Average ROAS</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Update current time
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleString('en-US', { 
+                month: 'short', 
+                day: 'numeric', 
+                year: 'numeric',
+                hour: '2-digit', 
+                minute: '2-digit'
+            });
+            document.getElementById('currentTime').textContent = timeString;
+        }
+
+        updateTime();
+        setInterval(updateTime, 60000);
+
+        // Toggle submenu
+        function toggleSubmenu(menuLink) {
+            const menuItem = menuLink.parentElement;
+            const wasExpanded = menuItem.classList.contains('expanded');
+            
+            // Close all other submenus
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('expanded');
+            });
+            
+            // Toggle current submenu
+            if (!wasExpanded) {
+                menuItem.classList.add('expanded');
+            }
+        }
+
+        // Load page in iframe
+        function loadPage(url, title) {
+            // Update page title
+            document.getElementById('pageTitle').textContent = title;
+            
+            // Update active menu state
+            document.querySelectorAll('.submenu-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Find the clicked element and add active class
+            if (event && event.target) {
+                event.target.classList.add('active');
+            }
+            
+            // Load content in iframe
+            const contentFrame = document.getElementById('contentFrame');
+            contentFrame.innerHTML = `<iframe src="${url}" class="content-frame" onload="console.log('Page loaded: ${url}')"></iframe>`;
+            
+            // Close mobile menu if open
+            if (window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.remove('mobile-open');
+            }
+        }
+
+        // Toggle mobile menu
+        function toggleMobileMenu() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('mobile-open');
+        }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.querySelector('.mobile-menu-toggle');
+            
+            if (window.innerWidth <= 768 && 
+                !sidebar.contains(event.target) && 
+                !menuToggle.contains(event.target) &&
+                sidebar.classList.contains('mobile-open')) {
+                sidebar.classList.remove('mobile-open');
+            }
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                document.getElementById('sidebar').classList.remove('mobile-open');
+            }
+        });
+
+        // Initialize - expand first menu by default and load platform introduction
+        window.addEventListener('DOMContentLoaded', function() {
+            const firstMenuItem = document.querySelector('.menu-item');
+            if (firstMenuItem) {
+                firstMenuItem.classList.add('expanded');
+            }
+            
+            // Load platform introduction page by default
+            loadPage('00-platform-intr.html', 'Platform Introduction');
+        });
+    </script>
+</body>
+</html>

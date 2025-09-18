@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decision Sandbox - AI Intelligent Optimization Center</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        /* Navigation Bar */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+        
+        /* AI Recommendations Panel */
+        .ai-recommendations {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .ai-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .ai-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .ai-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            background: linear-gradient(135deg, #52C41A 0%, #73D13D 100%);
+            color: white;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .recommendation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+        
+        .recommendation-card {
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #f0f2f5 100%);
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .recommendation-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(102,126,234,0.2);
+        }
+        
+        .rec-priority {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+        
+        .priority-critical {
+            background: #F5222D20;
+            color: #F5222D;
+        }
+        
+        .priority-high {
+            background: #FA8C1620;
+            color: #FA8C16;
+        }
+        
+        .priority-medium {
+            background: #1890FF20;
+            color: #1890FF;
+        }
+        
+        .rec-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .rec-desc {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+        
+        .rec-impact {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 15px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .impact-item {
+            text-align: center;
+        }
+        
+        .impact-label {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 4px;
+        }
+        
+        .impact-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        /* What-if Simulator */
+        .whatif-simulator {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .simulator-header {
+            margin-bottom: 25px;
+        }
+        
+        .simulator-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .simulator-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .control-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .control-label {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .control-slider {
+            width: 100%;
+            -webkit-appearance: none;
+            height: 6px;
+            border-radius: 3px;
+            background: #e0e0e0;
+            outline: none;
+        }
+        
+        .control-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+        }
+        
+        .control-value {
+            text-align: center;
+            margin-top: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .simulation-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 12px;
+        }
+        
+        .result-item {
+            text-align: center;
+        }
+        
+        .result-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        .result-value {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .result-change {
+            font-size: 12px;
+            margin-top: 4px;
+        }
+        
+        .positive {
+            color: #52C41A;
+        }
+        
+        .negative {
+            color: #F5222D;
+        }
+        
+        /* Optimization Matrix */
+        .optimization-matrix {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .matrix-header {
+            margin-bottom: 25px;
+        }
+        
+        .matrix-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        /* Budget Allocation Recommendations */
+        .budget-allocation {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .allocation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .allocation-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .total-budget {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .allocation-bars {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .allocation-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .allocation-label {
+            width: 120px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .allocation-bar {
+            flex: 1;
+            height: 30px;
+            background: #f0f0f0;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .allocation-fill {
+            height: 100%;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: 500;
+            transition: width 0.5s;
+        }
+        
+        .allocation-amount {
+            width: 80px;
+            text-align: right;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        /* Action Buttons */
+        .action-panel {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102,126,234,0.3);
+        }
+        
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #333;
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #52C41A 0%, #73D13D 100%);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <div class="logo">🎯</div>
+            <h2 style="font-size: 20px; color: #333;">Decision Sandbox</h2>
+        </div>
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <span style="color: #666; font-size: 14px;">AI Analysis: 2 minutes ago</span>
+            <button class="btn btn-primary">Refresh Suggestions</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- AI Optimization Suggestions -->
+        <div class="ai-recommendations">
+            <div class="ai-header">
+                <h2 class="ai-title">
+                    <span>🤖</span> AI Optimization Suggestions
+                    <span class="ai-badge">Based on Last 7 Days Data</span>
+                </h2>
+                <select style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px;">
+                    <option>All Suggestions</option>
+                    <option>Content Optimization</option>
+                    <option>Delivery Optimization</option>
+                    <option>Budget Adjustment</option>
+                </select>
+            </div>
+            
+            <div class="recommendation-grid">
+                <div class="recommendation-card">
+                    <span class="rec-priority priority-critical">Urgent</span>
+                    <h3 class="rec-title">🔴 Creative Fatigue Warning</h3>
+                    <p class="rec-desc">
+                        The "Pet Cleaning Comparison Image" creative on Meta platform has shown CTR decline for 5 consecutive days, with a cumulative drop of 35%. Recommend immediate creative replacement.
+                    </p>
+                    <div class="rec-impact">
+                        <div class="impact-item">
+                            <div class="impact-label">Impact Coverage</div>
+                            <div class="impact-value">45.8K</div>
+                        </div>
+                        <div class="impact-item">
+                            <div class="impact-label">Expected Improvement</div>
+                            <div class="impact-value">+2.3%</div>
+                        </div>
+                        <div class="impact-item">
+                            <div class="impact-label">Implementation Difficulty</div>
+                            <div class="impact-value">Low</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="recommendation-card">
+                    <span class="rec-priority priority-high">High</span>
+                    <h3 class="rec-title">📈 Budget Reallocation Opportunity</h3>
+                    <p class="rec-desc">
+                        Google channel ROAS reached 4.2x, recommend transferring 30% budget from underperforming TikTok (ROAS 1.8x)
+                    </p>
+                    <div class="rec-impact">
+                        <div class="impact-item">
+                            <div class="impact-label">Budget Adjustment</div>
+                            <div class="impact-value">$2.5K</div>
+                        </div>
+                        <div class="impact-item">
+                            <div class="impact-label">Expected Revenue</div>
+                            <div class="impact-value">+$890</div>
+                        </div>
+                        <div class="impact-item">
+                            <div class="impact-label">Risk Level</div>
+                            <div class="impact-value">Low</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="recommendation-card">
+                    <span class="rec-priority priority-high">High</span>
+                    <h3 class="rec-title">🎯 Content Gap Discovery</h3>
+                    <p class="rec-desc">
+                        "Robot vacuum noise comparison" keyword search volume grew 120%, but we lack related content. Recommend priority creation.
+                    </p>
+                    <div class="rec-impact">
+                        <div class="impact-item">
+                            <div class="impact-label">Monthly Search Volume</div>
+                            <div class="impact-value">8.5K</div>
+                        </div>
+                        <div class="impact-item">
+                            <div class="impact-label">Competition</div>
+                            <div class="impact-value">Low</div>
+                        </div>
+                        <div class="impact-item">
+                            <div class="impact-label">Expected Ranking</div>
+                            <div class="impact-value">Top3</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="recommendation-card">
+                    <span class="rec-priority priority-medium">Medium</span>
+                    <h3 class="rec-title">⏰ Time Period Optimization</h3>
+                    <p class="rec-desc">
+                        8-10 PM has the highest conversion rate (12.3%), recommend increasing bid by 20% during this period and reducing early morning delivery
+                    </p>
+                    <div class="rec-impact">
+                        <div class="impact-item">
+                            <div class="impact-label">Affected Orders</div>
+                            <div class="impact-value">+45</div>
+                        </div>
+                        <div class="impact-item">
+                            <div class="impact-label">Cost Savings</div>
+                            <div class="impact-value">$320</div>
+                        </div>
+                        <div class="impact-item">
+                            <div class="impact-label">Execution Time</div>
+                            <div class="impact-value">Immediate</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="recommendation-card">
+                    <span class="rec-priority priority-medium">Medium</span>
+                    <h3 class="rec-title">🔄 Audience Expansion Opportunity</h3>
+                    <p class="rec-desc">
+                        Lookalike audience (Pet owners 1%) performing excellently, recommend expanding to 2%, expected to reach 25K new users
+                    </p>
+                    <div class="rec-impact">
+                        <div class="impact-item">
+                            <div class="impact-label">New Coverage</div>
+                            <div class="impact-value">25K</div>
+                        </div>
+                        <div class="impact-item">
+                            <div class="impact-label">Expected CPA</div>
+                            <div class="impact-value">$12.5</div>
+                        </div>
+                        <div class="impact-item">
+                            <div class="impact-label">Test Budget</div>
+                            <div class="impact-value">$500</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="recommendation-card">
+                    <span class="rec-priority priority-medium">Medium</span>
+                    <h3 class="rec-title">📱 Mobile Optimization</h3>
+                    <p class="rec-desc">
+                        Mobile conversion rate is only 60% of desktop, A/O page load time needs optimization, video compression can improve speed by 20%
+                    </p>
+                    <div class="rec-impact">
+                        <div class="impact-item">
+                            <div class="impact-label">Affected Users</div>
+                            <div class="impact-value">68%</div>
+                        </div>
+                        <div class="impact-item">
+                            <div class="impact-label">Conversion Improvement</div>
+                            <div class="impact-value">+1.2%</div>
+                        </div>
+                        <div class="impact-item">
+                            <div class="impact-label">Technical Difficulty</div>
+                            <div class="impact-value">Medium</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- What-if Simulator -->
+        <div class="whatif-simulator">
+            <div class="simulator-header">
+                <h3 class="simulator-title">📊 What-if Scenario Simulator</h3>
+                <p style="color: #666; font-size: 14px;">Adjust parameters to see expected results changes</p>
+            </div>
+            
+            <div class="simulator-controls">
+                <div class="control-group">
+                    <label class="control-label">Total Budget ($/day)</label>
+                    <input type="range" class="control-slider" id="budgetSlider" min="500" max="2000" value="1000">
+                    <div class="control-value" id="budgetValue">$1,000</div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Content Count (articles)</label>
+                    <input type="range" class="control-slider" id="contentSlider" min="10" max="50" value="25">
+                    <div class="control-value" id="contentValue">25</div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Creative Rotation Frequency (days)</label>
+                    <input type="range" class="control-slider" id="creativeSlider" min="3" max="14" value="7">
+                    <div class="control-value" id="creativeValue">7</div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Bidding Strategy Aggressiveness</label>
+                    <input type="range" class="control-slider" id="bidSlider" min="0" max="100" value="50">
+                    <div class="control-value" id="bidValue">50%</div>
+                </div>
+            </div>
+            
+            <div class="simulation-results">
+                <div class="result-item">
+                    <div class="result-label">Expected AODV</div>
+                    <div class="result-value" id="aodvResult">6,234</div>
+                    <div class="result-change positive">+18%</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label">Expected Conversions</div>
+                    <div class="result-value" id="conversionResult">523</div>
+                    <div class="result-change positive">+23%</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label">Expected ROAS</div>
+                    <div class="result-value" id="roasResult">3.8x</div>
+                    <div class="result-change positive">+0.6</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label">Expected CPA</div>
+                    <div class="result-value" id="cpaResult">$18.5</div>
+                    <div class="result-change negative">-$2.3</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label">Market Share</div>
+                    <div class="result-value" id="shareResult">32%</div>
+                    <div class="result-change positive">+5%</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label">ROI</div>
+                    <div class="result-value" id="roiResult">285%</div>
+                    <div class="result-change positive">+45%</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Budget Allocation Recommendations -->
+        <div class="budget-allocation">
+            <div class="allocation-header">
+                <h3 class="allocation-title">💰 Smart Budget Allocation Recommendations</h3>
+                <div class="total-budget">Total Budget: $30,000/month</div>
+            </div>
+            
+            <div class="allocation-bars">
+                <div class="allocation-item">
+                    <div class="allocation-label">Google Ads</div>
+                    <div class="allocation-bar">
+                        <div class="allocation-fill" style="width: 35%; background: linear-gradient(90deg, #4285F4, #669DF7);">
+                            35%
+                        </div>
+                    </div>
+                    <div class="allocation-amount">$10,500</div>
+                </div>
+                
+                <div class="allocation-item">
+                    <div class="allocation-label">YouTube</div>
+                    <div class="allocation-bar">
+                        <div class="allocation-fill" style="width: 25%; background: linear-gradient(90deg, #FF0000, #FF4444);">
+                            25%
+                        </div>
+                    </div>
+                    <div class="allocation-amount">$7,500</div>
+                </div>
+                
+                <div class="allocation-item">
+                    <div class="allocation-label">Meta</div>
+                    <div class="allocation-bar">
+                        <div class="allocation-fill" style="width: 20%; background: linear-gradient(90deg, #1877F2, #42B3F4);">
+                            20%
+                        </div>
+                    </div>
+                    <div class="allocation-amount">$6,000</div>
+                </div>
+                
+                <div class="allocation-item">
+                    <div class="allocation-label">Amazon DSP</div>
+                    <div class="allocation-bar">
+                        <div class="allocation-fill" style="width: 15%; background: linear-gradient(90deg, #FF9900, #FFB84D);">
+                            15%
+                        </div>
+                    </div>
+                    <div class="allocation-amount">$4,500</div>
+                </div>
+                
+                <div class="allocation-item">
+                    <div class="allocation-label">TikTok</div>
+                    <div class="allocation-bar">
+                        <div class="allocation-fill" style="width: 5%; background: linear-gradient(90deg, #000000, #333333);">
+                            5%
+                        </div>
+                    </div>
+                    <div class="allocation-amount">$1,500</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Optimization Matrix Chart -->
+        <div class="optimization-matrix">
+            <div class="matrix-header">
+                <h3 class="matrix-title">📈 Optimization Priority Matrix</h3>
+                <p style="color: #666; font-size: 14px;">Distribution of optimization suggestions based on impact and implementation difficulty</p>
+            </div>
+            <div id="matrixChart" style="height: 400px;"></div>
+        </div>
+
+        <!-- Action Panel -->
+        <div class="action-panel">
+            <h3 style="font-size: 20px; margin-bottom: 10px;">Ready to Execute Optimization?</h3>
+            <p style="color: #666; margin-bottom: 20px;">The system will automatically apply selected optimization suggestions</p>
+            <div class="action-buttons">
+                <button class="btn btn-secondary">Save Plan</button>
+                <button class="btn btn-primary">Preview Changes</button>
+                <button class="btn btn-success">Execute Now</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize optimization matrix chart
+        function initMatrixChart() {
+            const chart = echarts.init(document.getElementById('matrixChart'));
+            
+            const data = [
+                {value: [3, 4, 200], name: 'Creative Update'},
+                {value: [4, 3, 150], name: 'Budget Reallocation'},
+                {value: [2, 4, 100], name: 'Content Creation'},
+                {value: [4, 2, 180], name: 'Time Period Optimization'},
+                {value: [3, 3, 120], name: 'Audience Expansion'},
+                {value: [2, 2, 80], name: 'Mobile Optimization'},
+                {value: [4, 4, 250], name: 'Schema Optimization'},
+                {value: [1, 3, 60], name: 'Bid Adjustment'},
+                {value: [3, 1, 90], name: 'Landing Page Optimization'},
+                {value: [2, 3, 70], name: 'Keyword Expansion'}
+            ];
+            
+            const option = {
+                title: {
+                    text: '',
+                    left: 'center'
+                },
+                grid: {
+                    left: '10%',
+                    right: '10%',
+                    bottom: '10%',
+                    top: '10%',
+                    containLabel: true
+                },
+                tooltip: {
+                    formatter: function(params) {
+                        return params.data.name + '<br>Impact: ' + params.data.value[0] + 
+                               '<br>Ease of Implementation: ' + params.data.value[1] + 
+                               '<br>Expected Revenue: $' + params.data.value[2] * 10;
+                    }
+                },
+                xAxis: {
+                    type: 'value',
+                    name: 'Impact',
+                    nameLocation: 'middle',
+                    nameGap: 30,
+                    min: 0,
+                    max: 5,
+                    splitLine: {
+                        lineStyle: {
+                            type: 'dashed'
+                        }
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    name: 'Ease of Implementation',
+                    nameLocation: 'middle',
+                    nameGap: 30,
+                    min: 0,
+                    max: 5,
+                    splitLine: {
+                        lineStyle: {
+                            type: 'dashed'
+                        }
+                    }
+                },
+                series: [{
+                    type: 'scatter',
+                    symbolSize: function(data) {
+                        return Math.sqrt(data[2]) * 5;
+                    },
+                    label: {
+                        show: true,
+                        formatter: function(param) {
+                            return param.data.name;
+                        },
+                        position: 'top'
+                    },
+                    itemStyle: {
+                        color: function(params) {
+                            const value = params.data.value;
+                            if (value[0] >= 3 && value[1] >= 3) {
+                                return '#52C41A'; // High impact, easy to implement
+                            } else if (value[0] >= 3) {
+                                return '#1890FF'; // High impact
+                            } else if (value[1] >= 3) {
+                                return '#FAAD14'; // Easy to implement
+                            } else {
+                                return '#999'; // Low priority
+                            }
+                        },
+                        opacity: 0.8
+                    },
+                    data: data
+                }]
+            };
+            
+            chart.setOption(option);
+            window.addEventListener('resize', () => chart.resize());
+        }
+
+        // Slider interaction
+        document.getElementById('budgetSlider').addEventListener('input', function(e) {
+            document.getElementById('budgetValue').textContent = '$' + parseInt(e.target.value).toLocaleString();
+            updateSimulation();
+        });
+
+        document.getElementById('contentSlider').addEventListener('input', function(e) {
+            document.getElementById('contentValue').textContent = e.target.value;
+            updateSimulation();
+        });
+
+        document.getElementById('creativeSlider').addEventListener('input', function(e) {
+            document.getElementById('creativeValue').textContent = e.target.value;
+            updateSimulation();
+        });
+
+        document.getElementById('bidSlider').addEventListener('input', function(e) {
+            document.getElementById('bidValue').textContent = e.target.value + '%';
+            updateSimulation();
+        });
+
+        // Update simulation results
+        function updateSimulation() {
+            const budget = parseInt(document.getElementById('budgetSlider').value);
+            const content = parseInt(document.getElementById('contentSlider').value);
+            const creative = parseInt(document.getElementById('creativeSlider').value);
+            const bid = parseInt(document.getElementById('bidSlider').value);
+            
+            // Simulation calculation
+            const aodv = Math.floor(budget * 6 + content * 100 + (14 - creative) * 50);
+            const conversion = Math.floor(aodv * 0.085 * (1 + bid/200));
+            const roas = (3.0 + budget/1000 + content/50).toFixed(1);
+            const cpa = (20 - budget/200 + creative/5).toFixed(1);
+            const share = Math.min(45, 20 + budget/50 + content/2).toFixed(0);
+            const roi = Math.floor(200 + budget/10 + content * 2);
+            
+            document.getElementById('aodvResult').textContent = aodv.toLocaleString();
+            document.getElementById('conversionResult').textContent = conversion;
+            document.getElementById('roasResult').textContent = roas + 'x';
+            document.getElementById('cpaResult').textContent = '$' + cpa;
+            document.getElementById('shareResult').textContent = share + '%';
+            document.getElementById('roiResult').textContent = roi + '%';
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initMatrixChart();
+        });
+    </script>
+</body>
+</html>
