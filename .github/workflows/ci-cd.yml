@@ -1,0 +1,84 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  update-documentation:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pandas numpy matplotlib scikit-learn
+    
+    - name: Update CLAUDE.md
+      run: |
+        python scripts/update_claude_md.py
+    
+    - name: Check for changes
+      id: git-check
+      run: |
+        git diff --exit-code || echo "changes=true" >> $GITHUB_OUTPUT
+    
+    - name: Commit and push if changed
+      if: steps.git-check.outputs.changes == 'true'
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add .
+        git commit -m "Auto-update: Documentation and project files"
+        git push
+
+  code-quality:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Validate HTML files
+      run: |
+        for file in *.html; do
+          echo "Checking $file..."
+          # Basic HTML validation
+          if ! grep -q "<!DOCTYPE html>" "$file"; then
+            echo "Warning: $file missing DOCTYPE declaration"
+          fi
+        done
+    
+    - name: Check for console.log statements
+      run: |
+        if grep -r "console\.log" *.html; then
+          echo "Warning: console.log statements found in production code"
+        fi
+
+  deploy:
+    needs: [update-documentation, code-quality]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Deploy notification
+      run: |
+        echo "Deployment ready for production"
+        echo "All CI/CD checks passed successfully"
