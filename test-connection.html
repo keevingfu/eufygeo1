@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>连接测试</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #1a1f3a;
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        .test-section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 600px;
+            margin: 0 auto 20px;
+        }
+        .test-result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .success {
+            background: rgba(82, 196, 26, 0.2);
+            border: 1px solid rgba(82, 196, 26, 0.4);
+            color: #52C41A;
+        }
+        .error {
+            background: rgba(245, 34, 45, 0.2);
+            border: 1px solid rgba(245, 34, 45, 0.4);
+            color: #F5222D;
+        }
+        button {
+            background: #FF6900;
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        button:hover {
+            background: #FF8C00;
+        }
+    </style>
+</head>
+<body>
+    <h1>连接测试页面</h1>
+    
+    <div class="test-section">
+        <h2>环境信息</h2>
+        <div id="envInfo"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>路径测试</h2>
+        <button onclick="testModulePath()">测试模块路径</button>
+        <div id="pathResults"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>fetch 测试</h2>
+        <button onclick="testFetch()">测试 fetch 请求</button>
+        <div id="fetchResults"></div>
+    </div>
+
+    <script>
+        // 显示环境信息
+        function showEnvInfo() {
+            const info = `
+                <div class="test-result">
+                    <strong>当前 URL:</strong> ${window.location.href}<br>
+                    <strong>协议:</strong> ${window.location.protocol}<br>
+                    <strong>主机名:</strong> ${window.location.hostname}<br>
+                    <strong>路径:</strong> ${window.location.pathname}<br>
+                    <strong>用户代理:</strong> ${navigator.userAgent}
+                </div>
+            `;
+            document.getElementById('envInfo').innerHTML = info;
+        }
+        
+        // 测试模块路径
+        async function testModulePath() {
+            const results = document.getElementById('pathResults');
+            results.innerHTML = '<div class="test-result">测试中...</div>';
+            
+            const paths = [
+                '01c-modules/e28-overview.html',
+                '/01c-modules/e28-overview.html',
+                './01c-modules/e28-overview.html'
+            ];
+            
+            let html = '';
+            
+            for (const path of paths) {
+                try {
+                    const fullUrl = new URL(path, window.location.href).href;
+                    html += `<div class="test-result success">✓ 路径 "${path}" 解析为: ${fullUrl}</div>`;
+                } catch (error) {
+                    html += `<div class="test-result error">✗ 路径 "${path}" 解析失败: ${error.message}</div>`;
+                }
+            }
+            
+            results.innerHTML = html;
+        }
+        
+        // 测试 fetch
+        async function testFetch() {
+            const results = document.getElementById('fetchResults');
+            results.innerHTML = '<div class="test-result">测试中...</div>';
+            
+            const testUrl = '01c-modules/e28-overview.html';
+            
+            try {
+                console.log('尝试 fetch:', testUrl);
+                const response = await fetch(testUrl);
+                console.log('响应:', response);
+                
+                if (response.ok) {
+                    const text = await response.text();
+                    results.innerHTML = `
+                        <div class="test-result success">
+                            ✓ 成功获取文件<br>
+                            状态码: ${response.status}<br>
+                            内容长度: ${text.length} 字符<br>
+                            内容类型: ${response.headers.get('content-type')}
+                        </div>
+                    `;
+                } else {
+                    results.innerHTML = `
+                        <div class="test-result error">
+                            ✗ 获取失败<br>
+                            状态码: ${response.status}<br>
+                            状态文本: ${response.statusText}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('fetch 错误:', error);
+                results.innerHTML = `
+                    <div class="test-result error">
+                        ✗ 请求失败<br>
+                        错误类型: ${error.name}<br>
+                        错误信息: ${error.message}<br>
+                        ${error.stack ? '<br>堆栈:<br><pre style="text-align: left; font-size: 11px;">' + error.stack + '</pre>' : ''}
+                    </div>
+                `;
+            }
+        }
+        
+        // 页面加载时显示环境信息
+        showEnvInfo();
+    </script>
+</body>
+</html>

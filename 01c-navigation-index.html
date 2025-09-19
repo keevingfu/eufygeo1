@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEO/GEM 导航索引</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 40px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 40px;
+        }
+        
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .module-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s;
+            cursor: pointer;
+            text-decoration: none;
+            color: white;
+            display: block;
+        }
+        
+        .module-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-5px);
+            border-color: #FF6900;
+        }
+        
+        .module-icon {
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+        
+        .module-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #FF6900;
+        }
+        
+        .module-description {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.5;
+        }
+        
+        .main-link {
+            display: inline-block;
+            margin: 40px auto;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #FF6900 0%, #FF8C00 100%);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .main-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(255, 105, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>GEO/GEM 智能营销平台</h1>
+        <p class="subtitle">Eufy E28 案例中心 - 功能模块导航</p>
+        
+        <div style="text-align: center;">
+            <a href="01c-public-domain-geo-social&pr.html" class="main-link">
+                ← 返回主页面
+            </a>
+        </div>
+        
+        <div class="modules-grid">
+            <a href="01c-modules/e28-overview.html" class="module-card">
+                <div class="module-icon">📊</div>
+                <h3 class="module-title">E28 总览</h3>
+                <p class="module-description">产品整体表现仪表盘，包含市场份额、用户反馈、销售趋势等关键指标</p>
+            </a>
+            
+            <a href="01c-modules/ci-intelligence.html" class="module-card">
+                <div class="module-icon">🔍</div>
+                <h3 class="module-title">CI 竞争情报</h3>
+                <p class="module-description">实时竞品监测与分析，洞察市场动态和竞争格局</p>
+            </a>
+            
+            <a href="01c-modules/geo-content-factory.html" class="module-card">
+                <div class="module-icon">🏭</div>
+                <h3 class="module-title">GEO 内容工厂</h3>
+                <p class="module-description">AI驱动的内容生产系统，自动化创建高质量营销内容</p>
+            </a>
+            
+            <a href="01c-modules/gem-campaign.html" class="module-card">
+                <div class="module-icon">🎯</div>
+                <h3 class="module-title">GEM 投放管理</h3>
+                <p class="module-description">智能广告投放管理，优化ROI和转化效果</p>
+            </a>
+            
+            <a href="01c-modules/ao-page-builder.html" class="module-card">
+                <div class="module-icon">🎨</div>
+                <h3 class="module-title">A/O 页面构建</h3>
+                <p class="module-description">可视化落地页构建器，快速创建高转化页面</p>
+            </a>
+            
+            <a href="01c-modules/realtime-monitoring.html" class="module-card">
+                <div class="module-icon">⚡</div>
+                <h3 class="module-title">实时监控</h3>
+                <p class="module-description">系统性能与流量实时监控，确保稳定运行</p>
+            </a>
+            
+            <a href="01c-modules/conversion-tracking.html" class="module-card">
+                <div class="module-icon">📈</div>
+                <h3 class="module-title">转化追踪</h3>
+                <p class="module-description">全链路转化漏斗分析，优化转化路径</p>
+            </a>
+            
+            <a href="01c-modules/roi-analysis.html" class="module-card">
+                <div class="module-icon">💰</div>
+                <h3 class="module-title">ROI 分析</h3>
+                <p class="module-description">投资回报率深度分析，支持决策优化</p>
+            </a>
+            
+            <a href="01c-modules/ai-decision-sandbox.html" class="module-card">
+                <div class="module-icon">🧠</div>
+                <h3 class="module-title">AI 决策沙盘</h3>
+                <p class="module-description">AI驱动的决策模拟系统，预测营销效果</p>
+            </a>
+            
+            <a href="01c-modules/dam-asset-management.html" class="module-card">
+                <div class="module-icon">📁</div>
+                <h3 class="module-title">DAM 资产管理</h3>
+                <p class="module-description">数字资产管理中心，高效管理营销素材</p>
+            </a>
+            
+            <a href="01c-modules/system-settings.html" class="module-card">
+                <div class="module-icon">⚙️</div>
+                <h3 class="module-title">系统设置</h3>
+                <p class="module-description">平台配置与管理，个性化系统设置</p>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

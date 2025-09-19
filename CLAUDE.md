@@ -14,6 +14,7 @@ The project is organized according to the business flow:
 - `01a-geo-search-intent-analytics.html` - Eureka GEO Intelligence Dashboard - Search Intent Analytics
 - `01a-public-domain-ao-page-builder.html` - A/O Micro Landing Page Builder - Intelligent Conversion Page Design System
 - `01b-public-domain-geo-content-factory.html` - GEO Content Factory - AI-Driven Content Production System
+- `01c-navigation-index.html` - GEO/GEM 导航索引
 - `01c-public-domain-geo-social&pr.html` - GEO/GEM智能营销平台 - Eufy E28案例中心
 - `01d-public-domain-geo-pm.html` - GEO/GEM Intelligent Marketing Platform - Unified Dashboard
 - `01e-private-domain-geo-amazon.html` - Amazon GEO Optimization Platform - Eufy Omni E28
@@ -54,7 +55,7 @@ The project is organized according to the business flow:
 - **Modular Architecture**: Each module operates independently while sharing common design
 - **AI-Powered**: Integrates AI capabilities for content generation and optimization
 - **Comprehensive Analytics**: Full tracking from exposure to final conversion
-- **Total Modules**: 24 active modules
+- **Total Modules**: 26 active modules
 
 ## Development Guidelines
 
@@ -72,4 +73,4 @@ The project is organized according to the business flow:
 
 ## Last Updated
 
-2025-09-19 01:27:09
+2025-09-19 01:43:03

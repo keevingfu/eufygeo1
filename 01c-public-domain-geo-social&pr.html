@@ -1328,12 +1328,27 @@
                         return;
                     }
                     
-                    const url = `01c-modules/${moduleFile}.html`;
+                    // 构建完整的URL
+                    const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
+                    const url = `${baseUrl}/01c-modules/${moduleFile}.html`;
+                    console.log(`基础URL: ${baseUrl}`);
                     console.log(`请求URL: ${url}`);
+                    console.log(`当前域名: ${window.location.hostname}`);
+                    console.log(`当前协议: ${window.location.protocol}`);
                     
                     // 加载页面内容
-                    const response = await fetch(url);
+                    const response = await fetch(url, {
+                        method: 'GET',
+                        mode: 'same-origin',
+                        credentials: 'same-origin',
+                        cache: 'no-cache',
+                        headers: {
+                            'Accept': 'text/html'
+                        }
+                    });
+                    
                     console.log(`响应状态: ${response.status}`);
+                    console.log(`响应头:`, response.headers);
                     
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}, url: ${url}`);
@@ -1355,7 +1370,8 @@
                     
                 } catch (error) {
                     console.error('页面加载失败:', error);
-                    this.showError(error.message);
+                    console.error('错误堆栈:', error.stack);
+                    this.showError(`${error.message}\n\n调试信息：\n域名: ${window.location.hostname}\n路径: ${window.location.pathname}`);
                 }
             }
             
