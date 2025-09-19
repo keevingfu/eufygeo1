@@ -1,0 +1,10 @@
+{
+  "name": "eufygeogem",
+  "version": "1.0.0",
+  "description": "EufyGeoGem - AI-powered content marketing platform",
+  "scripts": {
+    "build": "echo 'This is a static HTML project, no build required'"
+  },
+  "author": "",
+  "license": "ISC"
+}
