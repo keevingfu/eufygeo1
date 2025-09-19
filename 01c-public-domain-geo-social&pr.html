@@ -1204,7 +1204,15 @@
 
         // 页面加载时初始化
         document.addEventListener('DOMContentLoaded', function() {
-            initProgressChart();
+            // 初始化图表
+            setTimeout(() => {
+                initProgressChart();
+            }, 100);
+            
+            // 初始化导航系统
+            setTimeout(() => {
+                window.navigationSystem = new NavigationSystem();
+            }, 200);
             
             // 动态更新KPI数值
             animateValue('kpi-value-1', 0, 73, 2000);
@@ -1237,10 +1245,228 @@
             });
         });
 
+        // 动态导航系统
+        class NavigationSystem {
+            constructor() {
+                this.currentPage = 'e28-overview';
+                this.contentArea = document.querySelector('.content');
+                this.moduleMapping = {
+                    'E28 总览': 'e28-overview',
+                    'CI 竞争情报': 'ci-intelligence', 
+                    'GEO 内容工厂': 'geo-content-factory',
+                    'GEM 投放管理': 'gem-campaign',
+                    'A/O 页面构建': 'ao-page-builder',
+                    '实时监控': 'realtime-monitoring',
+                    '转化追踪': 'conversion-tracking',
+                    'ROI 分析': 'roi-analysis',
+                    'AI 决策沙盘': 'ai-decision-sandbox',
+                    'DAM 资产管理': 'dam-asset-management',
+                    '系统设置': 'system-settings'
+                };
+                this.loadingHTML = `
+                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 400px; color: #FF6900;">
+                        <div style="font-size: 48px; margin-bottom: 20px;">🔄</div>
+                        <h3>加载中...</h3>
+                        <p style="color: rgba(255,255,255,0.6);">正在加载页面内容</p>
+                    </div>
+                `;
+                this.errorHTML = `
+                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 400px; color: #F5222D;">
+                        <div style="font-size: 48px; margin-bottom: 20px;">❌</div>
+                        <h3>加载失败</h3>
+                        <p style="color: rgba(255,255,255,0.6);">页面内容加载失败，请稍后重试</p>
+                        <div id="errorDetails" style="margin: 10px 0; padding: 10px; background: rgba(245,34,45,0.1); border-radius: 6px; font-size: 12px; max-width: 500px; text-align: center;"></div>
+                        <button onclick="location.reload()" style="margin-top: 20px; padding: 10px 20px; background: #FF6900; border: none; border-radius: 8px; color: white; cursor: pointer;">重新加载</button>
+                    </div>
+                `;
+                this.initializeNavigation();
+            }
+            
+            initializeNavigation() {
+                // 为所有菜单项添加点击事件
+                document.querySelectorAll('.menu-item').forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const pageName = item.querySelector('span:last-child').textContent.trim();
+                        console.log('点击菜单:', pageName);
+                        if (this.moduleMapping[pageName]) {
+                            this.loadPage(pageName);
+                        } else {
+                            console.error('未找到页面映射:', pageName);
+                        }
+                    });
+                });
+                
+                // 默认不加载页面，保持原始内容
+                console.log('导航系统初始化完成');
+            }
+            
+            async loadPage(pageName) {
+                try {
+                    console.log(`开始加载页面: ${pageName}`);
+                    
+                    // 显示加载状态
+                    this.showLoading();
+                    
+                    // 更新活跃状态
+                    this.updateActiveState(pageName);
+                    
+                    // 获取模块文件名
+                    const moduleFile = this.moduleMapping[pageName];
+                    console.log(`模块文件: ${moduleFile}`);
+                    
+                    if (!moduleFile) {
+                        throw new Error(`未找到页面映射: ${pageName}`);
+                    }
+                    
+                    // 检查是否是本地文件协议
+                    const isLocalFile = window.location.protocol === 'file:';
+                    
+                    if (isLocalFile) {
+                        // 本地文件模式，显示提示信息
+                        this.showLocalFileWarning(pageName, moduleFile);
+                        return;
+                    }
+                    
+                    const url = `01c-modules/${moduleFile}.html`;
+                    console.log(`请求URL: ${url}`);
+                    
+                    // 加载页面内容
+                    const response = await fetch(url);
+                    console.log(`响应状态: ${response.status}`);
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}, url: ${url}`);
+                    }
+                    
+                    const content = await response.text();
+                    console.log(`内容长度: ${content.length}`);
+                    
+                    // 更新内容区域
+                    this.contentArea.innerHTML = content;
+                    
+                    // 初始化页面特定的脚本
+                    this.initializePageScripts(moduleFile);
+                    
+                    // 平滑滚动到顶部
+                    this.contentArea.scrollTop = 0;
+                    
+                    console.log(`成功加载页面: ${pageName}`);
+                    
+                } catch (error) {
+                    console.error('页面加载失败:', error);
+                    this.showError(error.message);
+                }
+            }
+            
+            showLoading() {
+                this.contentArea.innerHTML = this.loadingHTML;
+            }
+            
+            showError(errorMessage = '未知错误') {
+                this.contentArea.innerHTML = this.errorHTML;
+                // 添加错误详情
+                const errorDetails = document.getElementById('errorDetails');
+                if (errorDetails) {
+                    errorDetails.textContent = `错误详情: ${errorMessage}`;
+                }
+            }
+            
+            showLocalFileWarning(pageName, moduleFile) {
+                const warningHTML = `
+                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 400px; color: #FAAD14;">
+                        <div style="font-size: 48px; margin-bottom: 20px;">⚠️</div>
+                        <h3>本地文件模式</h3>
+                        <p style="color: rgba(255,255,255,0.7); max-width: 600px; text-align: center; line-height: 1.5; margin: 20px 0;">
+                            当前正在使用 file:// 协议访问页面。由于浏览器安全限制，无法通过 JavaScript 加载本地文件。
+                        </p>
+                        <div style="background: rgba(250,173,20,0.1); border: 1px solid rgba(250,173,20,0.3); border-radius: 8px; padding: 20px; margin: 20px 0; max-width: 500px;">
+                            <h4 style="margin: 0 0 10px 0; color: #FAAD14;">解决方案：</h4>
+                            <ol style="color: rgba(255,255,255,0.8); text-align: left; line-height: 1.6;">
+                                <li>使用本地服务器运行（推荐）：<br>
+                                    <code style="background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; font-size: 12px;">
+                                        python -m http.server 8000
+                                    </code>
+                                </li>
+                                <li>或直接访问模块文件：<br>
+                                    <code style="background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; font-size: 12px;">
+                                        01c-modules/${moduleFile}.html
+                                    </code>
+                                </li>
+                            </ol>
+                        </div>
+                        <button onclick="window.open('01c-modules/${moduleFile}.html', '_blank')" 
+                                style="margin-top: 10px; padding: 10px 20px; background: #FF6900; border: none; border-radius: 8px; color: white; cursor: pointer;">
+                            在新窗口打开 "${pageName}"
+                        </button>
+                    </div>
+                `;
+                this.contentArea.innerHTML = warningHTML;
+            }
+            
+            updateActiveState(pageName) {
+                // 移除所有活跃状态
+                document.querySelectorAll('.menu-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                // 添加当前活跃状态
+                document.querySelectorAll('.menu-item').forEach(item => {
+                    const itemText = item.querySelector('span:last-child').textContent.trim();
+                    if (itemText === pageName) {
+                        item.classList.add('active');
+                    }
+                });
+            }
+            
+            initializePageScripts(moduleFile) {
+                // 根据不同模块初始化特定功能
+                switch (moduleFile) {
+                    case 'e28-overview':
+                        // 初始化雷达图
+                        if (typeof echarts !== 'undefined' && document.getElementById('radarChart')) {
+                            setTimeout(() => {
+                                if (typeof initRadarChart === 'function') {
+                                    initRadarChart();
+                                }
+                            }, 100);
+                        }
+                        break;
+                    case 'gem-campaign':
+                        // 初始化性能图表
+                        if (typeof echarts !== 'undefined' && document.getElementById('performanceChart')) {
+                            setTimeout(() => {
+                                if (typeof initPerformanceChart === 'function') {
+                                    initPerformanceChart();
+                                }
+                            }, 100);
+                        }
+                        break;
+                    default:
+                        // 通用初始化
+                        break;
+                }
+            }
+        }
+
         // 显示模块详情
         function showModuleDetail(module) {
             console.log('显示模块详情:', module);
-            // 这里可以添加跳转或弹窗逻辑
+            // 可以通过导航系统加载对应页面
+            const nav = window.navigationSystem;
+            if (nav) {
+                const pageMap = {
+                    'ci': 'CI 竞争情报',
+                    'geo': 'GEO 内容工厂',
+                    'gem': 'GEM 投放管理',
+                    'ao': 'A/O 页面构建',
+                    'dam': 'DAM 资产管理',
+                    'analytics': '实时监控'
+                };
+                if (pageMap[module]) {
+                    nav.loadPage(pageMap[module]);
+                }
+            }
         }
 
         // 显示快速操作

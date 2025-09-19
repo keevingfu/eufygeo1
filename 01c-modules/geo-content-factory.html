@@ -1,0 +1,918 @@
+<!-- GEO Content Factory Module -->
+<div class="module-content">
+    <!-- 内容工厂标题 -->
+    <div class="module-header">
+        <h2 style="font-size: 24px; margin-bottom: 20px; color: #FF6900;">
+            📝 GEO 内容工厂
+        </h2>
+        <div class="header-actions">
+            <button class="action-btn" onclick="createNewContent()">✨ 新建内容</button>
+            <button class="action-btn" onclick="bulkGenerate()">⚡ 批量生成</button>
+            <button class="action-btn" onclick="exportContentPlan()">📋 导出计划</button>
+        </div>
+    </div>
+
+    <!-- 内容生产统计 -->
+    <div class="production-stats">
+        <h3 style="margin-bottom: 20px;">📊 生产统计概览</h3>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">📝</div>
+                <div class="stat-content">
+                    <div class="stat-number">156</div>
+                    <div class="stat-label">已发布内容</div>
+                    <div class="stat-trend positive">↑ +23 本月</div>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">🔄</div>
+                <div class="stat-content">
+                    <div class="stat-number">34</div>
+                    <div class="stat-label">待审核内容</div>
+                    <div class="stat-trend warning">⏳ 平均2天</div>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">📈</div>
+                <div class="stat-content">
+                    <div class="stat-number">73%</div>
+                    <div class="stat-label">AI引用率</div>
+                    <div class="stat-trend positive">↑ +18% vs上月</div>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">⭐</div>
+                <div class="stat-content">
+                    <div class="stat-number">4.2/5</div>
+                    <div class="stat-label">内容质量分</div>
+                    <div class="stat-trend positive">↑ +0.3</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 内容模板库 -->
+    <div class="template-library">
+        <h3 style="margin-bottom: 20px;">📚 内容模板库</h3>
+        <div class="template-categories">
+            <button class="category-tab active" onclick="switchCategory('all')">全部</button>
+            <button class="category-tab" onclick="switchCategory('comparison')">产品对比</button>
+            <button class="category-tab" onclick="switchCategory('feature')">功能说明</button>
+            <button class="category-tab" onclick="switchCategory('review')">评测文章</button>
+            <button class="category-tab" onclick="switchCategory('faq')">FAQ问答</button>
+        </div>
+        
+        <div class="template-grid">
+            <div class="template-card featured">
+                <div class="template-header">
+                    <span class="template-type">产品对比</span>
+                    <span class="usage-count">已用 23次</span>
+                </div>
+                <h4 class="template-title">E28 vs 竞品扫地机器人对比</h4>
+                <div class="template-preview">
+                    <p>详细对比Eufy Omni E28与主要竞品在吸力、功能、价格等维度的差异，突出E28的FlexiOne手持清洁器和HydroJet拖布系统优势...</p>
+                </div>
+                <div class="template-metrics">
+                    <div class="metric-item">
+                        <span class="metric-label">AI引用率</span>
+                        <span class="metric-value high">85%</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">用户参与度</span>
+                        <span class="metric-value high">92%</span>
+                    </div>
+                </div>
+                <div class="template-actions">
+                    <button class="template-btn primary" onclick="useTemplate('comparison-e28')">
+                        🚀 使用模板
+                    </button>
+                    <button class="template-btn secondary" onclick="editTemplate('comparison-e28')">
+                        ✏️ 编辑
+                    </button>
+                </div>
+            </div>
+
+            <div class="template-card">
+                <div class="template-header">
+                    <span class="template-type">功能说明</span>
+                    <span class="usage-count">已用 18次</span>
+                </div>
+                <h4 class="template-title">FlexiOne手持清洁器深度解析</h4>
+                <div class="template-preview">
+                    <p>全面介绍E28独有的FlexiOne手持清洁器功能，包括使用场景、技术原理、实际效果演示，解决用户对便携清洁的疑问...</p>
+                </div>
+                <div class="template-metrics">
+                    <div class="metric-item">
+                        <span class="metric-label">AI引用率</span>
+                        <span class="metric-value warning">23%</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">用户参与度</span>
+                        <span class="metric-value medium">67%</span>
+                    </div>
+                </div>
+                <div class="template-actions">
+                    <button class="template-btn primary" onclick="useTemplate('flexione-guide')">
+                        🚀 使用模板
+                    </button>
+                    <button class="template-btn secondary" onclick="editTemplate('flexione-guide')">
+                        ✏️ 编辑
+                    </button>
+                </div>
+            </div>
+
+            <div class="template-card">
+                <div class="template-header">
+                    <span class="template-type">FAQ问答</span>
+                    <span class="usage-count">已用 31次</span>
+                </div>
+                <h4 class="template-title">HydroJet拖布系统常见问题</h4>
+                <div class="template-preview">
+                    <p>整理用户对HydroJet拖布自清洗系统的常见疑问，包括清洁效果、维护方法、使用技巧等，提供专业详细的解答...</p>
+                </div>
+                <div class="template-metrics">
+                    <div class="metric-item">
+                        <span class="metric-label">AI引用率</span>
+                        <span class="metric-value high">78%</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">用户参与度</span>
+                        <span class="metric-value high">89%</span>
+                    </div>
+                </div>
+                <div class="template-actions">
+                    <button class="template-btn primary" onclick="useTemplate('hydrojet-faq')">
+                        🚀 使用模板
+                    </button>
+                    <button class="template-btn secondary" onclick="editTemplate('hydrojet-faq')">
+                        ✏️ 编辑
+                    </button>
+                </div>
+            </div>
+
+            <div class="template-card">
+                <div class="template-header">
+                    <span class="template-type">评测文章</span>
+                    <span class="usage-count">已用 12次</span>
+                </div>
+                <h4 class="template-title">E28 防缠毛刷实际测试</h4>
+                <div class="template-preview">
+                    <p>针对宠物毛发清理场景的深度测试，对比E28防缠毛刷与传统毛刷的效果差异，提供真实使用数据和用户反馈...</p>
+                </div>
+                <div class="template-metrics">
+                    <div class="metric-item">
+                        <span class="metric-label">AI引用率</span>
+                        <span class="metric-value medium">56%</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">用户参与度</span>
+                        <span class="metric-value high">83%</span>
+                    </div>
+                </div>
+                <div class="template-actions">
+                    <button class="template-btn primary" onclick="useTemplate('anti-tangle-test')">
+                        🚀 使用模板
+                    </button>
+                    <button class="template-btn secondary" onclick="editTemplate('anti-tangle-test')">
+                        ✏️ 编辑
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI写作助手 -->
+    <div class="ai-writing-assistant">
+        <h3 style="margin-bottom: 20px;">🤖 AI 写作助手</h3>
+        <div class="writing-interface">
+            <div class="input-section">
+                <div class="input-header">
+                    <h4>内容创作</h4>
+                    <div class="ai-mode-selector">
+                        <select onchange="changeAIMode(this.value)">
+                            <option value="professional">专业模式</option>
+                            <option value="friendly">友好模式</option>
+                            <option value="technical">技术模式</option>
+                            <option value="comparison">对比模式</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="content-requirements">
+                    <div class="requirement-row">
+                        <label>内容主题:</label>
+                        <input type="text" placeholder="例如: E28 FlexiOne手持清洁功能介绍" class="topic-input">
+                    </div>
+                    <div class="requirement-row">
+                        <label>目标关键词:</label>
+                        <input type="text" placeholder="例如: 扫地机器人, 手持清洁器, 便携吸尘" class="keywords-input">
+                    </div>
+                    <div class="requirement-row">
+                        <label>内容长度:</label>
+                        <select class="length-select">
+                            <option value="short">简短 (300-500字)</option>
+                            <option value="medium">中等 (500-1000字)</option>
+                            <option value="long">详细 (1000-2000字)</option>
+                        </select>
+                    </div>
+                    <div class="requirement-row">
+                        <label>特色功能:</label>
+                        <div class="feature-checkboxes">
+                            <label><input type="checkbox" value="flexione"> FlexiOne手持清洁器</label>
+                            <label><input type="checkbox" value="hydrojet"> HydroJet拖布系统</label>
+                            <label><input type="checkbox" value="antitangle"> 防缠毛刷</label>
+                            <label><input type="checkbox" value="ai-obstacle"> AI智能避障</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="generate-btn" onclick="generateContent()">
+                    ✨ 生成内容
+                </button>
+            </div>
+            
+            <div class="output-section">
+                <div class="output-header">
+                    <h4>生成结果</h4>
+                    <div class="output-actions">
+                        <button class="output-btn" onclick="copyContent()">📋 复制</button>
+                        <button class="output-btn" onclick="saveAsDraft()">💾 保存草稿</button>
+                        <button class="output-btn" onclick="optimizeForSEO()">🎯 SEO优化</button>
+                    </div>
+                </div>
+                
+                <div class="generated-content">
+                    <div class="content-placeholder">
+                        <div class="placeholder-icon">🤖</div>
+                        <p>在左侧设置内容要求，点击"生成内容"开始AI创作</p>
+                    </div>
+                </div>
+                
+                <div class="content-metrics" style="display: none;">
+                    <div class="metric-row">
+                        <span>字数统计:</span>
+                        <span id="wordCount">0</span>
+                    </div>
+                    <div class="metric-row">
+                        <span>SEO评分:</span>
+                        <span id="seoScore">-</span>
+                    </div>
+                    <div class="metric-row">
+                        <span>可读性:</span>
+                        <span id="readability">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 发布工作流 -->
+    <div class="publishing-workflow">
+        <h3 style="margin-bottom: 20px;">🚀 发布工作流</h3>
+        <div class="workflow-steps">
+            <div class="step-item completed">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h4>内容创作</h4>
+                    <p>使用AI助手或模板创作内容</p>
+                </div>
+                <div class="step-status">✅</div>
+            </div>
+            
+            <div class="step-item active">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h4>SEO优化</h4>
+                    <p>关键词优化、Schema标记添加</p>
+                </div>
+                <div class="step-status">🔄</div>
+            </div>
+            
+            <div class="step-item">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h4>质量审核</h4>
+                    <p>内容准确性和合规性检查</p>
+                </div>
+                <div class="step-status">⏳</div>
+            </div>
+            
+            <div class="step-item">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h4>多渠道发布</h4>
+                    <p>自动分发到各个平台和渠道</p>
+                </div>
+                <div class="step-status">⏳</div>
+            </div>
+            
+            <div class="step-item">
+                <div class="step-number">5</div>
+                <div class="step-content">
+                    <h4>效果监控</h4>
+                    <p>跟踪引用率和用户反馈</p>
+                </div>
+                <div class="step-status">⏳</div>
+            </div>
+        </div>
+        
+        <div class="workflow-actions">
+            <button class="workflow-btn" onclick="startWorkflow()">开始新工作流</button>
+            <button class="workflow-btn secondary" onclick="viewAllWorkflows()">查看所有工作流</button>
+        </div>
+    </div>
+</div>
+
+<style>
+.production-stats {
+    margin-bottom: 30px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.stat-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.3s;
+}
+
+.stat-card:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-3px);
+}
+
+.stat-icon {
+    font-size: 32px;
+}
+
+.stat-content {
+    flex: 1;
+}
+
+.stat-number {
+    font-size: 24px;
+    font-weight: bold;
+    color: #FF6900;
+    margin-bottom: 4px;
+}
+
+.stat-label {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 4px;
+}
+
+.stat-trend {
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.stat-trend.positive { color: #52C41A; }
+.stat-trend.warning { color: #FAAD14; }
+
+.template-library {
+    margin-bottom: 30px;
+}
+
+.template-categories {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 20px;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 5px;
+    border-radius: 10px;
+}
+
+.category-tab {
+    padding: 10px 20px;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 14px;
+}
+
+.category-tab:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.category-tab.active {
+    background: linear-gradient(135deg, #FF6900 0%, #FF8C00 100%);
+    color: white;
+}
+
+.template-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 20px;
+}
+
+.template-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.3s;
+}
+
+.template-card.featured {
+    border-color: rgba(255, 105, 0, 0.3);
+    background: linear-gradient(135deg, rgba(255,105,0,0.05) 0%, rgba(102,126,234,0.05) 100%);
+}
+
+.template-card:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-3px);
+}
+
+.template-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.template-type {
+    padding: 4px 8px;
+    background: rgba(255, 105, 0, 0.2);
+    border-radius: 8px;
+    font-size: 11px;
+    color: #FF6900;
+    font-weight: 600;
+}
+
+.usage-count {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.template-title {
+    font-size: 16px;
+    margin: 0 0 15px 0;
+    color: white;
+}
+
+.template-preview {
+    font-size: 13px;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 15px;
+}
+
+.template-metrics {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 15px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+}
+
+.metric-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.metric-label {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.metric-value {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.metric-value.high { color: #52C41A; }
+.metric-value.medium { color: #FAAD14; }
+.metric-value.warning { color: #F5222D; }
+
+.template-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.template-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.template-btn.primary {
+    background: linear-gradient(135deg, #FF6900 0%, #FF8C00 100%);
+    color: white;
+}
+
+.template-btn.secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.ai-writing-assistant {
+    margin-bottom: 30px;
+}
+
+.writing-interface {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.input-section,
+.output-section {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.input-header,
+.output-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.ai-mode-selector select {
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    color: white;
+    font-size: 12px;
+}
+
+.content-requirements {
+    margin-bottom: 20px;
+}
+
+.requirement-row {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.requirement-row label {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.topic-input,
+.keywords-input,
+.length-select {
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: white;
+    font-size: 13px;
+}
+
+.feature-checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.feature-checkboxes label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.generate-btn {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #FF6900 0%, #FF8C00 100%);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.generate-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255,105,0,0.3);
+}
+
+.output-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.output-btn {
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    color: white;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.generated-content {
+    min-height: 200px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.content-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 180px;
+    color: rgba(255, 255, 255, 0.5);
+    text-align: center;
+}
+
+.placeholder-icon {
+    font-size: 48px;
+    margin-bottom: 15px;
+}
+
+.content-metrics {
+    display: flex;
+    gap: 20px;
+    font-size: 12px;
+}
+
+.metric-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.publishing-workflow {
+    margin-bottom: 30px;
+}
+
+.workflow-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.step-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    transition: all 0.3s;
+}
+
+.step-item.completed {
+    border-color: rgba(82, 196, 26, 0.3);
+    background: rgba(82, 196, 26, 0.05);
+}
+
+.step-item.active {
+    border-color: rgba(255, 105, 0, 0.3);
+    background: rgba(255, 105, 0, 0.05);
+}
+
+.step-number {
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.step-item.completed .step-number {
+    background: rgba(82, 196, 26, 0.2);
+    color: #52C41A;
+}
+
+.step-item.active .step-number {
+    background: rgba(255, 105, 0, 0.2);
+    color: #FF6900;
+}
+
+.step-content {
+    flex: 1;
+}
+
+.step-content h4 {
+    margin: 0 0 4px 0;
+    font-size: 14px;
+}
+
+.step-content p {
+    margin: 0;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.step-status {
+    font-size: 18px;
+}
+
+.workflow-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.workflow-btn {
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #FF6900 0%, #FF8C00 100%);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.workflow-btn.secondary {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+@media (max-width: 768px) {
+    .writing-interface {
+        grid-template-columns: 1fr;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+    
+    .template-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<script>
+// 创建新内容
+function createNewContent() {
+    console.log('创建新内容');
+}
+
+// 批量生成
+function bulkGenerate() {
+    console.log('批量生成内容');
+}
+
+// 导出内容计划
+function exportContentPlan() {
+    console.log('导出内容计划');
+}
+
+// 切换分类
+function switchCategory(category) {
+    document.querySelectorAll('.category-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    console.log('切换到分类:', category);
+}
+
+// 使用模板
+function useTemplate(templateId) {
+    console.log('使用模板:', templateId);
+}
+
+// 编辑模板
+function editTemplate(templateId) {
+    console.log('编辑模板:', templateId);
+}
+
+// 改变AI模式
+function changeAIMode(mode) {
+    console.log('切换AI模式:', mode);
+}
+
+// 生成内容
+function generateContent() {
+    const topic = document.querySelector('.topic-input').value;
+    const keywords = document.querySelector('.keywords-input').value;
+    
+    if (!topic) {
+        alert('请输入内容主题');
+        return;
+    }
+    
+    // 模拟生成过程
+    const contentArea = document.querySelector('.generated-content');
+    contentArea.innerHTML = '<div style="text-align: center; padding: 40px; color: #FF6900;">🤖 AI正在生成内容，请稍候...</div>';
+    
+    setTimeout(() => {
+        const sampleContent = `
+            <h3>Eufy Omni E28 FlexiOne手持清洁器：突破传统扫地机器人的创新设计</h3>
+            
+            <p>在智能家居清洁领域，Eufy Omni E28凭借其独创的FlexiOne手持清洁器功能，为用户带来了前所未有的清洁体验。这一创新设计不仅解决了传统扫地机器人无法处理的清洁死角问题，更为用户提供了随时随地的便携清洁解决方案。</p>
+            
+            <h4>FlexiOne手持清洁器的核心优势</h4>
+            
+            <p><strong>1. 即拿即用的便携设计</strong><br>
+            FlexiOne手持清洁器采用轻量化设计，重量仅为1.2kg，配备人体工学握柄，确保长时间使用不会造成手部疲劳。无论是清理沙发缝隙、键盘死角，还是车内清洁，都能轻松胜任。</p>
+            
+            <p><strong>2. 强劲吸力与精准控制</strong><br>
+            继承E28主机的20,000Pa强劲吸力，FlexiOne在手持模式下依然保持优秀的清洁能力。搭配多种专业吸头，能够针对不同材质表面进行精准清洁，从硬质地板到软装家具，一机多用。</p>
+            
+            <p><strong>3. 智能电源管理</strong><br>
+            FlexiOne配备独立电池系统，续航时间长达25分钟，满足大多数手持清洁场景需求。当电量不足时，可自动返回主机进行充电，确保随时可用。</p>
+            
+            <h4>实际使用场景解析</h4>
+            
+            <p>经过实际测试，FlexiOne手持清洁器在以下场景中表现出色：</p>
+            
+            <ul>
+                <li><strong>楼梯清洁</strong>：传统扫地机器人无法处理的楼梯，FlexiOne可以轻松清理每一级台阶</li>
+                <li><strong>家具缝隙</strong>：沙发底部、床下空间等狭窄区域的灰尘和杂物清理</li>
+                <li><strong>车内清洁</strong>：座椅缝隙、仪表台死角等车内环境的精细清洁</li>
+                <li><strong>高处清洁</strong>：书架顶部、窗台等需要伸手够到的区域</li>
+            </ul>
+            
+            <h4>与竞品对比优势</h4>
+            
+            <p>相比市面上其他扫地机器人产品，E28的FlexiOne功能具有明显优势：</p>
+            
+            <ul>
+                <li><strong>vs iRobot Roomba j7+</strong>：iRobot缺乏手持清洁功能，只能依赖主机进行地面清洁</li>
+                <li><strong>vs Shark AI Robot</strong>：Shark虽有自清空功能，但无法提供便携式清洁解决方案</li>
+                <li><strong>vs Bissell SpinWave</strong>：Bissell主要针对拖地功能，缺乏多场景清洁能力</li>
+            </ul>
+            
+            <p>Eufy Omni E28的FlexiOne手持清洁器不仅是一个功能特性，更是对智能清洁理念的重新定义。它让扫地机器人从单一的地面清洁工具，进化为全屋清洁的综合解决方案，真正实现了"一机多用"的智能清洁体验。</p>
+        `;
+        
+        contentArea.innerHTML = sampleContent;
+        
+        // 显示指标
+        document.querySelector('.content-metrics').style.display = 'flex';
+        document.getElementById('wordCount').textContent = '756字';
+        document.getElementById('seoScore').textContent = '85分';
+        document.getElementById('readability').textContent = '良好';
+        
+    }, 2000);
+}
+
+// 复制内容
+function copyContent() {
+    console.log('复制内容到剪贴板');
+}
+
+// 保存草稿
+function saveAsDraft() {
+    console.log('保存为草稿');
+}
+
+// SEO优化
+function optimizeForSEO() {
+    console.log('进行SEO优化');
+}
+
+// 开始工作流
+function startWorkflow() {
+    console.log('开始新的发布工作流');
+}
+
+// 查看所有工作流
+function viewAllWorkflows() {
+    console.log('查看所有工作流');
+}
+</script>

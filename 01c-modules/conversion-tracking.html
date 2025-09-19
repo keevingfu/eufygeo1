@@ -1,0 +1,680 @@
+<!-- Conversion Tracking Module -->
+<div class="module-content">
+    <!-- 转化跟踪标题 -->
+    <div class="module-header">
+        <h2 style="font-size: 24px; margin-bottom: 20px; color: #FF6900;">
+            📊 转化跟踪分析
+        </h2>
+        <div class="header-actions">
+            <button class="action-btn" onclick="setupTracking()">⚙️ 配置跟踪</button>
+            <button class="action-btn" onclick="exportReport()">📋 导出报告</button>
+            <button class="action-btn" onclick="createFunnel()">🎯 创建漏斗</button>
+        </div>
+    </div>
+
+    <!-- 转化概览 -->
+    <div class="conversion-overview">
+        <h3 style="margin-bottom: 20px;">🎯 转化概览</h3>
+        <div class="overview-grid">
+            <div class="overview-card">
+                <div class="card-icon">👁️</div>
+                <div class="card-content">
+                    <div class="card-number">12,456</div>
+                    <div class="card-label">页面浏览量</div>
+                    <div class="card-change positive">↑ +15.3%</div>
+                </div>
+            </div>
+            
+            <div class="overview-card">
+                <div class="card-icon">🔗</div>
+                <div class="card-content">
+                    <div class="card-number">3,247</div>
+                    <div class="card-label">链接点击</div>
+                    <div class="card-change positive">↑ +8.7%</div>
+                </div>
+            </div>
+            
+            <div class="overview-card">
+                <div class="card-icon">🛒</div>
+                <div class="card-content">
+                    <div class="card-number">892</div>
+                    <div class="card-label">加购转化</div>
+                    <div class="card-change negative">↓ -2.1%</div>
+                </div>
+            </div>
+            
+            <div class="overview-card">
+                <div class="card-icon">💰</div>
+                <div class="card-content">
+                    <div class="card-number">267</div>
+                    <div class="card-label">完成购买</div>
+                    <div class="card-change positive">↑ +12.4%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 转化漏斗 -->
+    <div class="conversion-funnel">
+        <h3 style="margin-bottom: 20px;">🔽 转化漏斗分析</h3>
+        <div class="funnel-container">
+            <div id="conversionFunnelChart" style="height: 400px;"></div>
+        </div>
+        
+        <div class="funnel-insights">
+            <div class="insight-item">
+                <div class="insight-icon">⚠️</div>
+                <div class="insight-content">
+                    <h4>关键发现</h4>
+                    <p>从产品详情页到加购的转化率偏低（27.5%），建议优化产品展示和价格策略</p>
+                </div>
+            </div>
+            <div class="insight-item">
+                <div class="insight-icon">💡</div>
+                <div class="insight-content">
+                    <h4>优化建议</h4>
+                    <p>加强FlexiOne手持清洁器的功能展示，增加用户互动元素提升参与度</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 渠道转化对比 -->
+    <div class="channel-conversion">
+        <h3 style="margin-bottom: 20px;">📈 渠道转化对比</h3>
+        <div class="channel-grid">
+            <div class="channel-card">
+                <div class="channel-header">
+                    <span class="channel-name">📱 社交媒体</span>
+                    <span class="channel-conversion">3.2%</span>
+                </div>
+                <div class="channel-metrics">
+                    <div class="metric-row">
+                        <span>流量:</span>
+                        <span>4,567</span>
+                    </div>
+                    <div class="metric-row">
+                        <span>转化:</span>
+                        <span>146</span>
+                    </div>
+                    <div class="metric-row">
+                        <span>CPA:</span>
+                        <span>$23.45</span>
+                    </div>
+                </div>
+                <div class="channel-trend positive">↑ +0.8%</div>
+            </div>
+
+            <div class="channel-card">
+                <div class="channel-header">
+                    <span class="channel-name">🔍 搜索引擎</span>
+                    <span class="channel-conversion">5.7%</span>
+                </div>
+                <div class="channel-metrics">
+                    <div class="metric-row">
+                        <span>流量:</span>
+                        <span>2,893</span>
+                    </div>
+                    <div class="metric-row">
+                        <span>转化:</span>
+                        <span>165</span>
+                    </div>
+                    <div class="metric-row">
+                        <span>CPA:</span>
+                        <span>$18.76</span>
+                    </div>
+                </div>
+                <div class="channel-trend positive">↑ +1.2%</div>
+            </div>
+
+            <div class="channel-card">
+                <div class="channel-header">
+                    <span class="channel-name">📧 邮件营销</span>
+                    <span class="channel-conversion">8.9%</span>
+                </div>
+                <div class="channel-metrics">
+                    <div class="metric-row">
+                        <span>流量:</span>
+                        <span>1,234</span>
+                    </div>
+                    <div class="metric-row">
+                        <span>转化:</span>
+                        <span>110</span>
+                    </div>
+                    <div class="metric-row">
+                        <span>CPA:</span>
+                        <span>$15.23</span>
+                    </div>
+                </div>
+                <div class="channel-trend positive">↑ +2.1%</div>
+            </div>
+
+            <div class="channel-card">
+                <div class="channel-header">
+                    <span class="channel-name">💰 付费广告</span>
+                    <span class="channel-conversion">4.3%</span>
+                </div>
+                <div class="channel-metrics">
+                    <div class="metric-row">
+                        <span>流量:</span>
+                        <span>3,456</span>
+                    </div>
+                    <div class="metric-row">
+                        <span>转化:</span>
+                        <span>149</span>
+                    </div>
+                    <div class="metric-row">
+                        <span>CPA:</span>
+                        <span>$28.90</span>
+                    </div>
+                </div>
+                <div class="channel-trend negative">↓ -0.5%</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 时间趋势分析 -->
+    <div class="time-trend-analysis">
+        <h3 style="margin-bottom: 20px;">📅 时间趋势分析</h3>
+        <div class="trend-controls">
+            <button class="trend-period active" onclick="changePeriod('7d')">7天</button>
+            <button class="trend-period" onclick="changePeriod('30d')">30天</button>
+            <button class="trend-period" onclick="changePeriod('90d')">90天</button>
+        </div>
+        <div id="conversionTrendChart" style="height: 300px; margin-top: 20px;"></div>
+    </div>
+
+    <!-- 用户行为路径 -->
+    <div class="user-journey">
+        <h3 style="margin-bottom: 20px;">🛤️ 用户行为路径</h3>
+        <div class="journey-flow">
+            <div class="journey-step">
+                <div class="step-circle">1</div>
+                <div class="step-content">
+                    <h4>首次访问</h4>
+                    <p>100% (12,456)</p>
+                    <small>平均停留: 2:34</small>
+                </div>
+            </div>
+            <div class="journey-arrow">→</div>
+            <div class="journey-step">
+                <div class="step-circle">2</div>
+                <div class="step-content">
+                    <h4>产品页面</h4>
+                    <p>68% (8,470)</p>
+                    <small>平均停留: 4:12</small>
+                </div>
+            </div>
+            <div class="journey-arrow">→</div>
+            <div class="journey-step">
+                <div class="step-circle">3</div>
+                <div class="step-content">
+                    <h4>详细信息</h4>
+                    <p>45% (5,605)</p>
+                    <small>平均停留: 3:28</small>
+                </div>
+            </div>
+            <div class="journey-arrow">→</div>
+            <div class="journey-step">
+                <div class="step-circle">4</div>
+                <div class="step-content">
+                    <h4>加入购物车</h4>
+                    <p>27% (3,363)</p>
+                    <small>流失率: 73%</small>
+                </div>
+            </div>
+            <div class="journey-arrow">→</div>
+            <div class="journey-step">
+                <div class="step-circle">5</div>
+                <div class="step-content">
+                    <h4>完成购买</h4>
+                    <p>8% (996)</p>
+                    <small>最终转化</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.conversion-overview {
+    margin-bottom: 30px;
+}
+
+.overview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.overview-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.3s;
+}
+
+.overview-card:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-3px);
+}
+
+.card-icon {
+    font-size: 32px;
+}
+
+.card-content {
+    flex: 1;
+}
+
+.card-number {
+    font-size: 24px;
+    font-weight: bold;
+    color: #FF6900;
+    margin-bottom: 4px;
+}
+
+.card-label {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 4px;
+}
+
+.card-change {
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.card-change.positive { color: #52C41A; }
+.card-change.negative { color: #F5222D; }
+
+.conversion-funnel {
+    margin-bottom: 30px;
+}
+
+.funnel-container {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.funnel-insights {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.insight-item {
+    display: flex;
+    gap: 15px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.insight-icon {
+    font-size: 24px;
+}
+
+.insight-content h4 {
+    margin: 0 0 8px 0;
+    font-size: 14px;
+    color: #FF6900;
+}
+
+.insight-content p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.channel-conversion {
+    margin-bottom: 30px;
+}
+
+.channel-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.channel-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.3s;
+}
+
+.channel-card:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-3px);
+}
+
+.channel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.channel-name {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.channel-conversion {
+    font-size: 18px;
+    font-weight: bold;
+    color: #FF6900;
+}
+
+.channel-metrics {
+    margin-bottom: 10px;
+}
+
+.metric-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 13px;
+}
+
+.channel-trend {
+    font-size: 12px;
+    font-weight: 500;
+    text-align: right;
+}
+
+.time-trend-analysis {
+    margin-bottom: 30px;
+}
+
+.trend-controls {
+    display: flex;
+    gap: 5px;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 5px;
+    border-radius: 10px;
+    width: fit-content;
+}
+
+.trend-period {
+    padding: 8px 16px;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 13px;
+}
+
+.trend-period:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.trend-period.active {
+    background: linear-gradient(135deg, #FF6900 0%, #FF8C00 100%);
+    color: white;
+}
+
+.user-journey {
+    margin-bottom: 30px;
+}
+
+.journey-flow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    overflow-x: auto;
+}
+
+.journey-step {
+    text-align: center;
+    min-width: 120px;
+}
+
+.step-circle {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #FF6900 0%, #FF8C00 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: white;
+    margin: 0 auto 10px;
+}
+
+.step-content h4 {
+    margin: 0 0 5px 0;
+    font-size: 13px;
+    color: white;
+}
+
+.step-content p {
+    margin: 0 0 3px 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #FF6900;
+}
+
+.step-content small {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.journey-arrow {
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.4);
+    margin: 0 5px;
+}
+
+@media (max-width: 768px) {
+    .overview-grid,
+    .channel-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .journey-flow {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .journey-arrow {
+        transform: rotate(90deg);
+    }
+}
+</style>
+
+<script>
+// 配置跟踪
+function setupTracking() {
+    console.log('配置转化跟踪');
+}
+
+// 导出报告
+function exportReport() {
+    console.log('导出转化报告');
+}
+
+// 创建漏斗
+function createFunnel() {
+    console.log('创建转化漏斗');
+}
+
+// 切换时间周期
+function changePeriod(period) {
+    document.querySelectorAll('.trend-period').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    // 重新渲染趋势图表
+    renderTrendChart(period);
+    console.log('切换到时间周期:', period);
+}
+
+// 初始化转化漏斗图表
+function initConversionFunnelChart() {
+    if (typeof echarts === 'undefined') return;
+    
+    const chart = echarts.init(document.getElementById('conversionFunnelChart'));
+    const option = {
+        tooltip: {
+            trigger: 'item',
+            formatter: '{a} <br/>{b} : {c}%'
+        },
+        series: [
+            {
+                name: '转化漏斗',
+                type: 'funnel',
+                left: '10%',
+                top: 60,
+                bottom: 60,
+                width: '80%',
+                min: 0,
+                max: 100,
+                minSize: '0%',
+                maxSize: '100%',
+                sort: 'descending',
+                gap: 2,
+                label: {
+                    show: true,
+                    position: 'inside'
+                },
+                labelLine: {
+                    length: 10,
+                    lineStyle: {
+                        width: 1,
+                        type: 'solid'
+                    }
+                },
+                itemStyle: {
+                    borderColor: '#fff',
+                    borderWidth: 1
+                },
+                emphasis: {
+                    label: {
+                        fontSize: 20
+                    }
+                },
+                data: [
+                    { value: 100, name: '页面访问' },
+                    { value: 68, name: '产品页面' },
+                    { value: 45, name: '详细信息' },
+                    { value: 27, name: '加入购物车' },
+                    { value: 8, name: '完成购买' }
+                ]
+            }
+        ]
+    };
+    
+    chart.setOption(option);
+    window.addEventListener('resize', () => chart.resize());
+}
+
+// 渲染趋势图表
+function renderTrendChart(period) {
+    if (typeof echarts === 'undefined') return;
+    
+    const chart = echarts.init(document.getElementById('conversionTrendChart'));
+    
+    // 根据期间生成数据
+    let xAxisData, seriesData;
+    if (period === '7d') {
+        xAxisData = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+        seriesData = [3.2, 3.8, 4.1, 3.9, 4.5, 5.2, 4.8];
+    } else if (period === '30d') {
+        xAxisData = ['第1周', '第2周', '第3周', '第4周'];
+        seriesData = [3.5, 4.2, 4.8, 4.1];
+    } else {
+        xAxisData = ['第1月', '第2月', '第3月'];
+        seriesData = [3.8, 4.3, 4.6];
+    }
+    
+    const option = {
+        tooltip: {
+            trigger: 'axis'
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: xAxisData,
+            axisLine: {
+                lineStyle: { color: 'rgba(255,255,255,0.2)' }
+            },
+            axisTick: { show: false }
+        },
+        yAxis: {
+            type: 'value',
+            axisLabel: {
+                formatter: '{value}%'
+            },
+            axisLine: {
+                lineStyle: { color: 'rgba(255,255,255,0.2)' }
+            },
+            splitLine: {
+                lineStyle: { color: 'rgba(255,255,255,0.1)' }
+            }
+        },
+        series: [
+            {
+                name: '转化率',
+                type: 'line',
+                data: seriesData,
+                smooth: true,
+                lineStyle: {
+                    color: '#FF6900',
+                    width: 3
+                },
+                itemStyle: {
+                    color: '#FF6900'
+                },
+                areaStyle: {
+                    color: {
+                        type: 'linear',
+                        x: 0, y: 0, x2: 0, y2: 1,
+                        colorStops: [
+                            { offset: 0, color: 'rgba(255,105,0,0.3)' },
+                            { offset: 1, color: 'rgba(255,105,0,0.05)' }
+                        ]
+                    }
+                }
+            }
+        ]
+    };
+    
+    chart.setOption(option);
+}
+
+// 页面加载时初始化图表
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(() => {
+        initConversionFunnelChart();
+        renderTrendChart('7d');
+    }, 100);
+});
+</script>

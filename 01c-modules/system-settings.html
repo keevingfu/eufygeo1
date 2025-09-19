@@ -1,0 +1,1032 @@
+<!-- System Settings Module -->
+<div class="module-content">
+    <!-- 系统设置标题 -->
+    <div class="module-header">
+        <h2 style="font-size: 24px; margin-bottom: 20px; color: #FF6900;">
+            ⚙️ 系统设置中心
+        </h2>
+        <div class="header-actions">
+            <button class="action-btn" onclick="saveAllSettings()">💾 保存设置</button>
+            <button class="action-btn" onclick="resetToDefault()">🔄 重置默认</button>
+            <button class="action-btn" onclick="exportConfig()">📤 导出配置</button>
+        </div>
+    </div>
+
+    <!-- 设置导航 -->
+    <div class="settings-navigation">
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="switchTab('general')" data-tab="general">
+                🏠 常规设置
+            </button>
+            <button class="nav-tab" onclick="switchTab('account')" data-tab="account">
+                👤 账户管理
+            </button>
+            <button class="nav-tab" onclick="switchTab('notifications')" data-tab="notifications">
+                🔔 通知设置
+            </button>
+            <button class="nav-tab" onclick="switchTab('security')" data-tab="security">
+                🔐 安全设置
+            </button>
+            <button class="nav-tab" onclick="switchTab('api')" data-tab="api">
+                🔌 API配置
+            </button>
+            <button class="nav-tab" onclick="switchTab('advanced')" data-tab="advanced">
+                🔧 高级设置
+            </button>
+        </div>
+    </div>
+
+    <!-- 常规设置 -->
+    <div class="settings-panel active" data-panel="general">
+        <h3 style="margin-bottom: 20px;">🏠 常规设置</h3>
+        
+        <div class="settings-section">
+            <h4>界面设置</h4>
+            <div class="setting-items">
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label>界面主题</label>
+                        <p>选择系统界面的主题风格</p>
+                    </div>
+                    <div class="setting-control">
+                        <select id="themeSelect" onchange="updateSetting('theme', this.value)">
+                            <option value="dark">深色主题</option>
+                            <option value="light">浅色主题</option>
+                            <option value="auto">跟随系统</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label>界面语言</label>
+                        <p>设置系统界面显示语言</p>
+                    </div>
+                    <div class="setting-control">
+                        <select id="languageSelect" onchange="updateSetting('language', this.value)">
+                            <option value="zh-CN">简体中文</option>
+                            <option value="en-US">English</option>
+                            <option value="ja-JP">日本語</option>
+                            <option value="ko-KR">한국어</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label>时区设置</label>
+                        <p>设置系统显示的时区</p>
+                    </div>
+                    <div class="setting-control">
+                        <select id="timezoneSelect" onchange="updateSetting('timezone', this.value)">
+                            <option value="UTC+8">UTC+8 北京时间</option>
+                            <option value="UTC+0">UTC+0 格林威治时间</option>
+                            <option value="UTC-5">UTC-5 美国东部时间</option>
+                            <option value="UTC-8">UTC-8 美国西部时间</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label>数据刷新频率</label>
+                        <p>设置仪表盘数据的自动刷新间隔</p>
+                    </div>
+                    <div class="setting-control">
+                        <select id="refreshRate" onchange="updateSetting('refreshRate', this.value)">
+                            <option value="30">30秒</option>
+                            <option value="60">1分钟</option>
+                            <option value="300">5分钟</option>
+                            <option value="600">10分钟</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <h4>显示设置</h4>
+            <div class="setting-items">
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label>启用动画效果</label>
+                        <p>开启界面过渡动画和交互效果</p>
+                    </div>
+                    <div class="setting-control">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="animationsEnabled" checked onchange="updateSetting('animations', this.checked)">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label>紧凑模式</label>
+                        <p>减少界面元素间距，显示更多内容</p>
+                    </div>
+                    <div class="setting-control">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="compactMode" onchange="updateSetting('compact', this.checked)">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label>显示帮助提示</label>
+                        <p>在界面元素上显示操作提示</p>
+                    </div>
+                    <div class="setting-control">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="showTooltips" checked onchange="updateSetting('tooltips', this.checked)">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 账户管理 -->
+    <div class="settings-panel" data-panel="account">
+        <h3 style="margin-bottom: 20px;">👤 账户管理</h3>
+        
+        <div class="settings-section">
+            <h4>基本信息</h4>
+            <div class="setting-items">
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label>用户名</label>
+                        <p>您的系统登录用户名</p>
+                    </div>
+                    <div class="setting-control">
+                        <input type="text" value="admin@eufygeo.com" readonly class="readonly-input">
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label>显示名称</label>
+                        <p>在系统中显示的名称</p>
+                    </div>
+                    <div class="setting-control">
+                        <input type="text" id="displayName" value="系统管理员" onchange="updateSetting('displayName', this.value)">
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label>邮箱地址</label>
+                        <p>接收系统通知的邮箱</p>
+                    </div>
+                    <div class="setting-control">
+                        <input type="email" id="emailAddress" value="admin@eufygeo.com" onchange="updateSetting('email', this.value)">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <h4>密码安全</h4>
+            <div class="setting-items">
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label>修改密码</label>
+                        <p>更改您的登录密码</p>
+                    </div>
+                    <div class="setting-control">
+                        <button class="action-btn secondary" onclick="changePassword()">🔑 修改密码</button>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label>上次密码修改</label>
+                        <p>最近一次密码修改时间</p>
+                    </div>
+                    <div class="setting-control">
+                        <span class="info-text">2024-10-15 14:30:22</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <h4>会话管理</h4>
+            <div class="setting-items">
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label>会话超时</label>
+                        <p>无操作时自动退出登录的时间</p>
+                    </div>
+                    <div class="setting-control">
+                        <select id="sessionTimeout" onchange="updateSetting('sessionTimeout', this.value)">
+                            <option value="30">30分钟</option>
+                            <option value="60">1小时</option>
+                            <option value="240">4小时</option>
+                            <option value="480">8小时</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label>当前活跃会话</label>
+                        <p>查看和管理当前登录的会话</p>
+                    </div>
+                    <div class="setting-control">
+                        <button class="action-btn secondary" onclick="manageSessions()">📱 管理会话</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 通知设置 -->
+    <div class="settings-panel" data-panel="notifications">
+        <h3 style="margin-bottom: 20px;">🔔 通知设置</h3>
+        
+        <div class="settings-section">
+            <h4>邮件通知</h4>
+            <div class="setting-items">
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label>系统更新通知</label>
+                        <p>接收系统版本更新和维护通知</p>
+                    </div>
+                    <div class="setting-control">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="systemUpdates" checked onchange="updateSetting('emailSystemUpdates', this.checked)">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label>性能警报</label>
+                        <p>当系统性能异常时发送邮件警报</p>
+                    </div>
+                    <div class="setting-control">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="performanceAlerts" checked onchange="updateSetting('emailPerformanceAlerts', this.checked)">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label>数据报告</label>
+                        <p>接收定期的数据分析报告</p>
+                    </div>
+                    <div class="setting-control">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="dataReports" checked onchange="updateSetting('emailDataReports', this.checked)">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <h4>实时通知</h4>
+            <div class="setting-items">
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label>浏览器通知</label>
+                        <p>在浏览器中显示实时通知</p>
+                    </div>
+                    <div class="setting-control">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="browserNotifications" onchange="updateSetting('browserNotifications', this.checked)">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label>桌面通知</label>
+                        <p>显示系统桌面通知</p>
+                    </div>
+                    <div class="setting-control">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="desktopNotifications" onchange="updateSetting('desktopNotifications', this.checked)">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label>通知免打扰时间</label>
+                        <p>设置不接收通知的时间段</p>
+                    </div>
+                    <div class="setting-control">
+                        <div class="time-range">
+                            <input type="time" id="quietStart" value="22:00" onchange="updateSetting('quietTimeStart', this.value)">
+                            <span>至</span>
+                            <input type="time" id="quietEnd" value="08:00" onchange="updateSetting('quietTimeEnd', this.value)">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 安全设置 -->
+    <div class="settings-panel" data-panel="security">
+        <h3 style="margin-bottom: 20px;">🔐 安全设置</h3>
+        
+        <div class="settings-section">
+            <h4>访问控制</h4>
+            <div class="setting-items">
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label>IP白名单</label>
+                        <p>限制只有指定IP地址可以访问系统</p>
+                    </div>
+                    <div class="setting-control">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="ipWhitelist" onchange="updateSetting('ipWhitelist', this.checked)">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label>多因素认证</label>
+                        <p>启用两步验证提高账户安全性</p>
+                    </div>
+                    <div class="setting-control">
+                        <button class="action-btn secondary" onclick="setupMFA()">🛡️ 设置2FA</button>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label>登录失败锁定</label>
+                        <p>连续登录失败后锁定账户</p>
+                    </div>
+                    <div class="setting-control">
+                        <select id="failedLoginLock" onchange="updateSetting('failedLoginLock', this.value)">
+                            <option value="3">3次失败</option>
+                            <option value="5">5次失败</option>
+                            <option value="10">10次失败</option>
+                            <option value="0">禁用锁定</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <h4>日志审计</h4>
+            <div class="setting-items">
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label>操作日志记录</label>
+                        <p>记录所有用户操作行为</p>
+                    </div>
+                    <div class="setting-control">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="auditLogging" checked onchange="updateSetting('auditLogging', this.checked)">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label>日志保留期</label>
+                        <p>设置系统日志的保留时间</p>
+                    </div>
+                    <div class="setting-control">
+                        <select id="logRetention" onchange="updateSetting('logRetention', this.value)">
+                            <option value="30">30天</option>
+                            <option value="90">90天</option>
+                            <option value="180">180天</option>
+                            <option value="365">1年</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label>查看安全日志</label>
+                        <p>查看系统安全相关的日志记录</p>
+                    </div>
+                    <div class="setting-control">
+                        <button class="action-btn secondary" onclick="viewSecurityLogs()">📋 查看日志</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- API配置 -->
+    <div class="settings-panel" data-panel="api">
+        <h3 style="margin-bottom: 20px;">🔌 API配置</h3>
+        
+        <div class="settings-section">
+            <h4>API密钥管理</h4>
+            <div class="api-keys-list">
+                <div class="api-key-item">
+                    <div class="key-info">
+                        <h5>主API密钥</h5>
+                        <p>用于系统主要功能的API调用</p>
+                        <code>eufygeo_xxxxxxxxxxxxxxxxxxxxxxxx</code>
+                    </div>
+                    <div class="key-actions">
+                        <button class="action-btn secondary" onclick="regenerateKey('main')">🔄 重新生成</button>
+                        <button class="action-btn secondary" onclick="revokeKey('main')">❌ 撤销</button>
+                    </div>
+                </div>
+
+                <div class="api-key-item">
+                    <div class="key-info">
+                        <h5>只读API密钥</h5>
+                        <p>仅限查询操作的API密钥</p>
+                        <code>eufygeo_readonly_xxxxxxxxxxxxxxxxxxxx</code>
+                    </div>
+                    <div class="key-actions">
+                        <button class="action-btn secondary" onclick="regenerateKey('readonly')">🔄 重新生成</button>
+                        <button class="action-btn secondary" onclick="revokeKey('readonly')">❌ 撤销</button>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="action-btn primary" onclick="createNewKey()">➕ 创建新密钥</button>
+        </div>
+
+        <div class="settings-section">
+            <h4>API限流设置</h4>
+            <div class="setting-items">
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label>请求频率限制</label>
+                        <p>设置每分钟最大API请求次数</p>
+                    </div>
+                    <div class="setting-control">
+                        <input type="number" id="apiRateLimit" value="1000" min="100" max="10000" onchange="updateSetting('apiRateLimit', this.value)">
+                        <span class="input-suffix">次/分钟</span>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label>并发连接数</label>
+                        <p>同时处理的最大API连接数</p>
+                    </div>
+                    <div class="setting-control">
+                        <input type="number" id="maxConnections" value="100" min="10" max="1000" onchange="updateSetting('maxConnections', this.value)">
+                        <span class="input-suffix">连接</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 高级设置 -->
+    <div class="settings-panel" data-panel="advanced">
+        <h3 style="margin-bottom: 20px;">🔧 高级设置</h3>
+        
+        <div class="settings-section">
+            <h4>系统维护</h4>
+            <div class="setting-items">
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label>自动备份</label>
+                        <p>启用系统数据的自动备份</p>
+                    </div>
+                    <div class="setting-control">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="autoBackup" checked onchange="updateSetting('autoBackup', this.checked)">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label>备份频率</label>
+                        <p>设置自动备份的执行频率</p>
+                    </div>
+                    <div class="setting-control">
+                        <select id="backupFrequency" onchange="updateSetting('backupFrequency', this.value)">
+                            <option value="daily">每天</option>
+                            <option value="weekly">每周</option>
+                            <option value="monthly">每月</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label>数据清理</label>
+                        <p>清理临时文件和过期数据</p>
+                    </div>
+                    <div class="setting-control">
+                        <button class="action-btn secondary" onclick="cleanupData()">🧹 立即清理</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <h4>开发者选项</h4>
+            <div class="setting-items">
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label>调试模式</label>
+                        <p>启用系统调试和详细日志</p>
+                    </div>
+                    <div class="setting-control">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="debugMode" onchange="updateSetting('debugMode', this.checked)">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label>性能监控</label>
+                        <p>实时监控系统性能指标</p>
+                    </div>
+                    <div class="setting-control">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="performanceMonitoring" checked onchange="updateSetting('performanceMonitoring', this.checked)">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label>实验性功能</label>
+                        <p>启用尚在测试阶段的新功能</p>
+                    </div>
+                    <div class="setting-control">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="experimentalFeatures" onchange="updateSetting('experimentalFeatures', this.checked)">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-section danger-zone">
+            <h4>⚠️ 危险操作</h4>
+            <div class="setting-items">
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label>重置所有设置</label>
+                        <p>将所有设置恢复到默认值</p>
+                    </div>
+                    <div class="setting-control">
+                        <button class="action-btn danger" onclick="resetAllSettings()">🔄 重置设置</button>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label>清除所有数据</label>
+                        <p>删除所有用户数据和配置</p>
+                    </div>
+                    <div class="setting-control">
+                        <button class="action-btn danger" onclick="clearAllData()">🗑️ 清除数据</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.settings-navigation {
+    margin-bottom: 30px;
+}
+
+.nav-tabs {
+    display: flex;
+    gap: 5px;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 5px;
+    border-radius: 12px;
+    overflow-x: auto;
+}
+
+.nav-tab {
+    padding: 12px 20px;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.nav-tab:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.nav-tab.active {
+    background: linear-gradient(135deg, #FF6900 0%, #FF8C00 100%);
+    color: white;
+}
+
+.settings-panel {
+    display: none;
+}
+
+.settings-panel.active {
+    display: block;
+}
+
+.settings-section {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.settings-section h4 {
+    margin: 0 0 20px 0;
+    font-size: 16px;
+    color: #FF6900;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.danger-zone {
+    border-color: rgba(245, 34, 45, 0.3);
+    background: rgba(245, 34, 45, 0.03);
+}
+
+.danger-zone h4 {
+    color: #F5222D;
+    border-bottom-color: rgba(245, 34, 45, 0.2);
+}
+
+.setting-items {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.setting-item:last-child {
+    border-bottom: none;
+}
+
+.setting-info {
+    flex: 1;
+}
+
+.setting-info label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 5px;
+}
+
+.setting-info p {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+    margin: 0;
+    line-height: 1.4;
+}
+
+.setting-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.setting-control select,
+.setting-control input[type="text"],
+.setting-control input[type="email"],
+.setting-control input[type="number"] {
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    color: white;
+    font-size: 13px;
+    min-width: 150px;
+}
+
+.readonly-input {
+    background: rgba(255, 255, 255, 0.02);
+    color: rgba(255, 255, 255, 0.5);
+    cursor: not-allowed;
+}
+
+.input-suffix {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.time-range {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.time-range input[type="time"] {
+    padding: 6px 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    color: white;
+    font-size: 12px;
+}
+
+.time-range span {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.2);
+    transition: 0.3s;
+    border-radius: 24px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.3s;
+    border-radius: 50%;
+}
+
+.toggle-switch input:checked + .toggle-slider {
+    background: linear-gradient(135deg, #FF6900 0%, #FF8C00 100%);
+}
+
+.toggle-switch input:checked + .toggle-slider:before {
+    transform: translateX(26px);
+}
+
+.info-text {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.action-btn.secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.action-btn.danger {
+    background: linear-gradient(135deg, #F5222D 0%, #FF4D4F 100%);
+    color: white;
+}
+
+.action-btn.danger:hover {
+    box-shadow: 0 5px 15px rgba(245,34,45,0.3);
+}
+
+.api-keys-list {
+    margin-bottom: 20px;
+}
+
+.api-key-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.key-info h5 {
+    margin: 0 0 5px 0;
+    font-size: 14px;
+    color: white;
+}
+
+.key-info p {
+    margin: 0 0 10px 0;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.key-info code {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    color: #FF6900;
+    font-family: 'Courier New', monospace;
+}
+
+.key-actions {
+    display: flex;
+    gap: 10px;
+}
+
+@media (max-width: 768px) {
+    .nav-tabs {
+        flex-direction: column;
+    }
+    
+    .setting-item {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+    
+    .setting-control {
+        justify-content: flex-start;
+    }
+    
+    .api-key-item {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .key-actions {
+        justify-content: stretch;
+    }
+}
+</style>
+
+<script>
+// 保存所有设置
+function saveAllSettings() {
+    console.log('保存所有设置');
+    // 模拟保存过程
+    alert('设置已保存');
+}
+
+// 重置为默认设置
+function resetToDefault() {
+    if (confirm('确定要重置所有设置为默认值吗？')) {
+        console.log('重置所有设置为默认值');
+        location.reload();
+    }
+}
+
+// 导出配置
+function exportConfig() {
+    console.log('导出系统配置');
+}
+
+// 切换标签页
+function switchTab(tabName) {
+    // 移除所有active类
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    document.querySelectorAll('.settings-panel').forEach(panel => {
+        panel.classList.remove('active');
+    });
+    
+    // 添加active类到当前标签
+    document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+    document.querySelector(`[data-panel="${tabName}"]`).classList.add('active');
+    
+    console.log('切换到标签页:', tabName);
+}
+
+// 更新设置
+function updateSetting(key, value) {
+    console.log('更新设置:', key, '=', value);
+    
+    // 模拟一些特殊设置的处理
+    if (key === 'theme' && value === 'light') {
+        alert('浅色主题将在下次刷新时生效');
+    } else if (key === 'language' && value !== 'zh-CN') {
+        alert('语言更改将在下次刷新时生效');
+    }
+}
+
+// 修改密码
+function changePassword() {
+    const newPassword = prompt('请输入新密码:');
+    if (newPassword) {
+        console.log('修改密码');
+        alert('密码修改成功');
+    }
+}
+
+// 管理会话
+function manageSessions() {
+    console.log('管理活跃会话');
+    alert('当前有2个活跃会话：\n1. Chrome浏览器 (当前)\n2. 移动设备');
+}
+
+// 设置多因素认证
+function setupMFA() {
+    console.log('设置多因素认证');
+    alert('多因素认证设置向导将引导您完成配置');
+}
+
+// 查看安全日志
+function viewSecurityLogs() {
+    console.log('查看安全日志');
+    alert('显示最近的安全相关日志记录');
+}
+
+// API密钥管理
+function regenerateKey(keyType) {
+    if (confirm(`确定要重新生成${keyType === 'main' ? '主' : '只读'}API密钥吗？`)) {
+        console.log('重新生成API密钥:', keyType);
+        alert('新的API密钥已生成，请妥善保存');
+    }
+}
+
+function revokeKey(keyType) {
+    if (confirm(`确定要撤销${keyType === 'main' ? '主' : '只读'}API密钥吗？`)) {
+        console.log('撤销API密钥:', keyType);
+        alert('API密钥已被撤销');
+    }
+}
+
+function createNewKey() {
+    const keyName = prompt('请输入新密钥的名称:');
+    if (keyName) {
+        console.log('创建新API密钥:', keyName);
+        alert('新的API密钥已创建');
+    }
+}
+
+// 高级设置功能
+function cleanupData() {
+    if (confirm('确定要清理临时文件和过期数据吗？')) {
+        console.log('清理数据');
+        alert('数据清理完成，释放了234MB空间');
+    }
+}
+
+function resetAllSettings() {
+    if (confirm('⚠️ 这将重置所有设置，确定继续吗？')) {
+        console.log('重置所有设置');
+        alert('所有设置已重置为默认值');
+    }
+}
+
+function clearAllData() {
+    const confirmation = prompt('⚠️ 危险操作！这将删除所有数据。\n请输入 "DELETE" 确认:');
+    if (confirmation === 'DELETE') {
+        console.log('清除所有数据');
+        alert('所有数据已被清除');
+    } else if (confirmation !== null) {
+        alert('确认文本不正确，操作已取消');
+    }
+}
+
+// 页面加载时初始化
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('系统设置页面已加载');
+});
+</script>

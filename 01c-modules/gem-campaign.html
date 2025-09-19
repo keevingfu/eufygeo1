@@ -1,0 +1,1092 @@
+<!-- GEM Campaign Management Module -->
+<div class="module-content">
+    <!-- GEM投放管理标题 -->
+    <div class="module-header">
+        <h2 style="font-size: 24px; margin-bottom: 20px; color: #FF6900;">
+            🚀 GEM 智能投放管理
+        </h2>
+        <div class="header-actions">
+            <button class="action-btn" onclick="createCampaign()">✨ 新建活动</button>
+            <button class="action-btn" onclick="bulkOptimize()">⚡ 批量优化</button>
+            <button class="action-btn" onclick="exportCampaignReport()">📊 导出报告</button>
+        </div>
+    </div>
+
+    <!-- 投放概览仪表板 -->
+    <div class="campaign-dashboard">
+        <h3 style="margin-bottom: 20px;">📊 投放概览仪表板</h3>
+        <div class="dashboard-grid">
+            <div class="dashboard-card primary">
+                <div class="card-header">
+                    <span class="card-icon">💰</span>
+                    <h4>总预算</h4>
+                    <span class="period-selector">本月</span>
+                </div>
+                <div class="card-content">
+                    <div class="main-metric">$12,580</div>
+                    <div class="metric-details">
+                        <span class="spent">已花费: $8,240</span>
+                        <span class="remaining">剩余: $4,340</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 65%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-card success">
+                <div class="card-header">
+                    <span class="card-icon">🎯</span>
+                    <h4>ROAS</h4>
+                    <span class="trend-indicator positive">↗️ +15%</span>
+                </div>
+                <div class="card-content">
+                    <div class="main-metric">3.8x</div>
+                    <div class="metric-comparison">
+                        <span>vs 目标: 3.5x</span>
+                        <span class="status achieved">✅ 已达成</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-card info">
+                <div class="card-header">
+                    <span class="card-icon">👁️</span>
+                    <h4>曝光量</h4>
+                    <span class="trend-indicator positive">↗️ +23%</span>
+                </div>
+                <div class="card-content">
+                    <div class="main-metric">2.3M</div>
+                    <div class="metric-breakdown">
+                        <div class="breakdown-item">
+                            <span>搜索: 1.5M</span>
+                            <span class="percentage">65%</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span>展示: 0.8M</span>
+                            <span class="percentage">35%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-card warning">
+                <div class="card-header">
+                    <span class="card-icon">📱</span>
+                    <h4>转化率</h4>
+                    <span class="trend-indicator negative">↘️ -2%</span>
+                </div>
+                <div class="card-content">
+                    <div class="main-metric">8.5%</div>
+                    <div class="metric-comparison">
+                        <span>vs 上月: 8.7%</span>
+                        <span class="status attention">⚠️ 需关注</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 活动列表 -->
+    <div class="campaign-list">
+        <h3 style="margin-bottom: 20px;">📋 活动管理</h3>
+        <div class="list-controls">
+            <div class="filter-group">
+                <select class="filter-select" onchange="filterCampaigns(this.value)">
+                    <option value="all">全部活动</option>
+                    <option value="active">运行中</option>
+                    <option value="paused">已暂停</option>
+                    <option value="completed">已完成</option>
+                </select>
+                <select class="filter-select" onchange="filterByPlatform(this.value)">
+                    <option value="all">全部平台</option>
+                    <option value="google">Google Ads</option>
+                    <option value="facebook">Facebook</option>
+                    <option value="amazon">Amazon</option>
+                </select>
+            </div>
+            <div class="sort-group">
+                <button class="sort-btn" onclick="sortCampaigns('performance')">按效果排序</button>
+                <button class="sort-btn" onclick="sortCampaigns('budget')">按预算排序</button>
+            </div>
+        </div>
+
+        <div class="campaign-table">
+            <div class="table-header">
+                <div class="col-campaign">活动名称</div>
+                <div class="col-platform">平台</div>
+                <div class="col-status">状态</div>
+                <div class="col-budget">预算</div>
+                <div class="col-performance">表现</div>
+                <div class="col-actions">操作</div>
+            </div>
+
+            <div class="campaign-row featured">
+                <div class="col-campaign">
+                    <div class="campaign-info">
+                        <h4>E28 FlexiOne功能推广</h4>
+                        <div class="campaign-tags">
+                            <span class="tag priority">高优先级</span>
+                            <span class="tag feature">手持清洁器</span>
+                        </div>
+                        <div class="campaign-dates">2024/03/01 - 2024/03/31</div>
+                    </div>
+                </div>
+                <div class="col-platform">
+                    <div class="platform-badges">
+                        <span class="platform-badge google">Google</span>
+                        <span class="platform-badge facebook">Facebook</span>
+                    </div>
+                </div>
+                <div class="col-status">
+                    <span class="status-badge active">运行中</span>
+                    <div class="status-details">自动优化</div>
+                </div>
+                <div class="col-budget">
+                    <div class="budget-info">
+                        <div class="budget-amount">$3,200</div>
+                        <div class="budget-usage">已用: 68%</div>
+                        <div class="budget-bar">
+                            <div class="budget-fill" style="width: 68%;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-performance">
+                    <div class="performance-metrics">
+                        <div class="metric-item">
+                            <span class="metric-label">ROAS</span>
+                            <span class="metric-value excellent">4.2x</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">CTR</span>
+                            <span class="metric-value good">3.8%</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">转化</span>
+                            <span class="metric-value good">156</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-actions">
+                    <button class="action-btn-small primary" onclick="editCampaign('flexione-promo')">
+                        ✏️ 编辑
+                    </button>
+                    <button class="action-btn-small secondary" onclick="viewDetails('flexione-promo')">
+                        📊 详情
+                    </button>
+                    <button class="action-btn-small success" onclick="duplicateCampaign('flexione-promo')">
+                        📋 复制
+                    </button>
+                </div>
+            </div>
+
+            <div class="campaign-row">
+                <div class="col-campaign">
+                    <div class="campaign-info">
+                        <h4>E28 vs 竞品对比广告</h4>
+                        <div class="campaign-tags">
+                            <span class="tag comparison">对比营销</span>
+                            <span class="tag performance">高转化</span>
+                        </div>
+                        <div class="campaign-dates">2024/03/05 - 2024/04/05</div>
+                    </div>
+                </div>
+                <div class="col-platform">
+                    <div class="platform-badges">
+                        <span class="platform-badge google">Google</span>
+                        <span class="platform-badge amazon">Amazon</span>
+                    </div>
+                </div>
+                <div class="col-status">
+                    <span class="status-badge active">运行中</span>
+                    <div class="status-details">学习阶段</div>
+                </div>
+                <div class="col-budget">
+                    <div class="budget-info">
+                        <div class="budget-amount">$2,800</div>
+                        <div class="budget-usage">已用: 42%</div>
+                        <div class="budget-bar">
+                            <div class="budget-fill" style="width: 42%;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-performance">
+                    <div class="performance-metrics">
+                        <div class="metric-item">
+                            <span class="metric-label">ROAS</span>
+                            <span class="metric-value good">3.6x</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">CTR</span>
+                            <span class="metric-value warning">2.1%</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">转化</span>
+                            <span class="metric-value good">98</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-actions">
+                    <button class="action-btn-small primary" onclick="editCampaign('comparison-ad')">
+                        ✏️ 编辑
+                    </button>
+                    <button class="action-btn-small secondary" onclick="viewDetails('comparison-ad')">
+                        📊 详情
+                    </button>
+                    <button class="action-btn-small warning" onclick="optimizeCampaign('comparison-ad')">
+                        ⚡ 优化
+                    </button>
+                </div>
+            </div>
+
+            <div class="campaign-row">
+                <div class="col-campaign">
+                    <div class="campaign-info">
+                        <h4>HydroJet拖布技术展示</h4>
+                        <div class="campaign-tags">
+                            <span class="tag technology">技术特性</span>
+                            <span class="tag video">视频广告</span>
+                        </div>
+                        <div class="campaign-dates">2024/02/20 - 2024/03/20</div>
+                    </div>
+                </div>
+                <div class="col-platform">
+                    <div class="platform-badges">
+                        <span class="platform-badge facebook">Facebook</span>
+                        <span class="platform-badge youtube">YouTube</span>
+                    </div>
+                </div>
+                <div class="col-status">
+                    <span class="status-badge paused">已暂停</span>
+                    <div class="status-details">预算耗尽</div>
+                </div>
+                <div class="col-budget">
+                    <div class="budget-info">
+                        <div class="budget-amount">$1,500</div>
+                        <div class="budget-usage">已用: 100%</div>
+                        <div class="budget-bar">
+                            <div class="budget-fill" style="width: 100%;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-performance">
+                    <div class="performance-metrics">
+                        <div class="metric-item">
+                            <span class="metric-label">ROAS</span>
+                            <span class="metric-value warning">2.8x</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">CTR</span>
+                            <span class="metric-value excellent">5.2%</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">转化</span>
+                            <span class="metric-value good">76</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-actions">
+                    <button class="action-btn-small success" onclick="restartCampaign('hydrojet-demo')">
+                        ▶️ 重启
+                    </button>
+                    <button class="action-btn-small secondary" onclick="viewDetails('hydrojet-demo')">
+                        📊 详情
+                    </button>
+                    <button class="action-btn-small primary" onclick="addBudget('hydrojet-demo')">
+                        💰 加预算
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI优化建议 -->
+    <div class="ai-optimization">
+        <h3 style="margin-bottom: 20px;">🤖 AI 优化建议</h3>
+        <div class="optimization-grid">
+            <div class="optimization-card urgent">
+                <div class="card-priority">高优先级</div>
+                <div class="optimization-content">
+                    <h4>FlexiOne活动关键词扩展</h4>
+                    <p>检测到"便携式吸尘器"和"手持清洁设备"关键词搜索量上升67%，建议扩展FlexiOne活动的关键词覆盖范围。</p>
+                    <div class="optimization-impact">
+                        <span class="impact-metric">预期ROAS提升: +0.8x</span>
+                        <span class="impact-metric">预期转化增长: +45%</span>
+                    </div>
+                    <button class="optimization-btn" onclick="applyOptimization('keyword-expansion')">
+                        🚀 应用优化
+                    </button>
+                </div>
+            </div>
+
+            <div class="optimization-card medium">
+                <div class="card-priority">中优先级</div>
+                <div class="optimization-content">
+                    <h4>对比广告创意优化</h4>
+                    <p>竞品对比活动的CTR低于行业均值，建议更新广告创意，突出E28的防缠毛刷和AI避障技术优势。</p>
+                    <div class="optimization-impact">
+                        <span class="impact-metric">预期CTR提升: +1.2%</span>
+                        <span class="impact-metric">预期CPC降低: -15%</span>
+                    </div>
+                    <button class="optimization-btn" onclick="applyOptimization('creative-update')">
+                        ✨ 优化创意
+                    </button>
+                </div>
+            </div>
+
+            <div class="optimization-card low">
+                <div class="card-priority">低优先级</div>
+                <div class="optimization-content">
+                    <h4>HydroJet活动重启时机</h4>
+                    <p>检测到拖地相关搜索在周末增长23%，建议在周五重启HydroJet活动以获得最佳投放效果。</p>
+                    <div class="optimization-impact">
+                        <span class="impact-metric">最佳重启时间: 周五 14:00</span>
+                        <span class="impact-metric">建议增加预算: $800</span>
+                    </div>
+                    <button class="optimization-btn" onclick="scheduleRestart('hydrojet-demo')">
+                        📅 计划重启
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 实时性能监控 -->
+    <div class="performance-monitoring">
+        <h3 style="margin-bottom: 20px;">📈 实时性能监控</h3>
+        <div class="monitoring-chart">
+            <div class="chart-header">
+                <h4>过去7天投放表现</h4>
+                <div class="chart-controls">
+                    <button class="chart-btn active" onclick="switchMetric('roas')">ROAS</button>
+                    <button class="chart-btn" onclick="switchMetric('spend')">花费</button>
+                    <button class="chart-btn" onclick="switchMetric('conversions')">转化</button>
+                </div>
+            </div>
+            <div id="performanceChart" style="height: 300px;"></div>
+        </div>
+        
+        <div class="monitoring-alerts">
+            <div class="alert-item critical">
+                <span class="alert-icon">🚨</span>
+                <div class="alert-content">
+                    <h4>FlexiOne活动CPC异常上升</h4>
+                    <p>过去2小时CPC从$0.85上升至$1.23，建议立即检查关键词竞价策略</p>
+                </div>
+                <button class="alert-action" onclick="handleAlert('cpc-spike')">立即处理</button>
+            </div>
+            
+            <div class="alert-item warning">
+                <span class="alert-icon">⚠️</span>
+                <div class="alert-content">
+                    <h4>对比广告质量得分下降</h4>
+                    <p>质量得分从8.2降至6.8，可能影响广告展示和成本</p>
+                </div>
+                <button class="alert-action" onclick="handleAlert('quality-score')">优化广告</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.campaign-dashboard {
+    margin-bottom: 30px;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.dashboard-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.3s;
+}
+
+.dashboard-card.primary {
+    border-left: 4px solid #FF6900;
+}
+
+.dashboard-card.success {
+    border-left: 4px solid #52C41A;
+}
+
+.dashboard-card.info {
+    border-left: 4px solid #1890FF;
+}
+
+.dashboard-card.warning {
+    border-left: 4px solid #FAAD14;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.card-icon {
+    font-size: 20px;
+}
+
+.card-header h4 {
+    flex: 1;
+    margin: 0 0 0 10px;
+    font-size: 14px;
+}
+
+.period-selector,
+.trend-indicator {
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 8px;
+}
+
+.trend-indicator.positive {
+    background: rgba(82, 196, 26, 0.2);
+    color: #52C41A;
+}
+
+.trend-indicator.negative {
+    background: rgba(245, 34, 45, 0.2);
+    color: #F5222D;
+}
+
+.main-metric {
+    font-size: 32px;
+    font-weight: bold;
+    color: #FF6900;
+    margin-bottom: 10px;
+}
+
+.metric-details,
+.metric-comparison {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    margin-bottom: 10px;
+}
+
+.status.achieved {
+    color: #52C41A;
+}
+
+.status.attention {
+    color: #FAAD14;
+}
+
+.metric-breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.breakdown-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+}
+
+.percentage {
+    color: #FF6900;
+    font-weight: 600;
+}
+
+.progress-bar,
+.budget-bar {
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-fill,
+.budget-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #FF6900, #FF8C00);
+    border-radius: 3px;
+    transition: width 0.5s ease;
+}
+
+.campaign-list {
+    margin-bottom: 30px;
+}
+
+.list-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.filter-group,
+.sort-group {
+    display: flex;
+    gap: 10px;
+}
+
+.filter-select {
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    color: white;
+    font-size: 13px;
+}
+
+.sort-btn {
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    color: white;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.campaign-table {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.table-header,
+.campaign-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1.5fr 1.5fr 1.5fr;
+    gap: 20px;
+    padding: 20px;
+    align-items: center;
+}
+
+.table-header {
+    background: rgba(255, 255, 255, 0.05);
+    font-weight: 600;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.campaign-row {
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.campaign-row.featured {
+    background: linear-gradient(135deg, rgba(255,105,0,0.05) 0%, rgba(102,126,234,0.05) 100%);
+    border-left: 3px solid #FF6900;
+}
+
+.campaign-info h4 {
+    margin: 0 0 8px 0;
+    font-size: 14px;
+}
+
+.campaign-tags {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 8px;
+}
+
+.tag {
+    padding: 2px 6px;
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.tag.priority {
+    background: rgba(245, 34, 45, 0.2);
+    color: #F5222D;
+}
+
+.tag.feature {
+    background: rgba(255, 105, 0, 0.2);
+    color: #FF6900;
+}
+
+.tag.comparison {
+    background: rgba(24, 144, 255, 0.2);
+    color: #1890FF;
+}
+
+.tag.performance {
+    background: rgba(82, 196, 26, 0.2);
+    color: #52C41A;
+}
+
+.tag.technology {
+    background: rgba(102, 126, 234, 0.2);
+    color: #667eea;
+}
+
+.tag.video {
+    background: rgba(250, 173, 20, 0.2);
+    color: #FAAD14;
+}
+
+.campaign-dates {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.platform-badges {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.platform-badge {
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.platform-badge.google {
+    background: rgba(66, 133, 244, 0.2);
+    color: #4285F4;
+}
+
+.platform-badge.facebook {
+    background: rgba(24, 119, 242, 0.2);
+    color: #1877F2;
+}
+
+.platform-badge.amazon {
+    background: rgba(255, 153, 0, 0.2);
+    color: #FF9900;
+}
+
+.platform-badge.youtube {
+    background: rgba(255, 0, 0, 0.2);
+    color: #FF0000;
+}
+
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.status-badge.active {
+    background: rgba(82, 196, 26, 0.2);
+    color: #52C41A;
+}
+
+.status-badge.paused {
+    background: rgba(250, 173, 20, 0.2);
+    color: #FAAD14;
+}
+
+.status-details {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.5);
+    margin-top: 4px;
+}
+
+.budget-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.budget-amount {
+    font-size: 16px;
+    font-weight: 600;
+    color: #FF6900;
+}
+
+.budget-usage {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.performance-metrics {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.metric-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.metric-label {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.metric-value {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.metric-value.excellent { color: #52C41A; }
+.metric-value.good { color: #1890FF; }
+.metric-value.warning { color: #FAAD14; }
+
+.col-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.action-btn-small {
+    padding: 4px 8px;
+    border: none;
+    border-radius: 4px;
+    font-size: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.action-btn-small.primary {
+    background: linear-gradient(135deg, #FF6900 0%, #FF8C00 100%);
+    color: white;
+}
+
+.action-btn-small.secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.action-btn-small.success {
+    background: rgba(82, 196, 26, 0.2);
+    color: #52C41A;
+    border: 1px solid rgba(82, 196, 26, 0.3);
+}
+
+.action-btn-small.warning {
+    background: rgba(250, 173, 20, 0.2);
+    color: #FAAD14;
+    border: 1px solid rgba(250, 173, 20, 0.3);
+}
+
+.ai-optimization {
+    margin-bottom: 30px;
+}
+
+.optimization-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 20px;
+}
+
+.optimization-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    position: relative;
+}
+
+.optimization-card.urgent {
+    border-left: 4px solid #F5222D;
+    background: rgba(245, 34, 45, 0.05);
+}
+
+.optimization-card.medium {
+    border-left: 4px solid #FAAD14;
+    background: rgba(250, 173, 20, 0.05);
+}
+
+.optimization-card.low {
+    border-left: 4px solid #1890FF;
+    background: rgba(24, 144, 255, 0.05);
+}
+
+.card-priority {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    padding: 3px 8px;
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.optimization-content h4 {
+    margin: 0 0 10px 0;
+    font-size: 16px;
+}
+
+.optimization-content p {
+    font-size: 13px;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 15px;
+}
+
+.optimization-impact {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 15px;
+}
+
+.impact-metric {
+    font-size: 12px;
+    color: #FF6900;
+    font-weight: 500;
+}
+
+.optimization-btn {
+    width: 100%;
+    padding: 8px 16px;
+    background: linear-gradient(135deg, #FF6900 0%, #FF8C00 100%);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.performance-monitoring {
+    margin-bottom: 30px;
+}
+
+.monitoring-chart {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.chart-controls {
+    display: flex;
+    gap: 5px;
+}
+
+.chart-btn {
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    color: white;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.chart-btn.active {
+    background: linear-gradient(135deg, #FF6900 0%, #FF8C00 100%);
+}
+
+.monitoring-alerts {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.alert-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    border-radius: 10px;
+    border-left: 4px solid;
+}
+
+.alert-item.critical {
+    background: rgba(245, 34, 45, 0.05);
+    border-left-color: #F5222D;
+}
+
+.alert-item.warning {
+    background: rgba(250, 173, 20, 0.05);
+    border-left-color: #FAAD14;
+}
+
+.alert-icon {
+    font-size: 20px;
+}
+
+.alert-content {
+    flex: 1;
+}
+
+.alert-content h4 {
+    margin: 0 0 5px 0;
+    font-size: 14px;
+}
+
+.alert-content p {
+    margin: 0;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.alert-action {
+    padding: 6px 12px;
+    background: linear-gradient(135deg, #FF6900 0%, #FF8C00 100%);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+@media (max-width: 768px) {
+    .dashboard-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+    
+    .table-header,
+    .campaign-row {
+        grid-template-columns: 1fr;
+        text-align: left;
+    }
+    
+    .optimization-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<script>
+// 初始化性能图表
+function initPerformanceChart() {
+    const chart = echarts.init(document.getElementById('performanceChart'));
+    
+    const dates = [];
+    const roasData = [];
+    const spendData = [];
+    const conversionsData = [];
+    
+    for (let i = 6; i >= 0; i--) {
+        const date = new Date();
+        date.setDate(date.getDate() - i);
+        dates.push(date.toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' }));
+        
+        roasData.push((3.2 + Math.random() * 1.2).toFixed(1));
+        spendData.push(Math.floor(800 + Math.random() * 400));
+        conversionsData.push(Math.floor(15 + Math.random() * 25));
+    }
+    
+    const option = {
+        backgroundColor: 'transparent',
+        tooltip: {
+            trigger: 'axis',
+            backgroundColor: 'rgba(0,0,0,0.8)',
+            borderColor: '#FF6900',
+            borderWidth: 1,
+            textStyle: { color: '#fff' }
+        },
+        legend: {
+            data: ['ROAS', '花费($)', '转化数'],
+            textStyle: { color: 'rgba(255,255,255,0.7)' },
+            bottom: 10
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '15%',
+            containLabel: true
+        },
+        xAxis: {
+            type: 'category',
+            data: dates,
+            axisLabel: { color: 'rgba(255,255,255,0.5)' },
+            axisLine: { lineStyle: { color: 'rgba(255,255,255,0.2)' } }
+        },
+        yAxis: [
+            {
+                type: 'value',
+                name: 'ROAS',
+                position: 'left',
+                axisLabel: { color: 'rgba(255,255,255,0.5)' },
+                axisLine: { lineStyle: { color: 'rgba(255,255,255,0.2)' } },
+                splitLine: { lineStyle: { color: 'rgba(255,255,255,0.05)' } }
+            },
+            {
+                type: 'value',
+                name: '花费/转化',
+                position: 'right',
+                axisLabel: { color: 'rgba(255,255,255,0.5)' },
+                axisLine: { lineStyle: { color: 'rgba(255,255,255,0.2)' } }
+            }
+        ],
+        series: [
+            {
+                name: 'ROAS',
+                type: 'line',
+                data: roasData,
+                smooth: true,
+                lineStyle: { color: '#FF6900', width: 3 },
+                itemStyle: { color: '#FF6900' }
+            },
+            {
+                name: '花费($)',
+                type: 'bar',
+                yAxisIndex: 1,
+                data: spendData,
+                itemStyle: { color: '#667eea' }
+            },
+            {
+                name: '转化数',
+                type: 'line',
+                yAxisIndex: 1,
+                data: conversionsData,
+                smooth: true,
+                lineStyle: { color: '#52C41A', width: 2 },
+                itemStyle: { color: '#52C41A' }
+            }
+        ]
+    };
+    
+    chart.setOption(option);
+    window.addEventListener('resize', () => chart.resize());
+}
+
+// 页面加载时初始化图表
+if (typeof echarts !== 'undefined') {
+    setTimeout(initPerformanceChart, 100);
+}
+
+// 其他功能函数
+function createCampaign() { console.log('创建新活动'); }
+function bulkOptimize() { console.log('批量优化'); }
+function exportCampaignReport() { console.log('导出活动报告'); }
+function filterCampaigns(filter) { console.log('过滤活动:', filter); }
+function filterByPlatform(platform) { console.log('按平台过滤:', platform); }
+function sortCampaigns(sort) { console.log('排序活动:', sort); }
+function editCampaign(id) { console.log('编辑活动:', id); }
+function viewDetails(id) { console.log('查看详情:', id); }
+function duplicateCampaign(id) { console.log('复制活动:', id); }
+function optimizeCampaign(id) { console.log('优化活动:', id); }
+function restartCampaign(id) { console.log('重启活动:', id); }
+function addBudget(id) { console.log('增加预算:', id); }
+function applyOptimization(type) { console.log('应用优化:', type); }
+function scheduleRestart(id) { console.log('计划重启:', id); }
+function switchMetric(metric) {
+    document.querySelectorAll('.chart-btn').forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+    console.log('切换指标:', metric);
+}
+function handleAlert(type) { console.log('处理告警:', type); }
+</script>

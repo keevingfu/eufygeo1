@@ -1,0 +1,1190 @@
+<!-- A/O Page Builder Module -->
+<div class="module-content">
+    <!-- A/O页面构建器标题 -->
+    <div class="module-header">
+        <h2 style="font-size: 24px; margin-bottom: 20px; color: #FF6900;">
+            🎨 A/O 页面构建器
+        </h2>
+        <div class="header-actions">
+            <button class="action-btn" onclick="createNewPage()">✨ 新建页面</button>
+            <button class="action-btn" onclick="importTemplate()">📥 导入模板</button>
+            <button class="action-btn" onclick="exportPages()">📤 导出页面</button>
+        </div>
+    </div>
+
+    <!-- 页面统计概览 -->
+    <div class="page-stats">
+        <h3 style="margin-bottom: 20px;">📊 页面统计概览</h3>
+        <div class="stats-grid">
+            <div class="stat-card active">
+                <div class="stat-icon">🚀</div>
+                <div class="stat-content">
+                    <div class="stat-number">12</div>
+                    <div class="stat-label">活跃页面</div>
+                    <div class="stat-detail">E28专项优化</div>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">📈</div>
+                <div class="stat-content">
+                    <div class="stat-number">8.5%</div>
+                    <div class="stat-label">平均转化率</div>
+                    <div class="stat-detail">↑ +2.3% vs上月</div>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">👁️</div>
+                <div class="stat-content">
+                    <div class="stat-number">156K</div>
+                    <div class="stat-label">月访问量</div>
+                    <div class="stat-detail">↑ +23% 增长</div>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">⚡</div>
+                <div class="stat-content">
+                    <div class="stat-number">1.8s</div>
+                    <div class="stat-label">平均加载时间</div>
+                    <div class="stat-detail">✅ 性能优秀</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页面编辑器界面 -->
+    <div class="page-editor">
+        <h3 style="margin-bottom: 20px;">🎯 智能页面编辑器</h3>
+        <div class="editor-layout">
+            <!-- 左侧组件库 -->
+            <div class="component-library">
+                <h4>组件库</h4>
+                <div class="component-categories">
+                    <button class="category-btn active" onclick="switchComponentCategory('layout')">布局</button>
+                    <button class="category-btn" onclick="switchComponentCategory('content')">内容</button>
+                    <button class="category-btn" onclick="switchComponentCategory('form')">表单</button>
+                    <button class="category-btn" onclick="switchComponentCategory('media')">媒体</button>
+                </div>
+                
+                <div class="component-grid" id="layoutComponents">
+                    <div class="component-item" draggable="true" data-component="hero-section">
+                        <div class="component-preview">
+                            <div class="preview-box hero">Hero</div>
+                        </div>
+                        <div class="component-name">英雄区</div>
+                    </div>
+                    
+                    <div class="component-item" draggable="true" data-component="feature-grid">
+                        <div class="component-preview">
+                            <div class="preview-box grid">Grid</div>
+                        </div>
+                        <div class="component-name">特性网格</div>
+                    </div>
+                    
+                    <div class="component-item" draggable="true" data-component="comparison-table">
+                        <div class="component-preview">
+                            <div class="preview-box table">Table</div>
+                        </div>
+                        <div class="component-name">对比表格</div>
+                    </div>
+                    
+                    <div class="component-item" draggable="true" data-component="testimonial">
+                        <div class="component-preview">
+                            <div class="preview-box quote">Quote</div>
+                        </div>
+                        <div class="component-name">用户评价</div>
+                    </div>
+                    
+                    <div class="component-item" draggable="true" data-component="cta-section">
+                        <div class="component-preview">
+                            <div class="preview-box cta">CTA</div>
+                        </div>
+                        <div class="component-name">行动号召</div>
+                    </div>
+                    
+                    <div class="component-item" draggable="true" data-component="faq-section">
+                        <div class="component-preview">
+                            <div class="preview-box faq">FAQ</div>
+                        </div>
+                        <div class="component-name">常见问题</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 中间画布区 -->
+            <div class="canvas-area">
+                <div class="canvas-toolbar">
+                    <div class="toolbar-left">
+                        <button class="tool-btn" onclick="undoAction()">↶ 撤销</button>
+                        <button class="tool-btn" onclick="redoAction()">↷ 重做</button>
+                        <button class="tool-btn" onclick="previewPage()">👁️ 预览</button>
+                    </div>
+                    <div class="toolbar-center">
+                        <span class="page-title">E28 FlexiOne功能页面</span>
+                    </div>
+                    <div class="toolbar-right">
+                        <button class="tool-btn" onclick="savePage()">💾 保存</button>
+                        <button class="tool-btn publish" onclick="publishPage()">🚀 发布</button>
+                    </div>
+                </div>
+                
+                <div class="canvas-container">
+                    <div class="canvas" id="pageCanvas">
+                        <!-- 示例页面内容 -->
+                        <div class="canvas-component hero-component" data-component-id="hero-1">
+                            <div class="component-content">
+                                <h1>Eufy Omni E28</h1>
+                                <h2>革命性FlexiOne手持清洁技术</h2>
+                                <p>唯一配备可拆卸手持清洁器的智能扫地机器人，让清洁无死角</p>
+                                <button class="cta-button">立即了解 →</button>
+                            </div>
+                            <div class="component-controls">
+                                <button onclick="editComponent('hero-1')">✏️</button>
+                                <button onclick="deleteComponent('hero-1')">🗑️</button>
+                            </div>
+                        </div>
+                        
+                        <div class="canvas-component feature-component" data-component-id="features-1">
+                            <div class="component-content">
+                                <h3>核心优势</h3>
+                                <div class="feature-grid">
+                                    <div class="feature-item">
+                                        <div class="feature-icon">💨</div>
+                                        <h4>20,000Pa吸力</h4>
+                                        <p>强劲吸力，深度清洁</p>
+                                    </div>
+                                    <div class="feature-item">
+                                        <div class="feature-icon">🖐️</div>
+                                        <h4>FlexiOne手持</h4>
+                                        <p>便携清洁，随时可用</p>
+                                    </div>
+                                    <div class="feature-item">
+                                        <div class="feature-icon">💧</div>
+                                        <h4>HydroJet拖布</h4>
+                                        <p>自清洗拖布系统</p>
+                                    </div>
+                                    <div class="feature-item">
+                                        <div class="feature-icon">🤖</div>
+                                        <h4>AI智能避障</h4>
+                                        <p>精准识别，安全清洁</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="component-controls">
+                                <button onclick="editComponent('features-1')">✏️</button>
+                                <button onclick="deleteComponent('features-1')">🗑️</button>
+                            </div>
+                        </div>
+                        
+                        <div class="drop-zone">
+                            <div class="drop-zone-content">
+                                <div class="drop-icon">⬇️</div>
+                                <p>将组件拖拽到此处添加内容</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 右侧属性面板 -->
+            <div class="properties-panel">
+                <h4>属性设置</h4>
+                <div class="property-sections">
+                    <div class="property-section">
+                        <h5>📱 响应式设置</h5>
+                        <div class="responsive-controls">
+                            <button class="device-btn active" onclick="setDevice('desktop')">🖥️ 桌面</button>
+                            <button class="device-btn" onclick="setDevice('tablet')">📱 平板</button>
+                            <button class="device-btn" onclick="setDevice('mobile')">📱 手机</button>
+                        </div>
+                    </div>
+                    
+                    <div class="property-section">
+                        <h5>🎨 样式设置</h5>
+                        <div class="style-controls">
+                            <div class="control-group">
+                                <label>背景颜色</label>
+                                <input type="color" value="#FF6900" onchange="updateStyle('background', this.value)">
+                            </div>
+                            <div class="control-group">
+                                <label>文字颜色</label>
+                                <input type="color" value="#FFFFFF" onchange="updateStyle('color', this.value)">
+                            </div>
+                            <div class="control-group">
+                                <label>字体大小</label>
+                                <input type="range" min="12" max="48" value="16" onchange="updateStyle('fontSize', this.value + 'px')">
+                            </div>
+                            <div class="control-group">
+                                <label>间距</label>
+                                <input type="range" min="0" max="50" value="20" onchange="updateStyle('padding', this.value + 'px')">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="property-section">
+                        <h5>⚡ 动画效果</h5>
+                        <div class="animation-controls">
+                            <select onchange="updateAnimation(this.value)">
+                                <option value="none">无动画</option>
+                                <option value="fadeIn">淡入</option>
+                                <option value="slideUp">上滑</option>
+                                <option value="slideLeft">左滑</option>
+                                <option value="bounce">弹跳</option>
+                            </select>
+                            <div class="control-group">
+                                <label>延迟时间(ms)</label>
+                                <input type="number" value="0" min="0" max="2000" step="100">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="property-section">
+                        <h5>📊 A/B测试</h5>
+                        <div class="ab-test-controls">
+                            <button class="ab-btn" onclick="createVariant()">➕ 创建变体</button>
+                            <div class="variant-list">
+                                <div class="variant-item active">
+                                    <span>原版 (50%)</span>
+                                    <button onclick="editVariant('original')">✏️</button>
+                                </div>
+                                <div class="variant-item">
+                                    <span>变体A (50%)</span>
+                                    <button onclick="editVariant('variant-a')">✏️</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页面管理 -->
+    <div class="page-management">
+        <h3 style="margin-bottom: 20px;">📋 页面管理</h3>
+        <div class="page-list">
+            <div class="page-item featured">
+                <div class="page-thumbnail">
+                    <div class="thumb-content">E28 FlexiOne</div>
+                </div>
+                <div class="page-info">
+                    <h4>E28 FlexiOne功能页面</h4>
+                    <div class="page-meta">
+                        <span class="page-status active">活跃</span>
+                        <span class="page-visits">12.3K 访问</span>
+                        <span class="page-conversion">8.5% 转化</span>
+                    </div>
+                    <div class="page-date">最后编辑: 2024-03-15</div>
+                </div>
+                <div class="page-actions">
+                    <button class="page-btn primary" onclick="editPage('flexione-page')">编辑</button>
+                    <button class="page-btn secondary" onclick="duplicatePage('flexione-page')">复制</button>
+                    <button class="page-btn analytics" onclick="viewAnalytics('flexione-page')">分析</button>
+                </div>
+            </div>
+            
+            <div class="page-item">
+                <div class="page-thumbnail">
+                    <div class="thumb-content">E28 vs 竞品</div>
+                </div>
+                <div class="page-info">
+                    <h4>E28 vs 竞品对比页面</h4>
+                    <div class="page-meta">
+                        <span class="page-status active">活跃</span>
+                        <span class="page-visits">8.7K 访问</span>
+                        <span class="page-conversion">6.2% 转化</span>
+                    </div>
+                    <div class="page-date">最后编辑: 2024-03-12</div>
+                </div>
+                <div class="page-actions">
+                    <button class="page-btn primary" onclick="editPage('comparison-page')">编辑</button>
+                    <button class="page-btn secondary" onclick="duplicatePage('comparison-page')">复制</button>
+                    <button class="page-btn analytics" onclick="viewAnalytics('comparison-page')">分析</button>
+                </div>
+            </div>
+            
+            <div class="page-item">
+                <div class="page-thumbnail">
+                    <div class="thumb-content">HydroJet 技术</div>
+                </div>
+                <div class="page-info">
+                    <h4>HydroJet拖布技术说明</h4>
+                    <div class="page-meta">
+                        <span class="page-status draft">草稿</span>
+                        <span class="page-visits">- 访问</span>
+                        <span class="page-conversion">- 转化</span>
+                    </div>
+                    <div class="page-date">创建时间: 2024-03-10</div>
+                </div>
+                <div class="page-actions">
+                    <button class="page-btn primary" onclick="editPage('hydrojet-page')">编辑</button>
+                    <button class="page-btn success" onclick="publishPage('hydrojet-page')">发布</button>
+                    <button class="page-btn danger" onclick="deletePage('hydrojet-page')">删除</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 性能分析 -->
+    <div class="performance-analysis">
+        <h3 style="margin-bottom: 20px;">📈 性能分析</h3>
+        <div class="analysis-grid">
+            <div class="analysis-card">
+                <h4>转化漏斗分析</h4>
+                <div id="conversionFunnel" style="height: 250px;"></div>
+            </div>
+            <div class="analysis-card">
+                <h4>页面热力图</h4>
+                <div class="heatmap-container">
+                    <div class="heatmap-overlay">
+                        <div class="heat-point hot" style="top: 20%; left: 50%;" data-clicks="156"></div>
+                        <div class="heat-point warm" style="top: 45%; left: 30%;" data-clicks="89"></div>
+                        <div class="heat-point cool" style="top: 70%; left: 60%;" data-clicks="34"></div>
+                    </div>
+                    <div class="heatmap-legend">
+                        <span class="legend-item"><span class="dot hot"></span>高点击</span>
+                        <span class="legend-item"><span class="dot warm"></span>中点击</span>
+                        <span class="legend-item"><span class="dot cool"></span>低点击</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.page-stats {
+    margin-bottom: 30px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.stat-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.3s;
+}
+
+.stat-card.active {
+    border-color: rgba(255, 105, 0, 0.3);
+    background: linear-gradient(135deg, rgba(255,105,0,0.1) 0%, rgba(102,126,234,0.1) 100%);
+}
+
+.stat-icon {
+    font-size: 32px;
+}
+
+.stat-number {
+    font-size: 24px;
+    font-weight: bold;
+    color: #FF6900;
+    margin-bottom: 4px;
+}
+
+.stat-label {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 4px;
+}
+
+.stat-detail {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.page-editor {
+    margin-bottom: 30px;
+}
+
+.editor-layout {
+    display: grid;
+    grid-template-columns: 200px 1fr 250px;
+    gap: 20px;
+    height: 600px;
+}
+
+.component-library,
+.properties-panel {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 15px;
+    overflow-y: auto;
+}
+
+.component-library h4,
+.properties-panel h4 {
+    margin: 0 0 15px 0;
+    font-size: 14px;
+    color: #FF6900;
+}
+
+.component-categories {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 15px;
+}
+
+.category-btn {
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.category-btn.active,
+.category-btn:hover {
+    background: linear-gradient(135deg, #FF6900 0%, #FF8C00 100%);
+    color: white;
+    border-color: #FF6900;
+}
+
+.component-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.component-item {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 10px;
+    cursor: grab;
+    transition: all 0.3s;
+}
+
+.component-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-2px);
+}
+
+.component-item:active {
+    cursor: grabbing;
+}
+
+.component-preview {
+    margin-bottom: 8px;
+}
+
+.preview-box {
+    width: 100%;
+    height: 40px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 600;
+    color: white;
+}
+
+.preview-box.hero { background: linear-gradient(135deg, #FF6900, #FF8C00); }
+.preview-box.grid { background: linear-gradient(135deg, #667eea, #764ba2); }
+.preview-box.table { background: linear-gradient(135deg, #52C41A, #389e0d); }
+.preview-box.quote { background: linear-gradient(135deg, #1890FF, #096dd9); }
+.preview-box.cta { background: linear-gradient(135deg, #FAAD14, #d48806); }
+.preview-box.faq { background: linear-gradient(135deg, #722ed1, #531dab); }
+
+.component-name {
+    font-size: 11px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.canvas-area {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+}
+
+.canvas-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.toolbar-left,
+.toolbar-right {
+    display: flex;
+    gap: 8px;
+}
+
+.tool-btn {
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    color: white;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.tool-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.tool-btn.publish {
+    background: linear-gradient(135deg, #52C41A 0%, #389e0d 100%);
+    border-color: #52C41A;
+}
+
+.page-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #FF6900;
+}
+
+.canvas-container {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.canvas {
+    background: rgba(255, 255, 255, 0.02);
+    border: 2px dashed rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    min-height: 500px;
+    padding: 20px;
+    position: relative;
+}
+
+.canvas-component {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    margin-bottom: 15px;
+    position: relative;
+    transition: all 0.3s;
+}
+
+.canvas-component:hover {
+    border-color: rgba(255, 105, 0, 0.5);
+    box-shadow: 0 0 0 2px rgba(255, 105, 0, 0.2);
+}
+
+.canvas-component:hover .component-controls {
+    opacity: 1;
+}
+
+.component-content {
+    padding: 20px;
+}
+
+.hero-component .component-content {
+    text-align: center;
+    background: linear-gradient(135deg, rgba(255,105,0,0.2), rgba(102,126,234,0.2));
+}
+
+.hero-component h1 {
+    font-size: 32px;
+    margin: 0 0 10px 0;
+    color: #FF6900;
+}
+
+.hero-component h2 {
+    font-size: 24px;
+    margin: 0 0 15px 0;
+    color: white;
+}
+
+.hero-component p {
+    font-size: 16px;
+    margin: 0 0 20px 0;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.cta-button {
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #FF6900 0%, #FF8C00 100%);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.feature-item {
+    text-align: center;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+}
+
+.feature-icon {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.feature-item h4 {
+    margin: 0 0 8px 0;
+    color: #FF6900;
+}
+
+.feature-item p {
+    margin: 0;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.component-controls {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    display: flex;
+    gap: 5px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.component-controls button {
+    padding: 4px 8px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    color: white;
+    font-size: 10px;
+    cursor: pointer;
+}
+
+.drop-zone {
+    border: 2px dashed rgba(255, 105, 0, 0.3);
+    border-radius: 8px;
+    padding: 40px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.5);
+    margin-top: 20px;
+}
+
+.drop-zone-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.drop-icon {
+    font-size: 32px;
+}
+
+.property-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.property-section {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 15px;
+}
+
+.property-section:last-child {
+    border-bottom: none;
+}
+
+.property-section h5 {
+    margin: 0 0 10px 0;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.responsive-controls,
+.ab-test-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.device-btn,
+.ab-btn {
+    padding: 6px 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    color: white;
+    font-size: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.device-btn.active {
+    background: rgba(255, 105, 0, 0.2);
+    border-color: #FF6900;
+    color: #FF6900;
+}
+
+.style-controls,
+.animation-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.control-group label {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.control-group input,
+.control-group select {
+    padding: 4px 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    color: white;
+    font-size: 11px;
+}
+
+.variant-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.variant-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    font-size: 11px;
+}
+
+.variant-item.active {
+    background: rgba(255, 105, 0, 0.1);
+    border: 1px solid rgba(255, 105, 0, 0.3);
+}
+
+.page-management {
+    margin-bottom: 30px;
+}
+
+.page-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.page-item {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.3s;
+}
+
+.page-item.featured {
+    border-color: rgba(255, 105, 0, 0.3);
+    background: linear-gradient(135deg, rgba(255,105,0,0.05) 0%, rgba(102,126,234,0.05) 100%);
+}
+
+.page-thumbnail {
+    width: 80px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.thumb-content {
+    font-size: 10px;
+    font-weight: 600;
+    color: #FF6900;
+    text-align: center;
+}
+
+.page-info {
+    flex: 1;
+}
+
+.page-info h4 {
+    margin: 0 0 8px 0;
+    font-size: 16px;
+}
+
+.page-meta {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 8px;
+}
+
+.page-status {
+    padding: 2px 6px;
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.page-status.active {
+    background: rgba(82, 196, 26, 0.2);
+    color: #52C41A;
+}
+
+.page-status.draft {
+    background: rgba(250, 173, 20, 0.2);
+    color: #FAAD14;
+}
+
+.page-visits,
+.page-conversion {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.page-date {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.page-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.page-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.page-btn.primary {
+    background: linear-gradient(135deg, #FF6900 0%, #FF8C00 100%);
+    color: white;
+}
+
+.page-btn.secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.page-btn.analytics {
+    background: rgba(24, 144, 255, 0.2);
+    color: #1890FF;
+    border: 1px solid rgba(24, 144, 255, 0.3);
+}
+
+.page-btn.success {
+    background: rgba(82, 196, 26, 0.2);
+    color: #52C41A;
+    border: 1px solid rgba(82, 196, 26, 0.3);
+}
+
+.page-btn.danger {
+    background: rgba(245, 34, 45, 0.2);
+    color: #F5222D;
+    border: 1px solid rgba(245, 34, 45, 0.3);
+}
+
+.performance-analysis {
+    margin-bottom: 30px;
+}
+
+.analysis-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 20px;
+}
+
+.analysis-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.analysis-card h4 {
+    margin: 0 0 15px 0;
+    font-size: 16px;
+    color: #FF6900;
+}
+
+.heatmap-container {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.heatmap-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.heat-point {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    cursor: pointer;
+    animation: pulse 2s infinite;
+}
+
+.heat-point.hot {
+    background: radial-gradient(circle, rgba(245,34,45,0.8) 0%, rgba(245,34,45,0.2) 70%);
+}
+
+.heat-point.warm {
+    background: radial-gradient(circle, rgba(250,173,20,0.8) 0%, rgba(250,173,20,0.2) 70%);
+}
+
+.heat-point.cool {
+    background: radial-gradient(circle, rgba(24,144,255,0.8) 0%, rgba(24,144,255,0.2) 70%);
+}
+
+.heatmap-legend {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    display: flex;
+    gap: 15px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.dot.hot { background: #F5222D; }
+.dot.warm { background: #FAAD14; }
+.dot.cool { background: #1890FF; }
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.2); opacity: 0.7; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+@media (max-width: 768px) {
+    .editor-layout {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+    
+    .component-library,
+    .properties-panel {
+        order: 2;
+    }
+    
+    .canvas-area {
+        order: 1;
+        height: 400px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+    
+    .analysis-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<script>
+// 初始化转化漏斗图表
+function initConversionFunnel() {
+    const chart = echarts.init(document.getElementById('conversionFunnel'));
+    
+    const option = {
+        backgroundColor: 'transparent',
+        tooltip: {
+            trigger: 'item',
+            formatter: '{a} <br/>{b}: {c} ({d}%)',
+            backgroundColor: 'rgba(0,0,0,0.8)',
+            borderColor: '#FF6900',
+            borderWidth: 1,
+            textStyle: { color: '#fff' }
+        },
+        series: [{
+            name: '转化漏斗',
+            type: 'funnel',
+            left: '10%',
+            width: '80%',
+            maxSize: '80%',
+            data: [
+                { value: 10000, name: '页面访问' },
+                { value: 3200, name: '内容浏览' },
+                { value: 1800, name: '产品详情' },
+                { value: 980, name: '添加购物车' },
+                { value: 850, name: '完成购买' }
+            ],
+            itemStyle: {
+                color: function(params) {
+                    const colors = ['#FF6900', '#667eea', '#52C41A', '#1890FF', '#FAAD14'];
+                    return colors[params.dataIndex];
+                }
+            },
+            label: {
+                show: true,
+                position: 'inside',
+                formatter: '{b}: {c}',
+                textStyle: {
+                    color: '#fff',
+                    fontSize: 12
+                }
+            }
+        }]
+    };
+    
+    chart.setOption(option);
+    window.addEventListener('resize', () => chart.resize());
+}
+
+// 组件管理函数
+function switchComponentCategory(category) {
+    document.querySelectorAll('.category-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    // 这里可以切换不同的组件库内容
+    console.log('切换组件分类:', category);
+}
+
+function editComponent(id) {
+    console.log('编辑组件:', id);
+    // 在属性面板中显示组件的设置选项
+}
+
+function deleteComponent(id) {
+    if (confirm('确定要删除这个组件吗？')) {
+        const component = document.querySelector(`[data-component-id="${id}"]`);
+        if (component) {
+            component.remove();
+        }
+    }
+}
+
+// 工具栏函数
+function undoAction() { console.log('撤销操作'); }
+function redoAction() { console.log('重做操作'); }
+function previewPage() { 
+    console.log('预览页面');
+    // 可以打开新窗口显示页面预览
+}
+function savePage() { console.log('保存页面'); }
+function publishPage() { console.log('发布页面'); }
+
+// 设备响应式切换
+function setDevice(device) {
+    document.querySelectorAll('.device-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    const canvas = document.getElementById('pageCanvas');
+    switch(device) {
+        case 'desktop':
+            canvas.style.maxWidth = '100%';
+            break;
+        case 'tablet':
+            canvas.style.maxWidth = '768px';
+            break;
+        case 'mobile':
+            canvas.style.maxWidth = '375px';
+            break;
+    }
+    console.log('切换设备视图:', device);
+}
+
+// 样式更新
+function updateStyle(property, value) {
+    console.log('更新样式:', property, value);
+    // 更新选中组件的样式
+}
+
+function updateAnimation(animation) {
+    console.log('更新动画:', animation);
+    // 为选中组件添加动画效果
+}
+
+// A/B测试
+function createVariant() {
+    console.log('创建A/B测试变体');
+}
+
+function editVariant(variant) {
+    console.log('编辑变体:', variant);
+}
+
+// 页面管理函数
+function createNewPage() { console.log('创建新页面'); }
+function importTemplate() { console.log('导入模板'); }
+function exportPages() { console.log('导出页面'); }
+function editPage(id) { console.log('编辑页面:', id); }
+function duplicatePage(id) { console.log('复制页面:', id); }
+function viewAnalytics(id) { console.log('查看分析:', id); }
+function deletePage(id) {
+    if (confirm('确定要删除这个页面吗？')) {
+        console.log('删除页面:', id);
+    }
+}
+
+// 页面加载时初始化图表
+if (typeof echarts !== 'undefined') {
+    setTimeout(initConversionFunnel, 100);
+}
+</script>

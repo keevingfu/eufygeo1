@@ -1,0 +1,786 @@
+<!-- CI Competitive Intelligence Module -->
+<div class="module-content">
+    <!-- CI情报标题 -->
+    <div class="module-header">
+        <h2 style="font-size: 24px; margin-bottom: 20px; color: #FF6900;">
+            🔍 CI 竞争情报中心
+        </h2>
+        <div class="header-actions">
+            <button class="action-btn" onclick="refreshIntelligence()">🔄 更新情报</button>
+            <button class="action-btn" onclick="generateAlert()">🚨 创建告警</button>
+            <button class="action-btn" onclick="exportIntelligence()">📊 导出分析</button>
+        </div>
+    </div>
+
+    <!-- 实时监控面板 -->
+    <div class="monitoring-panel">
+        <h3 style="margin-bottom: 20px;">⚡ 实时竞争监控</h3>
+        <div class="monitor-grid">
+            <div class="monitor-card critical">
+                <div class="monitor-header">
+                    <span class="monitor-icon">🚨</span>
+                    <h4>紧急变化</h4>
+                    <span class="update-time">2分钟前</span>
+                </div>
+                <div class="monitor-content">
+                    <p><strong>iRobot Roomba j7+</strong> 在"最佳扫地机器人"关键词排名上升至#1位</p>
+                    <div class="change-detail">
+                        <span class="change-from">原排名: #2</span>
+                        <span class="change-arrow">→</span>
+                        <span class="change-to">新排名: #1</span>
+                    </div>
+                    <button class="quick-action" onclick="analyzeCompetitorChange('roomba-j7')">
+                        🔍 深度分析
+                    </button>
+                </div>
+            </div>
+
+            <div class="monitor-card warning">
+                <div class="monitor-header">
+                    <span class="monitor-icon">⚠️</span>
+                    <h4>关键词机会</h4>
+                    <span class="update-time">15分钟前</span>
+                </div>
+                <div class="monitor-content">
+                    <p>"宠物毛发清理机器人"搜索量激增<strong>+156%</strong></p>
+                    <div class="opportunity-metrics">
+                        <span class="metric">竞争度: 中等</span>
+                        <span class="metric">E28相关性: 高</span>
+                    </div>
+                    <button class="quick-action" onclick="seizeOpportunity('pet-hair')">
+                        🚀 抢占机会
+                    </button>
+                </div>
+            </div>
+
+            <div class="monitor-card info">
+                <div class="monitor-header">
+                    <span class="monitor-icon">📊</span>
+                    <h4>内容表现</h4>
+                    <span class="update-time">1小时前</span>
+                </div>
+                <div class="monitor-content">
+                    <p>E28 FlexiOne特性内容AI引用率从<strong>18%</strong>提升至<strong>23%</strong></p>
+                    <div class="performance-trend">
+                        <span class="trend-indicator positive">↗️ +5%</span>
+                        <span class="trend-desc">持续上升趋势</span>
+                    </div>
+                    <button class="quick-action" onclick="optimizeContent('flexione')">
+                        📝 继续优化
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 竞品排名矩阵 -->
+    <div class="ranking-matrix">
+        <h3 style="margin-bottom: 20px;">📈 竞品排名矩阵</h3>
+        <div class="matrix-controls">
+            <select class="filter-select" onchange="updateMatrix(this.value)">
+                <option value="all">全部关键词</option>
+                <option value="brand">品牌关键词</option>
+                <option value="category">品类关键词</option>
+                <option value="feature">功能关键词</option>
+            </select>
+            <button class="matrix-btn" onclick="showTrendView()">📊 趋势视图</button>
+        </div>
+        
+        <div class="matrix-table">
+            <div class="matrix-header">
+                <div class="keyword-cell">关键词</div>
+                <div class="rank-cell">Eufy E28</div>
+                <div class="rank-cell">iRobot j7+</div>
+                <div class="rank-cell">Shark AI</div>
+                <div class="rank-cell">Bissell</div>
+                <div class="action-cell">操作</div>
+            </div>
+            
+            <div class="matrix-row">
+                <div class="keyword-cell">
+                    <span class="keyword-text">best robot vacuum</span>
+                    <span class="search-volume">126K/月</span>
+                </div>
+                <div class="rank-cell rank-2">#2 ↑</div>
+                <div class="rank-cell rank-1">#1</div>
+                <div class="rank-cell rank-3">#3</div>
+                <div class="rank-cell rank-4">#4</div>
+                <div class="action-cell">
+                    <button class="mini-btn" onclick="analyzeKeyword('best-robot-vacuum')">分析</button>
+                </div>
+            </div>
+            
+            <div class="matrix-row">
+                <div class="keyword-cell">
+                    <span class="keyword-text">robot vacuum pet hair</span>
+                    <span class="search-volume">89K/月</span>
+                </div>
+                <div class="rank-cell rank-4">#4 ↓</div>
+                <div class="rank-cell rank-1">#1</div>
+                <div class="rank-cell rank-2">#2</div>
+                <div class="rank-cell rank-3">#3</div>
+                <div class="action-cell">
+                    <button class="mini-btn opportunity" onclick="analyzeKeyword('pet-hair')">机会</button>
+                </div>
+            </div>
+            
+            <div class="matrix-row">
+                <div class="keyword-cell">
+                    <span class="keyword-text">self-emptying robot vacuum</span>
+                    <span class="search-volume">54K/月</span>
+                </div>
+                <div class="rank-cell rank-3">#3 →</div>
+                <div class="rank-cell rank-1">#1</div>
+                <div class="rank-cell rank-4">#4</div>
+                <div class="rank-cell rank-2">#2</div>
+                <div class="action-cell">
+                    <button class="mini-btn" onclick="analyzeKeyword('self-emptying')">分析</button>
+                </div>
+            </div>
+            
+            <div class="matrix-row">
+                <div class="keyword-cell">
+                    <span class="keyword-text">robot vacuum with mop</span>
+                    <span class="search-volume">42K/月</span>
+                </div>
+                <div class="rank-cell rank-1">#1 ↑</div>
+                <div class="rank-cell rank-3">#3</div>
+                <div class="rank-cell rank-2">#2</div>
+                <div class="rank-cell rank-4">#4</div>
+                <div class="action-cell">
+                    <button class="mini-btn success" onclick="analyzeKeyword('mop')">优势</button>
+                </div>
+            </div>
+            
+            <div class="matrix-row">
+                <div class="keyword-cell">
+                    <span class="keyword-text">handheld vacuum attachment</span>
+                    <span class="search-volume">23K/月</span>
+                </div>
+                <div class="rank-cell rank-5">#5 ↓</div>
+                <div class="rank-cell rank-2">#2</div>
+                <div class="rank-cell rank-1">#1</div>
+                <div class="rank-cell rank-3">#3</div>
+                <div class="action-cell">
+                    <button class="mini-btn urgent" onclick="analyzeKeyword('handheld')">急需</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 内容缺口分析 -->
+    <div class="content-gap-analysis">
+        <h3 style="margin-bottom: 20px;">🎯 内容缺口分析</h3>
+        <div class="gap-grid">
+            <div class="gap-card high-impact">
+                <div class="gap-header">
+                    <span class="impact-level">高影响</span>
+                    <h4>FlexiOne手持功能演示</h4>
+                </div>
+                <div class="gap-metrics">
+                    <div class="metric-item">
+                        <span class="metric-label">缺口程度</span>
+                        <div class="gap-bar">
+                            <div class="gap-fill" style="width: 85%;"></div>
+                        </div>
+                        <span class="metric-value">85%</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">机会价值</span>
+                        <span class="opportunity-value high">+23个排名位</span>
+                    </div>
+                </div>
+                <div class="gap-description">
+                    竞品iRobot和Shark都有详细的手持清洁器功能说明，而E28的FlexiOne特性在AI回答中引用率仅23%，急需补充使用场景和对比内容。
+                </div>
+                <div class="gap-actions">
+                    <button class="action-btn-mini primary" onclick="createContent('flexione-demo')">
+                        📝 创建内容
+                    </button>
+                    <button class="action-btn-mini secondary" onclick="scheduleContent('flexione-demo')">
+                        📅 计划排期
+                    </button>
+                </div>
+            </div>
+
+            <div class="gap-card medium-impact">
+                <div class="gap-header">
+                    <span class="impact-level medium">中影响</span>
+                    <h4>防缠毛刷技术说明</h4>
+                </div>
+                <div class="gap-metrics">
+                    <div class="metric-item">
+                        <span class="metric-label">缺口程度</span>
+                        <div class="gap-bar">
+                            <div class="gap-fill" style="width: 60%;"></div>
+                        </div>
+                        <span class="metric-value">60%</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">机会价值</span>
+                        <span class="opportunity-value medium">+12个排名位</span>
+                    </div>
+                </div>
+                <div class="gap-description">
+                    宠物毛发清理是用户高关注点，需要增加E28防缠毛刷的技术原理和实际效果对比。
+                </div>
+                <div class="gap-actions">
+                    <button class="action-btn-mini primary" onclick="createContent('anti-tangle')">
+                        📝 创建内容
+                    </button>
+                    <button class="action-btn-mini secondary" onclick="scheduleContent('anti-tangle')">
+                        📅 计划排期
+                    </button>
+                </div>
+            </div>
+
+            <div class="gap-card low-impact">
+                <div class="gap-header">
+                    <span class="impact-level low">低影响</span>
+                    <h4>HydroJet技术细节</h4>
+                </div>
+                <div class="gap-metrics">
+                    <div class="metric-item">
+                        <span class="metric-label">缺口程度</span>
+                        <div class="gap-bar">
+                            <div class="gap-fill" style="width: 35%;"></div>
+                        </div>
+                        <span class="metric-value">35%</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">机会价值</span>
+                        <span class="opportunity-value low">+6个排名位</span>
+                    </div>
+                </div>
+                <div class="gap-description">
+                    HydroJet拖布系统表现良好，可适度增加自清洗功能的技术说明。
+                </div>
+                <div class="gap-actions">
+                    <button class="action-btn-mini primary" onclick="createContent('hydrojet-tech')">
+                        📝 创建内容
+                    </button>
+                    <button class="action-btn-mini secondary" onclick="scheduleContent('hydrojet-tech')">
+                        📅 计划排期
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 告警设置 -->
+    <div class="alert-settings">
+        <h3 style="margin-bottom: 20px;">🚨 智能告警设置</h3>
+        <div class="alert-grid">
+            <div class="alert-card">
+                <div class="alert-icon">📉</div>
+                <div class="alert-content">
+                    <h4>排名下降告警</h4>
+                    <p>关键词排名下降超过3位时触发</p>
+                    <div class="alert-status active">已启用</div>
+                </div>
+                <div class="alert-toggle">
+                    <input type="checkbox" checked onchange="toggleAlert('ranking-drop')">
+                </div>
+            </div>
+
+            <div class="alert-card">
+                <div class="alert-icon">🚀</div>
+                <div class="alert-content">
+                    <h4>机会发现告警</h4>
+                    <p>发现新的内容机会或关键词机会</p>
+                    <div class="alert-status active">已启用</div>
+                </div>
+                <div class="alert-toggle">
+                    <input type="checkbox" checked onchange="toggleAlert('opportunity')">
+                </div>
+            </div>
+
+            <div class="alert-card">
+                <div class="alert-icon">⚡</div>
+                <div class="alert-content">
+                    <h4>竞品动态告警</h4>
+                    <p>竞品发布新内容或排名大幅变化</p>
+                    <div class="alert-status active">已启用</div>
+                </div>
+                <div class="alert-toggle">
+                    <input type="checkbox" checked onchange="toggleAlert('competitor')">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.monitoring-panel {
+    margin-bottom: 30px;
+}
+
+.monitor-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.monitor-card {
+    border-radius: 12px;
+    padding: 20px;
+    border-left: 4px solid;
+    transition: all 0.3s;
+}
+
+.monitor-card.critical {
+    background: rgba(245, 34, 45, 0.05);
+    border-left-color: #F5222D;
+    border: 1px solid rgba(245, 34, 45, 0.2);
+}
+
+.monitor-card.warning {
+    background: rgba(250, 173, 20, 0.05);
+    border-left-color: #FAAD14;
+    border: 1px solid rgba(250, 173, 20, 0.2);
+}
+
+.monitor-card.info {
+    background: rgba(24, 144, 255, 0.05);
+    border-left-color: #1890FF;
+    border: 1px solid rgba(24, 144, 255, 0.2);
+}
+
+.monitor-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.monitor-icon {
+    font-size: 18px;
+}
+
+.monitor-header h4 {
+    flex: 1;
+    margin: 0;
+    font-size: 14px;
+}
+
+.update-time {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.change-detail {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 10px 0;
+    font-size: 12px;
+}
+
+.change-from { color: rgba(255, 255, 255, 0.6); }
+.change-arrow { color: #FF6900; }
+.change-to { color: #52C41A; font-weight: 600; }
+
+.opportunity-metrics,
+.performance-trend {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin: 10px 0;
+    font-size: 12px;
+}
+
+.metric {
+    padding: 2px 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+}
+
+.trend-indicator.positive {
+    color: #52C41A;
+}
+
+.quick-action {
+    padding: 6px 12px;
+    background: linear-gradient(135deg, #FF6900 0%, #FF8C00 100%);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 10px;
+}
+
+.ranking-matrix {
+    margin-bottom: 30px;
+}
+
+.matrix-controls {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.filter-select {
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: white;
+    font-size: 13px;
+}
+
+.matrix-btn {
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: white;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.matrix-table {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.matrix-header,
+.matrix-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
+    gap: 15px;
+    padding: 15px;
+    align-items: center;
+}
+
+.matrix-header {
+    background: rgba(255, 255, 255, 0.05);
+    font-weight: 600;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.matrix-row {
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.keyword-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.keyword-text {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.search-volume {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.rank-cell {
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.rank-1 { color: #FFD700; }
+.rank-2 { color: #C0C0C0; }
+.rank-3 { color: #CD7F32; }
+.rank-4 { color: rgba(255, 255, 255, 0.6); }
+.rank-5 { color: rgba(255, 255, 255, 0.4); }
+
+.mini-btn {
+    padding: 4px 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    color: white;
+    font-size: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.mini-btn.opportunity {
+    background: rgba(250, 173, 20, 0.2);
+    border-color: #FAAD14;
+    color: #FAAD14;
+}
+
+.mini-btn.success {
+    background: rgba(82, 196, 26, 0.2);
+    border-color: #52C41A;
+    color: #52C41A;
+}
+
+.mini-btn.urgent {
+    background: rgba(245, 34, 45, 0.2);
+    border-color: #F5222D;
+    color: #F5222D;
+}
+
+.content-gap-analysis {
+    margin-bottom: 30px;
+}
+
+.gap-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 20px;
+}
+
+.gap-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.3s;
+}
+
+.gap-card.high-impact {
+    border-left: 4px solid #F5222D;
+}
+
+.gap-card.medium-impact {
+    border-left: 4px solid #FAAD14;
+}
+
+.gap-card.low-impact {
+    border-left: 4px solid #1890FF;
+}
+
+.gap-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.impact-level {
+    padding: 3px 8px;
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.impact-level.high {
+    background: rgba(245, 34, 45, 0.2);
+    color: #F5222D;
+}
+
+.impact-level.medium {
+    background: rgba(250, 173, 20, 0.2);
+    color: #FAAD14;
+}
+
+.impact-level.low {
+    background: rgba(24, 144, 255, 0.2);
+    color: #1890FF;
+}
+
+.gap-metrics {
+    margin-bottom: 15px;
+}
+
+.metric-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.metric-label {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+    min-width: 80px;
+}
+
+.gap-bar {
+    flex: 1;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.gap-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #FF6900, #FF8C00);
+    border-radius: 3px;
+}
+
+.metric-value {
+    font-size: 12px;
+    font-weight: 600;
+    color: #FF6900;
+    min-width: 40px;
+}
+
+.opportunity-value {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.opportunity-value.high { color: #F5222D; }
+.opportunity-value.medium { color: #FAAD14; }
+.opportunity-value.low { color: #1890FF; }
+
+.gap-description {
+    font-size: 13px;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 15px;
+}
+
+.gap-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.action-btn-mini {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.action-btn-mini.primary {
+    background: linear-gradient(135deg, #FF6900 0%, #FF8C00 100%);
+    color: white;
+}
+
+.action-btn-mini.secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.alert-settings {
+    margin-bottom: 30px;
+}
+
+.alert-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.alert-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.alert-icon {
+    font-size: 24px;
+}
+
+.alert-content {
+    flex: 1;
+}
+
+.alert-content h4 {
+    margin: 0 0 5px 0;
+    font-size: 14px;
+}
+
+.alert-content p {
+    margin: 0 0 8px 0;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.alert-status {
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 8px;
+}
+
+.alert-status.active {
+    background: rgba(82, 196, 26, 0.2);
+    color: #52C41A;
+}
+
+.alert-toggle input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+}
+</style>
+
+<script>
+// 刷新情报数据
+function refreshIntelligence() {
+    console.log('刷新竞争情报数据');
+    // 实际实现中会调用API刷新数据
+}
+
+// 生成告警
+function generateAlert() {
+    console.log('创建新告警');
+    // 实际实现中会打开告警创建弹窗
+}
+
+// 导出情报分析
+function exportIntelligence() {
+    console.log('导出竞争情报分析');
+    // 实际实现中会生成报告
+}
+
+// 分析竞品变化
+function analyzeCompetitorChange(competitor) {
+    console.log('分析竞品变化:', competitor);
+}
+
+// 抢占机会
+function seizeOpportunity(opportunity) {
+    console.log('抢占机会:', opportunity);
+}
+
+// 优化内容
+function optimizeContent(content) {
+    console.log('优化内容:', content);
+}
+
+// 更新矩阵
+function updateMatrix(filter) {
+    console.log('更新矩阵过滤:', filter);
+}
+
+// 显示趋势视图
+function showTrendView() {
+    console.log('显示趋势视图');
+}
+
+// 分析关键词
+function analyzeKeyword(keyword) {
+    console.log('分析关键词:', keyword);
+}
+
+// 创建内容
+function createContent(contentType) {
+    console.log('创建内容:', contentType);
+}
+
+// 计划内容
+function scheduleContent(contentType) {
+    console.log('计划内容:', contentType);
+}
+
+// 切换告警
+function toggleAlert(alertType) {
+    console.log('切换告警:', alertType);
+}
+</script>

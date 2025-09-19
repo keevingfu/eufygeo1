@@ -1,0 +1,931 @@
+<!-- ROI Analysis Module -->
+<div class="module-content">
+    <!-- ROI分析标题 -->
+    <div class="module-header">
+        <h2 style="font-size: 24px; margin-bottom: 20px; color: #FF6900;">
+            💰 ROI投资回报分析
+        </h2>
+        <div class="header-actions">
+            <button class="action-btn" onclick="calculateROI()">🧮 计算ROI</button>
+            <button class="action-btn" onclick="exportAnalysis()">📊 导出分析</button>
+            <button class="action-btn" onclick="createProjection()">📈 创建预测</button>
+        </div>
+    </div>
+
+    <!-- ROI概览仪表盘 -->
+    <div class="roi-dashboard">
+        <h3 style="margin-bottom: 20px;">📊 ROI概览仪表盘</h3>
+        <div class="dashboard-grid">
+            <div class="roi-card primary">
+                <div class="roi-header">
+                    <span class="roi-title">总体ROI</span>
+                    <span class="roi-period">30天</span>
+                </div>
+                <div class="roi-value">287%</div>
+                <div class="roi-change positive">↑ +23% vs上月</div>
+                <div class="roi-breakdown">
+                    投入: $45,200 | 产出: $175,040
+                </div>
+            </div>
+
+            <div class="roi-card">
+                <div class="roi-header">
+                    <span class="roi-title">营销ROI</span>
+                    <span class="roi-period">30天</span>
+                </div>
+                <div class="roi-value">325%</div>
+                <div class="roi-change positive">↑ +18%</div>
+                <div class="roi-breakdown">
+                    广告投入: $28,500
+                </div>
+            </div>
+
+            <div class="roi-card">
+                <div class="roi-header">
+                    <span class="roi-title">内容ROI</span>
+                    <span class="roi-period">30天</span>
+                </div>
+                <div class="roi-value">245%</div>
+                <div class="roi-change positive">↑ +12%</div>
+                <div class="roi-breakdown">
+                    内容投入: $12,800
+                </div>
+            </div>
+
+            <div class="roi-card">
+                <div class="roi-header">
+                    <span class="roi-title">技术ROI</span>
+                    <span class="roi-period">30天</span>
+                </div>
+                <div class="roi-value">189%</div>
+                <div class="roi-change warning">↓ -5%</div>
+                <div class="roi-breakdown">
+                    工具投入: $3,900
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 投资分布分析 -->
+    <div class="investment-distribution">
+        <h3 style="margin-bottom: 20px;">💼 投资分布分析</h3>
+        <div class="distribution-container">
+            <div class="distribution-chart">
+                <div id="investmentPieChart" style="height: 300px;"></div>
+            </div>
+            <div class="distribution-details">
+                <div class="investment-item">
+                    <div class="item-header">
+                        <span class="item-name">📱 社交媒体广告</span>
+                        <span class="item-percentage">35%</span>
+                    </div>
+                    <div class="item-amount">$15,820</div>
+                    <div class="item-roi">ROI: 342%</div>
+                    <div class="item-trend positive">↑ 表现优秀</div>
+                </div>
+
+                <div class="investment-item">
+                    <div class="item-header">
+                        <span class="item-name">🔍 搜索引擎营销</span>
+                        <span class="item-percentage">28%</span>
+                    </div>
+                    <div class="item-amount">$12,656</div>
+                    <div class="item-roi">ROI: 298%</div>
+                    <div class="item-trend positive">↑ 稳定增长</div>
+                </div>
+
+                <div class="investment-item">
+                    <div class="item-header">
+                        <span class="item-name">📝 内容营销</span>
+                        <span class="item-percentage">22%</span>
+                    </div>
+                    <div class="item-amount">$9,944</div>
+                    <div class="item-roi">ROI: 245%</div>
+                    <div class="item-trend positive">↑ 持续优化</div>
+                </div>
+
+                <div class="investment-item">
+                    <div class="item-header">
+                        <span class="item-name">🛠️ 技术工具</span>
+                        <span class="item-percentage">15%</span>
+                    </div>
+                    <div class="item-amount">$6,780</div>
+                    <div class="item-roi">ROI: 189%</div>
+                    <div class="item-trend warning">↓ 需要优化</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ROI趋势分析 -->
+    <div class="roi-trend">
+        <h3 style="margin-bottom: 20px;">📈 ROI趋势分析</h3>
+        <div class="trend-controls">
+            <button class="trend-tab active" onclick="switchTrendView('monthly')">月度趋势</button>
+            <button class="trend-tab" onclick="switchTrendView('quarterly')">季度对比</button>
+            <button class="trend-tab" onclick="switchTrendView('channel')">渠道对比</button>
+        </div>
+        <div id="roiTrendChart" style="height: 350px; margin-top: 20px;"></div>
+    </div>
+
+    <!-- 成本效益分析 -->
+    <div class="cost-benefit-analysis">
+        <h3 style="margin-bottom: 20px;">⚖️ 成本效益分析</h3>
+        <div class="analysis-grid">
+            <div class="cost-section">
+                <h4>💸 成本构成</h4>
+                <div class="cost-items">
+                    <div class="cost-item">
+                        <span class="cost-label">广告投放</span>
+                        <span class="cost-amount">$28,500</span>
+                        <span class="cost-percentage">63%</span>
+                    </div>
+                    <div class="cost-item">
+                        <span class="cost-label">内容制作</span>
+                        <span class="cost-amount">$9,800</span>
+                        <span class="cost-percentage">22%</span>
+                    </div>
+                    <div class="cost-item">
+                        <span class="cost-label">工具订阅</span>
+                        <span class="cost-amount">$3,900</span>
+                        <span class="cost-percentage">9%</span>
+                    </div>
+                    <div class="cost-item">
+                        <span class="cost-label">人力成本</span>
+                        <span class="cost-amount">$3,000</span>
+                        <span class="cost-percentage">6%</span>
+                    </div>
+                </div>
+                <div class="total-cost">
+                    <strong>总成本: $45,200</strong>
+                </div>
+            </div>
+
+            <div class="benefit-section">
+                <h4>💰 收益分析</h4>
+                <div class="benefit-items">
+                    <div class="benefit-item">
+                        <span class="benefit-label">直接销售</span>
+                        <span class="benefit-amount">$142,300</span>
+                        <span class="benefit-percentage">81%</span>
+                    </div>
+                    <div class="benefit-item">
+                        <span class="benefit-label">品牌曝光</span>
+                        <span class="benefit-amount">$21,450</span>
+                        <span class="benefit-percentage">12%</span>
+                    </div>
+                    <div class="benefit-item">
+                        <span class="benefit-label">数据价值</span>
+                        <span class="benefit-amount">$7,890</span>
+                        <span class="benefit-percentage">5%</span>
+                    </div>
+                    <div class="benefit-item">
+                        <span class="benefit-label">用户留存</span>
+                        <span class="benefit-amount">$3,400</span>
+                        <span class="benefit-percentage">2%</span>
+                    </div>
+                </div>
+                <div class="total-benefit">
+                    <strong>总收益: $175,040</strong>
+                </div>
+            </div>
+        </div>
+        
+        <div class="net-profit">
+            <div class="profit-calculation">
+                净利润 = $175,040 - $45,200 = <span class="profit-value">$129,840</span>
+            </div>
+            <div class="profit-margin">
+                利润率: <span class="margin-value">287%</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 预测模型 -->
+    <div class="prediction-model">
+        <h3 style="margin-bottom: 20px;">🔮 ROI预测模型</h3>
+        <div class="prediction-container">
+            <div class="prediction-inputs">
+                <h4>预测参数</h4>
+                <div class="input-group">
+                    <label>预测期间:</label>
+                    <select id="predictionPeriod" onchange="updatePrediction()">
+                        <option value="1">1个月</option>
+                        <option value="3" selected>3个月</option>
+                        <option value="6">6个月</option>
+                        <option value="12">12个月</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>投资增长率:</label>
+                    <input type="range" id="investmentGrowth" min="0" max="50" value="15" onchange="updatePrediction()">
+                    <span id="investmentValue">15%</span>
+                </div>
+                <div class="input-group">
+                    <label>市场趋势:</label>
+                    <select id="marketTrend" onchange="updatePrediction()">
+                        <option value="conservative">保守</option>
+                        <option value="moderate" selected>中等</option>
+                        <option value="aggressive">激进</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="prediction-results">
+                <h4>预测结果</h4>
+                <div class="prediction-metrics">
+                    <div class="prediction-metric">
+                        <span class="metric-label">预期ROI:</span>
+                        <span class="metric-value" id="predictedROI">312%</span>
+                    </div>
+                    <div class="prediction-metric">
+                        <span class="metric-label">预期收益:</span>
+                        <span class="metric-value" id="predictedRevenue">$486,720</span>
+                    </div>
+                    <div class="prediction-metric">
+                        <span class="metric-label">建议投资:</span>
+                        <span class="metric-value" id="recommendedInvestment">$156,000</span>
+                    </div>
+                    <div class="prediction-metric">
+                        <span class="metric-label">风险等级:</span>
+                        <span class="metric-value risk-medium" id="riskLevel">中等</span>
+                    </div>
+                </div>
+                
+                <div class="prediction-chart">
+                    <div id="predictionChart" style="height: 200px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.roi-dashboard {
+    margin-bottom: 30px;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.roi-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.3s;
+}
+
+.roi-card.primary {
+    border-color: rgba(255, 105, 0, 0.3);
+    background: linear-gradient(135deg, rgba(255,105,0,0.05) 0%, rgba(102,126,234,0.05) 100%);
+}
+
+.roi-card:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-3px);
+}
+
+.roi-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.roi-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.roi-period {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.roi-value {
+    font-size: 32px;
+    font-weight: bold;
+    color: #FF6900;
+    margin-bottom: 8px;
+}
+
+.roi-change {
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.roi-change.positive { color: #52C41A; }
+.roi-change.warning { color: #FAAD14; }
+
+.roi-breakdown {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.investment-distribution {
+    margin-bottom: 30px;
+}
+
+.distribution-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.distribution-details {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.investment-item {
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.item-name {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.item-percentage {
+    font-size: 14px;
+    font-weight: bold;
+    color: #FF6900;
+}
+
+.item-amount {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.item-roi {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 4px;
+}
+
+.item-trend {
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.item-trend.positive { color: #52C41A; }
+.item-trend.warning { color: #FAAD14; }
+
+.roi-trend {
+    margin-bottom: 30px;
+}
+
+.trend-controls {
+    display: flex;
+    gap: 5px;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 5px;
+    border-radius: 10px;
+    width: fit-content;
+}
+
+.trend-tab {
+    padding: 10px 20px;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 13px;
+}
+
+.trend-tab:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.trend-tab.active {
+    background: linear-gradient(135deg, #FF6900 0%, #FF8C00 100%);
+    color: white;
+}
+
+.cost-benefit-analysis {
+    margin-bottom: 30px;
+}
+
+.analysis-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-bottom: 20px;
+}
+
+.cost-section,
+.benefit-section {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.cost-section h4,
+.benefit-section h4 {
+    margin: 0 0 20px 0;
+    font-size: 16px;
+    color: #FF6900;
+}
+
+.cost-items,
+.benefit-items {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.cost-item,
+.benefit-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 6px;
+}
+
+.cost-label,
+.benefit-label {
+    font-size: 13px;
+    flex: 1;
+}
+
+.cost-amount,
+.benefit-amount {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 15px;
+}
+
+.cost-percentage,
+.benefit-percentage {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+    width: 30px;
+    text-align: right;
+}
+
+.total-cost,
+.total-benefit {
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 16px;
+    color: #FF6900;
+}
+
+.net-profit {
+    background: linear-gradient(135deg, rgba(255,105,0,0.05) 0%, rgba(82,196,26,0.05) 100%);
+    border: 1px solid rgba(255, 105, 0, 0.2);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+}
+
+.profit-calculation {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.profit-value {
+    color: #52C41A;
+    font-weight: bold;
+}
+
+.profit-margin {
+    font-size: 16px;
+}
+
+.margin-value {
+    color: #FF6900;
+    font-weight: bold;
+}
+
+.prediction-model {
+    margin-bottom: 30px;
+}
+
+.prediction-container {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 30px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.prediction-inputs h4,
+.prediction-results h4 {
+    margin: 0 0 20px 0;
+    font-size: 16px;
+    color: #FF6900;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 8px;
+}
+
+.input-group select,
+.input-group input[type="range"] {
+    width: 100%;
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    color: white;
+    font-size: 13px;
+}
+
+.prediction-metrics {
+    margin-bottom: 20px;
+}
+
+.prediction-metric {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.metric-label {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.metric-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: #FF6900;
+}
+
+.metric-value.risk-medium {
+    color: #FAAD14;
+}
+
+@media (max-width: 768px) {
+    .dashboard-grid,
+    .analysis-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .distribution-container,
+    .prediction-container {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<script>
+// 计算ROI
+function calculateROI() {
+    console.log('计算ROI');
+}
+
+// 导出分析
+function exportAnalysis() {
+    console.log('导出ROI分析');
+}
+
+// 创建预测
+function createProjection() {
+    console.log('创建ROI预测');
+}
+
+// 切换趋势视图
+function switchTrendView(view) {
+    document.querySelectorAll('.trend-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    renderROITrendChart(view);
+    console.log('切换趋势视图:', view);
+}
+
+// 更新预测
+function updatePrediction() {
+    const period = document.getElementById('predictionPeriod').value;
+    const growth = document.getElementById('investmentGrowth').value;
+    const trend = document.getElementById('marketTrend').value;
+    
+    document.getElementById('investmentValue').textContent = growth + '%';
+    
+    // 模拟计算预测值
+    let baseROI = 287;
+    let multiplier = 1;
+    
+    if (trend === 'conservative') multiplier = 0.9;
+    else if (trend === 'aggressive') multiplier = 1.2;
+    
+    const predictedROI = Math.round(baseROI * multiplier * (1 + growth/100) * period/3);
+    const predictedRevenue = Math.round(175040 * (predictedROI/287) * period/3);
+    const recommendedInvestment = Math.round(predictedRevenue / (predictedROI/100));
+    
+    document.getElementById('predictedROI').textContent = predictedROI + '%';
+    document.getElementById('predictedRevenue').textContent = '$' + predictedRevenue.toLocaleString();
+    document.getElementById('recommendedInvestment').textContent = '$' + recommendedInvestment.toLocaleString();
+    
+    // 更新风险等级
+    let riskLevel = '低';
+    let riskClass = 'risk-low';
+    if (growth > 25 || trend === 'aggressive') {
+        riskLevel = '高';
+        riskClass = 'risk-high';
+    } else if (growth > 15) {
+        riskLevel = '中等';
+        riskClass = 'risk-medium';
+    }
+    
+    const riskElement = document.getElementById('riskLevel');
+    riskElement.textContent = riskLevel;
+    riskElement.className = 'metric-value ' + riskClass;
+    
+    renderPredictionChart(period);
+}
+
+// 初始化投资分布饼图
+function initInvestmentPieChart() {
+    if (typeof echarts === 'undefined') return;
+    
+    const chart = echarts.init(document.getElementById('investmentPieChart'));
+    const option = {
+        tooltip: {
+            trigger: 'item',
+            formatter: '{a} <br/>{b}: {c} ({d}%)'
+        },
+        series: [
+            {
+                name: '投资分布',
+                type: 'pie',
+                radius: ['50%', '70%'],
+                avoidLabelOverlap: false,
+                label: {
+                    show: false,
+                    position: 'center'
+                },
+                emphasis: {
+                    label: {
+                        show: true,
+                        fontSize: '18',
+                        fontWeight: 'bold'
+                    }
+                },
+                labelLine: {
+                    show: false
+                },
+                data: [
+                    { value: 15820, name: '社交媒体广告' },
+                    { value: 12656, name: '搜索引擎营销' },
+                    { value: 9944, name: '内容营销' },
+                    { value: 6780, name: '技术工具' }
+                ]
+            }
+        ]
+    };
+    
+    chart.setOption(option);
+    window.addEventListener('resize', () => chart.resize());
+}
+
+// 渲染ROI趋势图表
+function renderROITrendChart(view) {
+    if (typeof echarts === 'undefined') return;
+    
+    const chart = echarts.init(document.getElementById('roiTrendChart'));
+    
+    let option = {};
+    
+    if (view === 'monthly') {
+        option = {
+            tooltip: { trigger: 'axis' },
+            legend: { data: ['ROI', '投资', '收益'] },
+            grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+            xAxis: {
+                type: 'category',
+                data: ['1月', '2月', '3月', '4月', '5月', '6月'],
+                axisLine: { lineStyle: { color: 'rgba(255,255,255,0.2)' } }
+            },
+            yAxis: [
+                {
+                    type: 'value',
+                    name: 'ROI (%)',
+                    axisLine: { lineStyle: { color: 'rgba(255,255,255,0.2)' } },
+                    splitLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } }
+                },
+                {
+                    type: 'value',
+                    name: '金额 ($)',
+                    axisLine: { lineStyle: { color: 'rgba(255,255,255,0.2)' } }
+                }
+            ],
+            series: [
+                {
+                    name: 'ROI',
+                    type: 'line',
+                    data: [234, 267, 298, 312, 287, 325],
+                    lineStyle: { color: '#FF6900' },
+                    itemStyle: { color: '#FF6900' }
+                },
+                {
+                    name: '投资',
+                    type: 'bar',
+                    yAxisIndex: 1,
+                    data: [32000, 38000, 42000, 45000, 45200, 48000],
+                    itemStyle: { color: 'rgba(102,126,234,0.7)' }
+                },
+                {
+                    name: '收益',
+                    type: 'bar',
+                    yAxisIndex: 1,
+                    data: [107000, 134000, 152000, 168000, 175040, 185000],
+                    itemStyle: { color: 'rgba(82,196,26,0.7)' }
+                }
+            ]
+        };
+    } else if (view === 'quarterly') {
+        option = {
+            tooltip: { trigger: 'axis' },
+            grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+            xAxis: {
+                type: 'category',
+                data: ['Q1', 'Q2', 'Q3', 'Q4'],
+                axisLine: { lineStyle: { color: 'rgba(255,255,255,0.2)' } }
+            },
+            yAxis: {
+                type: 'value',
+                axisLine: { lineStyle: { color: 'rgba(255,255,255,0.2)' } },
+                splitLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } }
+            },
+            series: [
+                {
+                    name: 'ROI',
+                    type: 'line',
+                    data: [267, 298, 287, 312],
+                    smooth: true,
+                    lineStyle: { color: '#FF6900', width: 3 },
+                    itemStyle: { color: '#FF6900' },
+                    areaStyle: {
+                        color: {
+                            type: 'linear',
+                            x: 0, y: 0, x2: 0, y2: 1,
+                            colorStops: [
+                                { offset: 0, color: 'rgba(255,105,0,0.3)' },
+                                { offset: 1, color: 'rgba(255,105,0,0.05)' }
+                            ]
+                        }
+                    }
+                }
+            ]
+        };
+    } else {
+        option = {
+            tooltip: { trigger: 'axis' },
+            legend: { data: ['社交媒体', '搜索引擎', '内容营销', '技术工具'] },
+            grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+            xAxis: {
+                type: 'category',
+                data: ['1月', '2月', '3月', '4月', '5月', '6月'],
+                axisLine: { lineStyle: { color: 'rgba(255,255,255,0.2)' } }
+            },
+            yAxis: {
+                type: 'value',
+                axisLine: { lineStyle: { color: 'rgba(255,255,255,0.2)' } },
+                splitLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } }
+            },
+            series: [
+                {
+                    name: '社交媒体',
+                    type: 'line',
+                    data: [342, 356, 378, 389, 342, 365],
+                    lineStyle: { color: '#FF6900' },
+                    itemStyle: { color: '#FF6900' }
+                },
+                {
+                    name: '搜索引擎',
+                    type: 'line',
+                    data: [298, 312, 287, 305, 298, 320],
+                    lineStyle: { color: '#667EEA' },
+                    itemStyle: { color: '#667EEA' }
+                },
+                {
+                    name: '内容营销',
+                    type: 'line',
+                    data: [245, 234, 256, 267, 245, 278],
+                    lineStyle: { color: '#52C41A' },
+                    itemStyle: { color: '#52C41A' }
+                },
+                {
+                    name: '技术工具',
+                    type: 'line',
+                    data: [189, 176, 198, 205, 189, 167],
+                    lineStyle: { color: '#FAAD14' },
+                    itemStyle: { color: '#FAAD14' }
+                }
+            ]
+        };
+    }
+    
+    chart.setOption(option);
+}
+
+// 渲染预测图表
+function renderPredictionChart(period) {
+    if (typeof echarts === 'undefined') return;
+    
+    const chart = echarts.init(document.getElementById('predictionChart'));
+    
+    const months = parseInt(period);
+    const xAxisData = [];
+    const seriesData = [];
+    
+    for (let i = 1; i <= months; i++) {
+        xAxisData.push(`月${i}`);
+        seriesData.push(287 + (i * 5) + Math.random() * 20);
+    }
+    
+    const option = {
+        tooltip: { trigger: 'axis' },
+        grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+        xAxis: {
+            type: 'category',
+            data: xAxisData,
+            axisLine: { lineStyle: { color: 'rgba(255,255,255,0.2)' } }
+        },
+        yAxis: {
+            type: 'value',
+            axisLabel: { formatter: '{value}%' },
+            axisLine: { lineStyle: { color: 'rgba(255,255,255,0.2)' } },
+            splitLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } }
+        },
+        series: [
+            {
+                name: '预测ROI',
+                type: 'line',
+                data: seriesData,
+                smooth: true,
+                lineStyle: { color: '#667EEA', width: 2, type: 'dashed' },
+                itemStyle: { color: '#667EEA' },
+                areaStyle: {
+                    color: {
+                        type: 'linear',
+                        x: 0, y: 0, x2: 0, y2: 1,
+                        colorStops: [
+                            { offset: 0, color: 'rgba(102,126,234,0.2)' },
+                            { offset: 1, color: 'rgba(102,126,234,0.05)' }
+                        ]
+                    }
+                }
+            }
+        ]
+    };
+    
+    chart.setOption(option);
+}
+
+// 页面加载时初始化图表
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(() => {
+        initInvestmentPieChart();
+        renderROITrendChart('monthly');
+        renderPredictionChart('3');
+    }, 100);
+});
+</script>

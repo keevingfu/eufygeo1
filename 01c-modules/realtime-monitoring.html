@@ -1,0 +1,1185 @@
+<!-- Real-time Monitoring Module -->
+<div class="module-content">
+    <!-- 实时监控标题 -->
+    <div class="module-header">
+        <h2 style="font-size: 24px; margin-bottom: 20px; color: #FF6900;">
+            📊 实时监控中心
+        </h2>
+        <div class="header-actions">
+            <button class="action-btn" onclick="toggleAutoRefresh()">🔄 自动刷新</button>
+            <button class="action-btn" onclick="configureAlerts()">🚨 告警设置</button>
+            <button class="action-btn" onclick="exportMonitorData()">📊 导出数据</button>
+        </div>
+    </div>
+
+    <!-- 系统状态总览 -->
+    <div class="system-status">
+        <h3 style="margin-bottom: 20px;">⚡ 系统状态总览</h3>
+        <div class="status-grid">
+            <div class="status-card healthy">
+                <div class="status-header">
+                    <span class="status-icon">✅</span>
+                    <h4>系统健康度</h4>
+                    <span class="status-indicator healthy"></span>
+                </div>
+                <div class="status-content">
+                    <div class="status-value">98.7%</div>
+                    <div class="status-detail">所有服务正常运行</div>
+                    <div class="status-time">最后检查: 30秒前</div>
+                </div>
+            </div>
+
+            <div class="status-card warning">
+                <div class="status-header">
+                    <span class="status-icon">⚠️</span>
+                    <h4>API响应时间</h4>
+                    <span class="status-indicator warning"></span>
+                </div>
+                <div class="status-content">
+                    <div class="status-value">285ms</div>
+                    <div class="status-detail">略高于正常水平</div>
+                    <div class="status-time">平均响应时间</div>
+                </div>
+            </div>
+
+            <div class="status-card healthy">
+                <div class="status-header">
+                    <span class="status-icon">🌐</span>
+                    <h4>CDN性能</h4>
+                    <span class="status-indicator healthy"></span>
+                </div>
+                <div class="status-content">
+                    <div class="status-value">99.2%</div>
+                    <div class="status-detail">全球节点正常</div>
+                    <div class="status-time">缓存命中率: 94%</div>
+                </div>
+            </div>
+
+            <div class="status-card critical">
+                <div class="status-header">
+                    <span class="status-icon">🔥</span>
+                    <h4>错误率</h4>
+                    <span class="status-indicator critical"></span>
+                </div>
+                <div class="status-content">
+                    <div class="status-value">0.02%</div>
+                    <div class="status-detail">轻微错误增长</div>
+                    <div class="status-time">过去1小时</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 实时指标仪表板 -->
+    <div class="realtime-metrics">
+        <h3 style="margin-bottom: 20px;">📈 实时指标仪表板</h3>
+        <div class="metrics-layout">
+            <div class="metric-chart">
+                <div class="chart-header">
+                    <h4>实时流量监控</h4>
+                    <div class="metric-controls">
+                        <select onchange="updateTimeRange(this.value)">
+                            <option value="1h">过去1小时</option>
+                            <option value="6h">过去6小时</option>
+                            <option value="24h">过去24小时</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="trafficChart" style="height: 300px;"></div>
+                <div class="chart-summary">
+                    <div class="summary-item">
+                        <span class="summary-label">当前PV</span>
+                        <span class="summary-value">2,347</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">当前UV</span>
+                        <span class="summary-value">1,892</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">峰值QPS</span>
+                        <span class="summary-value">156/s</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="metric-panels">
+                <div class="metric-panel">
+                    <h4>📱 设备分布</h4>
+                    <div class="device-stats">
+                        <div class="device-item">
+                            <div class="device-info">
+                                <span class="device-icon">🖥️</span>
+                                <span class="device-name">桌面端</span>
+                            </div>
+                            <div class="device-metrics">
+                                <span class="device-percentage">52%</span>
+                                <div class="device-bar">
+                                    <div class="device-fill" style="width: 52%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="device-item">
+                            <div class="device-info">
+                                <span class="device-icon">📱</span>
+                                <span class="device-name">移动端</span>
+                            </div>
+                            <div class="device-metrics">
+                                <span class="device-percentage">41%</span>
+                                <div class="device-bar">
+                                    <div class="device-fill" style="width: 41%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="device-item">
+                            <div class="device-info">
+                                <span class="device-icon">📟</span>
+                                <span class="device-name">平板端</span>
+                            </div>
+                            <div class="device-metrics">
+                                <span class="device-percentage">7%</span>
+                                <div class="device-bar">
+                                    <div class="device-fill" style="width: 7%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="metric-panel">
+                    <h4>🌍 地域分布</h4>
+                    <div class="geo-stats">
+                        <div class="geo-item">
+                            <div class="geo-flag">🇺🇸</div>
+                            <div class="geo-info">
+                                <span class="geo-country">美国</span>
+                                <span class="geo-percentage">34%</span>
+                            </div>
+                        </div>
+                        <div class="geo-item">
+                            <div class="geo-flag">🇨🇳</div>
+                            <div class="geo-info">
+                                <span class="geo-country">中国</span>
+                                <span class="geo-percentage">28%</span>
+                            </div>
+                        </div>
+                        <div class="geo-item">
+                            <div class="geo-flag">🇩🇪</div>
+                            <div class="geo-info">
+                                <span class="geo-country">德国</span>
+                                <span class="geo-percentage">12%</span>
+                            </div>
+                        </div>
+                        <div class="geo-item">
+                            <div class="geo-flag">🇬🇧</div>
+                            <div class="geo-info">
+                                <span class="geo-country">英国</span>
+                                <span class="geo-percentage">8%</span>
+                            </div>
+                        </div>
+                        <div class="geo-item">
+                            <div class="geo-flag">🌐</div>
+                            <div class="geo-info">
+                                <span class="geo-country">其他</span>
+                                <span class="geo-percentage">18%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="metric-panel">
+                    <h4>🔍 热门页面</h4>
+                    <div class="page-stats">
+                        <div class="page-item">
+                            <div class="page-info">
+                                <span class="page-url">/e28-flexione</span>
+                                <span class="page-visits">1,247 访问</span>
+                            </div>
+                            <span class="page-percentage">23%</span>
+                        </div>
+                        <div class="page-item">
+                            <div class="page-info">
+                                <span class="page-url">/e28-vs-competitors</span>
+                                <span class="page-visits">987 访问</span>
+                            </div>
+                            <span class="page-percentage">18%</span>
+                        </div>
+                        <div class="page-item">
+                            <div class="page-info">
+                                <span class="page-url">/hydrojet-technology</span>
+                                <span class="page-visits">756 访问</span>
+                            </div>
+                            <span class="page-percentage">14%</span>
+                        </div>
+                        <div class="page-item">
+                            <div class="page-info">
+                                <span class="page-url">/e28-overview</span>
+                                <span class="page-visits">623 访问</span>
+                            </div>
+                            <span class="page-percentage">11%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 关键事件流 -->
+    <div class="event-stream">
+        <h3 style="margin-bottom: 20px;">⚡ 关键事件流</h3>
+        <div class="stream-layout">
+            <div class="stream-filters">
+                <button class="filter-btn active" onclick="filterEvents('all')">全部</button>
+                <button class="filter-btn" onclick="filterEvents('traffic')">流量</button>
+                <button class="filter-btn" onclick="filterEvents('conversion')">转化</button>
+                <button class="filter-btn" onclick="filterEvents('error')">错误</button>
+                <button class="filter-btn" onclick="filterEvents('security')">安全</button>
+            </div>
+            
+            <div class="event-list">
+                <div class="event-item critical">
+                    <div class="event-time">14:32:15</div>
+                    <div class="event-icon">🚨</div>
+                    <div class="event-content">
+                        <div class="event-title">FlexiOne页面转化率异常下降</div>
+                        <div class="event-description">过去15分钟转化率从8.5%降至6.1%，可能与页面加载速度有关</div>
+                        <div class="event-tags">
+                            <span class="event-tag conversion">转化</span>
+                            <span class="event-tag performance">性能</span>
+                        </div>
+                    </div>
+                    <div class="event-actions">
+                        <button class="event-btn" onclick="investigateEvent('conversion-drop')">调查</button>
+                    </div>
+                </div>
+
+                <div class="event-item warning">
+                    <div class="event-time">14:28:42</div>
+                    <div class="event-icon">⚠️</div>
+                    <div class="event-content">
+                        <div class="event-title">API响应时间超过阈值</div>
+                        <div class="event-description">产品信息API平均响应时间达到385ms，超过300ms告警阈值</div>
+                        <div class="event-tags">
+                            <span class="event-tag api">API</span>
+                            <span class="event-tag performance">性能</span>
+                        </div>
+                    </div>
+                    <div class="event-actions">
+                        <button class="event-btn" onclick="investigateEvent('api-slow')">调查</button>
+                    </div>
+                </div>
+
+                <div class="event-item info">
+                    <div class="event-time">14:25:13</div>
+                    <div class="event-icon">📈</div>
+                    <div class="event-content">
+                        <div class="event-title">流量峰值突破历史记录</div>
+                        <div class="event-description">当前QPS达到172/s，比历史峰值高出12%，主要来源于社交媒体推广</div>
+                        <div class="event-tags">
+                            <span class="event-tag traffic">流量</span>
+                            <span class="event-tag social">社交</span>
+                        </div>
+                    </div>
+                    <div class="event-actions">
+                        <button class="event-btn" onclick="investigateEvent('traffic-peak')">详情</button>
+                    </div>
+                </div>
+
+                <div class="event-item success">
+                    <div class="event-time">14:20:56</div>
+                    <div class="event-icon">✅</div>
+                    <div class="event-content">
+                        <div class="event-title">CDN缓存优化生效</div>
+                        <div class="event-description">静态资源加载时间从1.2s优化至0.6s，页面整体性能提升50%</div>
+                        <div class="event-tags">
+                            <span class="event-tag cdn">CDN</span>
+                            <span class="event-tag optimization">优化</span>
+                        </div>
+                    </div>
+                    <div class="event-actions">
+                        <button class="event-btn" onclick="investigateEvent('cdn-optimization')">查看</button>
+                    </div>
+                </div>
+
+                <div class="event-item info">
+                    <div class="event-time">14:18:32</div>
+                    <div class="event-icon">🔄</div>
+                    <div class="event-content">
+                        <div class="event-title">定时任务执行完成</div>
+                        <div class="event-description">SEO数据同步任务成功完成，更新了2,847条关键词排名数据</div>
+                        <div class="event-tags">
+                            <span class="event-tag cron">定时任务</span>
+                            <span class="event-tag seo">SEO</span>
+                        </div>
+                    </div>
+                    <div class="event-actions">
+                        <button class="event-btn" onclick="investigateEvent('cron-complete')">报告</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 告警规则管理 -->
+    <div class="alert-management">
+        <h3 style="margin-bottom: 20px;">🚨 告警规则管理</h3>
+        <div class="alert-grid">
+            <div class="alert-rule active">
+                <div class="rule-header">
+                    <div class="rule-status on">启用</div>
+                    <h4>页面响应时间告警</h4>
+                </div>
+                <div class="rule-content">
+                    <div class="rule-condition">
+                        <span class="condition-label">条件:</span>
+                        <span class="condition-text">平均响应时间 > 300ms 持续2分钟</span>
+                    </div>
+                    <div class="rule-action">
+                        <span class="action-label">动作:</span>
+                        <span class="action-text">发送邮件 + 短信通知</span>
+                    </div>
+                    <div class="rule-stats">
+                        <span>今日触发: 3次</span>
+                        <span>最后触发: 14:28</span>
+                    </div>
+                </div>
+                <div class="rule-actions">
+                    <button class="rule-btn" onclick="editRule('response-time')">编辑</button>
+                    <button class="rule-btn" onclick="toggleRule('response-time')">禁用</button>
+                </div>
+            </div>
+
+            <div class="alert-rule active">
+                <div class="rule-header">
+                    <div class="rule-status on">启用</div>
+                    <h4>转化率异常告警</h4>
+                </div>
+                <div class="rule-content">
+                    <div class="rule-condition">
+                        <span class="condition-label">条件:</span>
+                        <span class="condition-text">转化率下降 > 20% 相比前1小时</span>
+                    </div>
+                    <div class="rule-action">
+                        <span class="action-label">动作:</span>
+                        <span class="action-text">发送Slack通知 + 创建事件</span>
+                    </div>
+                    <div class="rule-stats">
+                        <span>今日触发: 1次</span>
+                        <span>最后触发: 14:32</span>
+                    </div>
+                </div>
+                <div class="rule-actions">
+                    <button class="rule-btn" onclick="editRule('conversion-rate')">编辑</button>
+                    <button class="rule-btn" onclick="toggleRule('conversion-rate')">禁用</button>
+                </div>
+            </div>
+
+            <div class="alert-rule">
+                <div class="rule-header">
+                    <div class="rule-status off">禁用</div>
+                    <h4>错误率告警</h4>
+                </div>
+                <div class="rule-content">
+                    <div class="rule-condition">
+                        <span class="condition-label">条件:</span>
+                        <span class="condition-text">错误率 > 1% 持续5分钟</span>
+                    </div>
+                    <div class="rule-action">
+                        <span class="action-label">动作:</span>
+                        <span class="action-text">发送邮件通知</span>
+                    </div>
+                    <div class="rule-stats">
+                        <span>今日触发: 0次</span>
+                        <span>最后触发: 昨日 16:45</span>
+                    </div>
+                </div>
+                <div class="rule-actions">
+                    <button class="rule-btn" onclick="editRule('error-rate')">编辑</button>
+                    <button class="rule-btn" onclick="toggleRule('error-rate')">启用</button>
+                </div>
+            </div>
+        </div>
+        
+        <button class="add-rule-btn" onclick="createNewRule()">
+            ➕ 添加新规则
+        </button>
+    </div>
+</div>
+
+<style>
+.system-status {
+    margin-bottom: 30px;
+}
+
+.status-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.status-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.3s;
+    position: relative;
+}
+
+.status-card.healthy {
+    border-left: 4px solid #52C41A;
+}
+
+.status-card.warning {
+    border-left: 4px solid #FAAD14;
+}
+
+.status-card.critical {
+    border-left: 4px solid #F5222D;
+}
+
+.status-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.status-icon {
+    font-size: 20px;
+}
+
+.status-header h4 {
+    flex: 1;
+    margin: 0 0 0 10px;
+    font-size: 14px;
+}
+
+.status-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+.status-indicator.healthy {
+    background: #52C41A;
+}
+
+.status-indicator.warning {
+    background: #FAAD14;
+}
+
+.status-indicator.critical {
+    background: #F5222D;
+}
+
+.status-value {
+    font-size: 32px;
+    font-weight: bold;
+    color: #FF6900;
+    margin-bottom: 8px;
+}
+
+.status-detail {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 4px;
+}
+
+.status-time {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.realtime-metrics {
+    margin-bottom: 30px;
+}
+
+.metrics-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+}
+
+.metric-chart {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.chart-header h4 {
+    margin: 0;
+    font-size: 16px;
+    color: #FF6900;
+}
+
+.metric-controls select {
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    color: white;
+    font-size: 12px;
+}
+
+.chart-summary {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.summary-item {
+    text-align: center;
+}
+
+.summary-label {
+    display: block;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 4px;
+}
+
+.summary-value {
+    display: block;
+    font-size: 18px;
+    font-weight: 600;
+    color: #FF6900;
+}
+
+.metric-panels {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.metric-panel {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.metric-panel h4 {
+    margin: 0 0 15px 0;
+    font-size: 14px;
+    color: #FF6900;
+}
+
+.device-stats,
+.geo-stats,
+.page-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.device-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.device-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+}
+
+.device-icon {
+    font-size: 16px;
+}
+
+.device-name {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.device-metrics {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 120px;
+}
+
+.device-percentage {
+    font-size: 12px;
+    font-weight: 600;
+    color: #FF6900;
+    width: 30px;
+}
+
+.device-bar {
+    flex: 1;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.device-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #FF6900, #FF8C00);
+    border-radius: 3px;
+}
+
+.geo-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.geo-flag {
+    font-size: 16px;
+    width: 20px;
+}
+
+.geo-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex: 1;
+}
+
+.geo-country {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.geo-percentage {
+    font-size: 12px;
+    font-weight: 600;
+    color: #FF6900;
+}
+
+.page-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.page-info {
+    flex: 1;
+}
+
+.page-url {
+    display: block;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 2px;
+}
+
+.page-visits {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.page-percentage {
+    font-size: 12px;
+    font-weight: 600;
+    color: #FF6900;
+}
+
+.event-stream {
+    margin-bottom: 30px;
+}
+
+.stream-layout {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.stream-filters {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.filter-btn {
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.filter-btn.active,
+.filter-btn:hover {
+    background: linear-gradient(135deg, #FF6900 0%, #FF8C00 100%);
+    color: white;
+    border-color: #FF6900;
+}
+
+.event-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.event-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    border-left: 4px solid;
+}
+
+.event-item.critical {
+    border-left-color: #F5222D;
+    background: rgba(245, 34, 45, 0.05);
+}
+
+.event-item.warning {
+    border-left-color: #FAAD14;
+    background: rgba(250, 173, 20, 0.05);
+}
+
+.event-item.info {
+    border-left-color: #1890FF;
+    background: rgba(24, 144, 255, 0.05);
+}
+
+.event-item.success {
+    border-left-color: #52C41A;
+    background: rgba(82, 196, 26, 0.05);
+}
+
+.event-time {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+    font-family: 'Monaco', 'Menlo', monospace;
+    min-width: 60px;
+}
+
+.event-icon {
+    font-size: 16px;
+    margin-top: 2px;
+}
+
+.event-content {
+    flex: 1;
+}
+
+.event-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: white;
+}
+
+.event-description {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.4;
+    margin-bottom: 8px;
+}
+
+.event-tags {
+    display: flex;
+    gap: 5px;
+}
+
+.event-tag {
+    padding: 2px 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.event-tag.conversion { background: rgba(255, 105, 0, 0.2); color: #FF6900; }
+.event-tag.performance { background: rgba(250, 173, 20, 0.2); color: #FAAD14; }
+.event-tag.api { background: rgba(24, 144, 255, 0.2); color: #1890FF; }
+.event-tag.traffic { background: rgba(82, 196, 26, 0.2); color: #52C41A; }
+.event-tag.social { background: rgba(102, 126, 234, 0.2); color: #667eea; }
+.event-tag.cdn { background: rgba(245, 34, 45, 0.2); color: #F5222D; }
+.event-tag.optimization { background: rgba(82, 196, 26, 0.2); color: #52C41A; }
+.event-tag.cron { background: rgba(102, 126, 234, 0.2); color: #667eea; }
+.event-tag.seo { background: rgba(255, 105, 0, 0.2); color: #FF6900; }
+
+.event-actions {
+    margin-top: 5px;
+}
+
+.event-btn {
+    padding: 4px 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    color: white;
+    font-size: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.event-btn:hover {
+    background: rgba(255, 105, 0, 0.2);
+    border-color: #FF6900;
+}
+
+.alert-management {
+    margin-bottom: 30px;
+}
+
+.alert-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.alert-rule {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.alert-rule.active {
+    border-color: rgba(82, 196, 26, 0.3);
+    background: rgba(82, 196, 26, 0.05);
+}
+
+.rule-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.rule-status {
+    padding: 3px 8px;
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.rule-status.on {
+    background: rgba(82, 196, 26, 0.2);
+    color: #52C41A;
+}
+
+.rule-status.off {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.rule-header h4 {
+    margin: 0;
+    font-size: 14px;
+}
+
+.rule-content {
+    flex: 1;
+}
+
+.rule-condition,
+.rule-action {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.condition-label,
+.action-label {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+    min-width: 40px;
+}
+
+.condition-text,
+.action-text {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.rule-stats {
+    display: flex;
+    gap: 15px;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.rule-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.rule-btn {
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    color: white;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.rule-btn:hover {
+    background: rgba(255, 105, 0, 0.2);
+    border-color: #FF6900;
+}
+
+.add-rule-btn {
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #FF6900 0%, #FF8C00 100%);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.add-rule-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255,105,0,0.3);
+}
+
+@media (max-width: 768px) {
+    .metrics-layout {
+        grid-template-columns: 1fr;
+    }
+    
+    .status-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+    
+    .alert-rule {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+</style>
+
+<script>
+// 初始化实时流量图表
+function initTrafficChart() {
+    const chart = echarts.init(document.getElementById('trafficChart'));
+    
+    const times = [];
+    const pvData = [];
+    const uvData = [];
+    const qpsData = [];
+    
+    // 生成过去1小时的数据
+    for (let i = 59; i >= 0; i--) {
+        const time = new Date();
+        time.setMinutes(time.getMinutes() - i);
+        times.push(time.toTimeString().slice(0, 5));
+        
+        // 模拟实时数据
+        pvData.push(Math.floor(1800 + Math.random() * 800 + Math.sin(i * 0.1) * 400));
+        uvData.push(Math.floor(1200 + Math.random() * 600 + Math.sin(i * 0.1) * 300));
+        qpsData.push(Math.floor(80 + Math.random() * 80 + Math.sin(i * 0.2) * 40));
+    }
+    
+    const option = {
+        backgroundColor: 'transparent',
+        tooltip: {
+            trigger: 'axis',
+            backgroundColor: 'rgba(0,0,0,0.8)',
+            borderColor: '#FF6900',
+            borderWidth: 1,
+            textStyle: { color: '#fff' }
+        },
+        legend: {
+            data: ['PV', 'UV', 'QPS'],
+            textStyle: { color: 'rgba(255,255,255,0.7)' },
+            bottom: 10
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '15%',
+            containLabel: true
+        },
+        xAxis: {
+            type: 'category',
+            data: times,
+            axisLabel: {
+                color: 'rgba(255,255,255,0.5)',
+                interval: 9
+            },
+            axisLine: { lineStyle: { color: 'rgba(255,255,255,0.2)' } }
+        },
+        yAxis: [
+            {
+                type: 'value',
+                name: 'PV/UV',
+                position: 'left',
+                axisLabel: { color: 'rgba(255,255,255,0.5)' },
+                axisLine: { lineStyle: { color: 'rgba(255,255,255,0.2)' } },
+                splitLine: { lineStyle: { color: 'rgba(255,255,255,0.05)' } }
+            },
+            {
+                type: 'value',
+                name: 'QPS',
+                position: 'right',
+                axisLabel: { color: 'rgba(255,255,255,0.5)' },
+                axisLine: { lineStyle: { color: 'rgba(255,255,255,0.2)' } }
+            }
+        ],
+        series: [
+            {
+                name: 'PV',
+                type: 'line',
+                data: pvData,
+                smooth: true,
+                lineStyle: { color: '#FF6900', width: 2 },
+                areaStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: 'rgba(255,105,0,0.3)' },
+                        { offset: 1, color: 'rgba(255,105,0,0)' }
+                    ])
+                }
+            },
+            {
+                name: 'UV',
+                type: 'line',
+                data: uvData,
+                smooth: true,
+                lineStyle: { color: '#667eea', width: 2 },
+                areaStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: 'rgba(102,126,234,0.3)' },
+                        { offset: 1, color: 'rgba(102,126,234,0)' }
+                    ])
+                }
+            },
+            {
+                name: 'QPS',
+                type: 'line',
+                yAxisIndex: 1,
+                data: qpsData,
+                smooth: true,
+                lineStyle: { color: '#52C41A', width: 2 }
+            }
+        ]
+    };
+    
+    chart.setOption(option);
+    window.addEventListener('resize', () => chart.resize());
+    
+    // 模拟实时数据更新
+    setInterval(() => {
+        const newTime = new Date().toTimeString().slice(0, 5);
+        const newPV = Math.floor(1800 + Math.random() * 800);
+        const newUV = Math.floor(1200 + Math.random() * 600);
+        const newQPS = Math.floor(80 + Math.random() * 80);
+        
+        // 更新数据
+        times.shift();
+        times.push(newTime);
+        pvData.shift();
+        pvData.push(newPV);
+        uvData.shift();
+        uvData.push(newUV);
+        qpsData.shift();
+        qpsData.push(newQPS);
+        
+        // 更新图表
+        chart.setOption({
+            xAxis: { data: times },
+            series: [
+                { data: pvData },
+                { data: uvData },
+                { data: qpsData }
+            ]
+        });
+        
+        // 更新实时指标
+        updateRealtimeMetrics(newPV, newUV, newQPS);
+    }, 30000); // 30秒更新一次
+}
+
+// 更新实时指标
+function updateRealtimeMetrics(pv, uv, qps) {
+    const summaryItems = document.querySelectorAll('.summary-value');
+    if (summaryItems.length >= 3) {
+        summaryItems[0].textContent = pv.toLocaleString();
+        summaryItems[1].textContent = uv.toLocaleString();
+        summaryItems[2].textContent = `${qps}/s`;
+    }
+}
+
+// 功能函数
+function toggleAutoRefresh() {
+    console.log('切换自动刷新状态');
+    // 实现自动刷新开关
+}
+
+function configureAlerts() {
+    console.log('配置告警设置');
+    // 打开告警配置面板
+}
+
+function exportMonitorData() {
+    console.log('导出监控数据');
+    // 导出当前监控数据
+}
+
+function updateTimeRange(range) {
+    console.log('更新时间范围:', range);
+    // 重新加载图表数据
+}
+
+function filterEvents(type) {
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    console.log('过滤事件类型:', type);
+}
+
+function investigateEvent(eventId) {
+    console.log('调查事件:', eventId);
+    // 打开事件详情或调查面板
+}
+
+function editRule(ruleId) {
+    console.log('编辑规则:', ruleId);
+    // 打开规则编辑面板
+}
+
+function toggleRule(ruleId) {
+    console.log('切换规则状态:', ruleId);
+    // 启用/禁用规则
+}
+
+function createNewRule() {
+    console.log('创建新规则');
+    // 打开新规则创建面板
+}
+
+// 页面加载时初始化
+if (typeof echarts !== 'undefined') {
+    setTimeout(initTrafficChart, 100);
+}
+</script>

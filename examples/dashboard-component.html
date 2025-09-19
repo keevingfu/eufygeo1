@@ -1,0 +1,205 @@
+<!-- Example: Dashboard Component Pattern -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Component Pattern</title>
+    <style>
+        /* Mobile-first responsive design pattern */
+        .dashboard-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        
+        /* Grid layout pattern for dashboard */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        /* Card component pattern */
+        .metric-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+        
+        /* Chart container pattern */
+        .chart-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .chart-box {
+            height: 400px;
+            position: relative;
+        }
+        
+        /* Loading state pattern */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #666;
+        }
+        
+        /* Error state pattern */
+        .error-state {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            padding: 1rem;
+            color: #dc2626;
+        }
+        
+        /* Responsive breakpoints */
+        @media (max-width: 768px) {
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .chart-box {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Dashboard Container Pattern -->
+    <div class="dashboard-container">
+        <!-- Header Section Pattern -->
+        <div class="dashboard-header">
+            <h1>SEO Performance Dashboard</h1>
+            <div class="header-actions">
+                <button class="btn btn-primary" onclick="refreshData()">
+                    🔄 Refresh
+                </button>
+            </div>
+        </div>
+        
+        <!-- Metrics Grid Pattern -->
+        <div class="metrics-grid">
+            <!-- Metric Card Pattern -->
+            <div class="metric-card">
+                <div class="metric-header">
+                    <h3>Organic Traffic</h3>
+                    <span class="metric-icon">📈</span>
+                </div>
+                <div class="metric-value">156.2K</div>
+                <div class="metric-change positive">
+                    <span>↗️ +23.5%</span>
+                </div>
+            </div>
+            
+            <!-- Loading State Example -->
+            <div class="metric-card">
+                <div class="loading">
+                    <span>Loading...</span>
+                </div>
+            </div>
+            
+            <!-- Error State Example -->
+            <div class="metric-card">
+                <div class="error-state">
+                    Failed to load data. Please try again.
+                </div>
+            </div>
+        </div>
+        
+        <!-- Chart Container Pattern -->
+        <div class="chart-container">
+            <div class="chart-header">
+                <h2>Traffic Trend (30 Days)</h2>
+                <select class="chart-filter">
+                    <option>Last 30 Days</option>
+                    <option>Last 7 Days</option>
+                </select>
+            </div>
+            <div id="trafficChart" class="chart-box">
+                <!-- ECharts will render here -->
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // JavaScript patterns for dashboard
+        
+        // Data fetching pattern with error handling
+        async function fetchDashboardData() {
+            try {
+                // Show loading state
+                showLoadingState();
+                
+                // Fetch data with timeout
+                const response = await fetchWithTimeout('/api/v1/metrics', {
+                    timeout: 5000
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                // Update UI with data
+                updateDashboard(data);
+                
+            } catch (error) {
+                console.error('Dashboard data fetch error:', error);
+                showErrorState(error.message);
+            }
+        }
+        
+        // Fetch with timeout pattern
+        function fetchWithTimeout(url, options = {}) {
+            const { timeout = 5000 } = options;
+            
+            const controller = new AbortController();
+            const id = setTimeout(() => controller.abort(), timeout);
+            
+            return fetch(url, {
+                ...options,
+                signal: controller.signal
+            }).finally(() => clearTimeout(id));
+        }
+        
+        // Refresh data pattern with rate limiting
+        let lastRefresh = 0;
+        const REFRESH_COOLDOWN = 5000; // 5 seconds
+        
+        function refreshData() {
+            const now = Date.now();
+            if (now - lastRefresh < REFRESH_COOLDOWN) {
+                console.log('Please wait before refreshing again');
+                return;
+            }
+            
+            lastRefresh = now;
+            fetchDashboardData();
+        }
+        
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchDashboardData();
+            
+            // Set up auto-refresh
+            setInterval(fetchDashboardData, 5 * 60 * 1000); // 5 minutes
+        });
+    </script>
+</body>
+</html>

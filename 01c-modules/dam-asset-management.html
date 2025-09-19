@@ -1,0 +1,912 @@
+<!-- DAM Asset Management Module -->
+<div class="module-content">
+    <!-- DAM资产管理标题 -->
+    <div class="module-header">
+        <h2 style="font-size: 24px; margin-bottom: 20px; color: #FF6900;">
+            📁 DAM内容资产管理
+        </h2>
+        <div class="header-actions">
+            <button class="action-btn" onclick="uploadAssets()">📤 上传资产</button>
+            <button class="action-btn" onclick="bulkActions()">🔧 批量操作</button>
+            <button class="action-btn" onclick="exportCollection()">💾 导出合集</button>
+        </div>
+    </div>
+
+    <!-- 资产概览仪表盘 -->
+    <div class="assets-overview">
+        <h3 style="margin-bottom: 20px;">📊 资产概览仪表盘</h3>
+        <div class="overview-stats">
+            <div class="stat-card">
+                <div class="stat-icon">🖼️</div>
+                <div class="stat-content">
+                    <div class="stat-number">2,456</div>
+                    <div class="stat-label">图片资产</div>
+                    <div class="stat-detail">新增 +89 本月</div>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">🎥</div>
+                <div class="stat-content">
+                    <div class="stat-number">167</div>
+                    <div class="stat-label">视频资产</div>
+                    <div class="stat-detail">新增 +12 本月</div>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">📄</div>
+                <div class="stat-content">
+                    <div class="stat-number">892</div>
+                    <div class="stat-label">文档资产</div>
+                    <div class="stat-detail">新增 +34 本月</div>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">💾</div>
+                <div class="stat-content">
+                    <div class="stat-number">1.2TB</div>
+                    <div class="stat-label">存储空间</div>
+                    <div class="stat-detail">使用率 67%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 搜索和筛选 -->
+    <div class="search-filter-section">
+        <div class="search-bar">
+            <input type="text" placeholder="搜索资产名称、标签或描述..." class="search-input">
+            <button class="search-btn" onclick="searchAssets()">🔍</button>
+        </div>
+        
+        <div class="filter-controls">
+            <div class="filter-group">
+                <label>资产类型:</label>
+                <select id="assetType" onchange="filterAssets()">
+                    <option value="all">全部类型</option>
+                    <option value="image">图片</option>
+                    <option value="video">视频</option>
+                    <option value="document">文档</option>
+                    <option value="audio">音频</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label>产品系列:</label>
+                <select id="productSeries" onchange="filterAssets()">
+                    <option value="all">全部产品</option>
+                    <option value="e28">Eufy Omni E28</option>
+                    <option value="flexione">FlexiOne</option>
+                    <option value="hydrojet">HydroJet</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label>使用场景:</label>
+                <select id="useCase" onchange="filterAssets()">
+                    <option value="all">全部场景</option>
+                    <option value="social">社交媒体</option>
+                    <option value="website">网站展示</option>
+                    <option value="advertising">广告投放</option>
+                    <option value="email">邮件营销</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label>创建时间:</label>
+                <select id="timeRange" onchange="filterAssets()">
+                    <option value="all">全部时间</option>
+                    <option value="today">今天</option>
+                    <option value="week">本周</option>
+                    <option value="month">本月</option>
+                    <option value="quarter">本季度</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- 资产网格展示 -->
+    <div class="assets-grid-section">
+        <div class="grid-controls">
+            <div class="view-controls">
+                <button class="view-btn active" onclick="changeView('grid')" data-view="grid">⊞ 网格</button>
+                <button class="view-btn" onclick="changeView('list')" data-view="list">☰ 列表</button>
+            </div>
+            
+            <div class="sort-controls">
+                <select id="sortBy" onchange="sortAssets()">
+                    <option value="recent">最新创建</option>
+                    <option value="name">名称排序</option>
+                    <option value="size">文件大小</option>
+                    <option value="usage">使用频率</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="assets-grid" id="assetsGrid">
+            <!-- E28 产品图片 -->
+            <div class="asset-item" data-type="image" data-product="e28" data-scenario="website">
+                <div class="asset-preview">
+                    <div class="preview-placeholder image-placeholder">
+                        <div class="placeholder-icon">🖼️</div>
+                        <div class="file-info">JPG • 2.3MB</div>
+                    </div>
+                    <div class="asset-overlay">
+                        <button class="overlay-btn" onclick="previewAsset('e28-hero-1')">👁️</button>
+                        <button class="overlay-btn" onclick="downloadAsset('e28-hero-1')">⬇️</button>
+                        <button class="overlay-btn" onclick="shareAsset('e28-hero-1')">🔗</button>
+                    </div>
+                </div>
+                <div class="asset-info">
+                    <h4 class="asset-title">E28 主打产品图</h4>
+                    <div class="asset-meta">
+                        <span class="asset-tags">
+                            <span class="tag">产品展示</span>
+                            <span class="tag">高清</span>
+                        </span>
+                        <span class="asset-usage">使用 23次</span>
+                    </div>
+                    <div class="asset-stats">
+                        <span class="upload-date">2024-11-15</span>
+                        <span class="file-size">2.3MB</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FlexiOne 演示视频 -->
+            <div class="asset-item" data-type="video" data-product="flexione" data-scenario="social">
+                <div class="asset-preview">
+                    <div class="preview-placeholder video-placeholder">
+                        <div class="placeholder-icon">🎥</div>
+                        <div class="file-info">MP4 • 45.2MB</div>
+                        <div class="video-duration">1:23</div>
+                    </div>
+                    <div class="asset-overlay">
+                        <button class="overlay-btn" onclick="previewAsset('flexione-demo')">👁️</button>
+                        <button class="overlay-btn" onclick="downloadAsset('flexione-demo')">⬇️</button>
+                        <button class="overlay-btn" onclick="shareAsset('flexione-demo')">🔗</button>
+                    </div>
+                </div>
+                <div class="asset-info">
+                    <h4 class="asset-title">FlexiOne 功能演示</h4>
+                    <div class="asset-meta">
+                        <span class="asset-tags">
+                            <span class="tag">产品演示</span>
+                            <span class="tag">短视频</span>
+                        </span>
+                        <span class="asset-usage">使用 45次</span>
+                    </div>
+                    <div class="asset-stats">
+                        <span class="upload-date">2024-11-12</span>
+                        <span class="file-size">45.2MB</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HydroJet 说明文档 -->
+            <div class="asset-item" data-type="document" data-product="hydrojet" data-scenario="email">
+                <div class="asset-preview">
+                    <div class="preview-placeholder document-placeholder">
+                        <div class="placeholder-icon">📄</div>
+                        <div class="file-info">PDF • 1.8MB</div>
+                    </div>
+                    <div class="asset-overlay">
+                        <button class="overlay-btn" onclick="previewAsset('hydrojet-manual')">👁️</button>
+                        <button class="overlay-btn" onclick="downloadAsset('hydrojet-manual')">⬇️</button>
+                        <button class="overlay-btn" onclick="shareAsset('hydrojet-manual')">🔗</button>
+                    </div>
+                </div>
+                <div class="asset-info">
+                    <h4 class="asset-title">HydroJet 系统说明书</h4>
+                    <div class="asset-meta">
+                        <span class="asset-tags">
+                            <span class="tag">说明文档</span>
+                            <span class="tag">技术文档</span>
+                        </span>
+                        <span class="asset-usage">使用 12次</span>
+                    </div>
+                    <div class="asset-stats">
+                        <span class="upload-date">2024-11-10</span>
+                        <span class="file-size">1.8MB</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 社交媒体图片集 -->
+            <div class="asset-item" data-type="image" data-product="e28" data-scenario="social">
+                <div class="asset-preview">
+                    <div class="preview-placeholder image-placeholder">
+                        <div class="placeholder-icon">🖼️</div>
+                        <div class="file-info">PNG • 3.1MB</div>
+                        <div class="collection-badge">合集 (8)</div>
+                    </div>
+                    <div class="asset-overlay">
+                        <button class="overlay-btn" onclick="previewAsset('social-collection')">👁️</button>
+                        <button class="overlay-btn" onclick="downloadAsset('social-collection')">⬇️</button>
+                        <button class="overlay-btn" onclick="shareAsset('social-collection')">🔗</button>
+                    </div>
+                </div>
+                <div class="asset-info">
+                    <h4 class="asset-title">社交媒体图片合集</h4>
+                    <div class="asset-meta">
+                        <span class="asset-tags">
+                            <span class="tag">社交媒体</span>
+                            <span class="tag">合集</span>
+                        </span>
+                        <span class="asset-usage">使用 67次</span>
+                    </div>
+                    <div class="asset-stats">
+                        <span class="upload-date">2024-11-08</span>
+                        <span class="file-size">3.1MB</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 广告创意图 -->
+            <div class="asset-item" data-type="image" data-product="e28" data-scenario="advertising">
+                <div class="asset-preview">
+                    <div class="preview-placeholder image-placeholder">
+                        <div class="placeholder-icon">🖼️</div>
+                        <div class="file-info">JPG • 1.9MB</div>
+                    </div>
+                    <div class="asset-overlay">
+                        <button class="overlay-btn" onclick="previewAsset('ad-creative')">👁️</button>
+                        <button class="overlay-btn" onclick="downloadAsset('ad-creative')">⬇️</button>
+                        <button class="overlay-btn" onclick="shareAsset('ad-creative')">🔗</button>
+                    </div>
+                </div>
+                <div class="asset-info">
+                    <h4 class="asset-title">E28 广告创意图</h4>
+                    <div class="asset-meta">
+                        <span class="asset-tags">
+                            <span class="tag">广告创意</span>
+                            <span class="tag">营销素材</span>
+                        </span>
+                        <span class="asset-usage">使用 34次</span>
+                    </div>
+                    <div class="asset-stats">
+                        <span class="upload-date">2024-11-06</span>
+                        <span class="file-size">1.9MB</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 产品对比图表 -->
+            <div class="asset-item" data-type="document" data-product="e28" data-scenario="website">
+                <div class="asset-preview">
+                    <div class="preview-placeholder document-placeholder">
+                        <div class="placeholder-icon">📊</div>
+                        <div class="file-info">PDF • 956KB</div>
+                    </div>
+                    <div class="asset-overlay">
+                        <button class="overlay-btn" onclick="previewAsset('comparison-chart')">👁️</button>
+                        <button class="overlay-btn" onclick="downloadAsset('comparison-chart')">⬇️</button>
+                        <button class="overlay-btn" onclick="shareAsset('comparison-chart')">🔗</button>
+                    </div>
+                </div>
+                <div class="asset-info">
+                    <h4 class="asset-title">产品对比图表</h4>
+                    <div class="asset-meta">
+                        <span class="asset-tags">
+                            <span class="tag">对比图表</span>
+                            <span class="tag">数据可视化</span>
+                        </span>
+                        <span class="asset-usage">使用 18次</span>
+                    </div>
+                    <div class="asset-stats">
+                        <span class="upload-date">2024-11-04</span>
+                        <span class="file-size">956KB</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 资产分析 -->
+    <div class="asset-analytics">
+        <h3 style="margin-bottom: 20px;">📈 资产使用分析</h3>
+        <div class="analytics-container">
+            <div class="analytics-chart">
+                <h4>使用频率趋势</h4>
+                <div id="usageAnalyticsChart" style="height: 250px;"></div>
+            </div>
+            
+            <div class="analytics-insights">
+                <h4>关键洞察</h4>
+                <div class="insights-list">
+                    <div class="insight-item">
+                        <div class="insight-icon">🔥</div>
+                        <div class="insight-content">
+                            <h5>热门资产</h5>
+                            <p>FlexiOne演示视频本月使用量增长67%，建议创建更多类似内容</p>
+                        </div>
+                    </div>
+                    
+                    <div class="insight-item">
+                        <div class="insight-icon">📱</div>
+                        <div class="insight-content">
+                            <h5>社交媒体偏好</h5>
+                            <p>垂直格式的图片在社交媒体上表现更佳，使用率比横版高43%</p>
+                        </div>
+                    </div>
+                    
+                    <div class="insight-item">
+                        <div class="insight-icon">⚠️</div>
+                        <div class="insight-content">
+                            <h5>更新提醒</h5>
+                            <p>有8个资产超过30天未使用，建议清理或重新优化</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.assets-overview {
+    margin-bottom: 30px;
+}
+
+.overview-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.stat-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.3s;
+}
+
+.stat-card:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-3px);
+}
+
+.stat-icon {
+    font-size: 32px;
+}
+
+.stat-content {
+    flex: 1;
+}
+
+.stat-number {
+    font-size: 24px;
+    font-weight: bold;
+    color: #FF6900;
+    margin-bottom: 4px;
+}
+
+.stat-label {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 4px;
+}
+
+.stat-detail {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.search-filter-section {
+    margin-bottom: 30px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.search-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.search-input {
+    flex: 1;
+    padding: 12px 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: white;
+    font-size: 14px;
+}
+
+.search-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.search-btn {
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #FF6900 0%, #FF8C00 100%);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.filter-controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.filter-group label {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.filter-group select {
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    color: white;
+    font-size: 13px;
+}
+
+.assets-grid-section {
+    margin-bottom: 30px;
+}
+
+.grid-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.view-controls {
+    display: flex;
+    gap: 5px;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 5px;
+    border-radius: 8px;
+}
+
+.view-btn {
+    padding: 8px 16px;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 12px;
+}
+
+.view-btn:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.view-btn.active {
+    background: linear-gradient(135deg, #FF6900 0%, #FF8C00 100%);
+    color: white;
+}
+
+.sort-controls select {
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    color: white;
+    font-size: 13px;
+}
+
+.assets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.asset-item {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s;
+}
+
+.asset-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-3px);
+}
+
+.asset-preview {
+    position: relative;
+    height: 180px;
+    overflow: hidden;
+}
+
+.preview-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.image-placeholder {
+    background: linear-gradient(135deg, rgba(102,126,234,0.1) 0%, rgba(255,105,0,0.1) 100%);
+}
+
+.video-placeholder {
+    background: linear-gradient(135deg, rgba(245,34,45,0.1) 0%, rgba(250,173,20,0.1) 100%);
+}
+
+.document-placeholder {
+    background: linear-gradient(135deg, rgba(82,196,26,0.1) 0%, rgba(102,126,234,0.1) 100%);
+}
+
+.placeholder-icon {
+    font-size: 48px;
+    margin-bottom: 10px;
+    opacity: 0.6;
+}
+
+.file-info {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+}
+
+.video-duration {
+    font-size: 11px;
+    color: white;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 2px 6px;
+    border-radius: 4px;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+
+.collection-badge {
+    font-size: 10px;
+    color: white;
+    background: rgba(255, 105, 0, 0.8);
+    padding: 2px 6px;
+    border-radius: 4px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.asset-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.asset-item:hover .asset-overlay {
+    opacity: 1;
+}
+
+.overlay-btn {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.overlay-btn:hover {
+    background: rgba(255, 105, 0, 0.8);
+    transform: scale(1.1);
+}
+
+.asset-info {
+    padding: 15px;
+}
+
+.asset-title {
+    margin: 0 0 10px 0;
+    font-size: 14px;
+    color: white;
+    font-weight: 600;
+}
+
+.asset-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.asset-tags {
+    display: flex;
+    gap: 5px;
+}
+
+.tag {
+    padding: 2px 6px;
+    background: rgba(255, 105, 0, 0.2);
+    border-radius: 4px;
+    font-size: 10px;
+    color: #FF6900;
+}
+
+.asset-usage {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.asset-stats {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.asset-analytics {
+    margin-bottom: 30px;
+}
+
+.analytics-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.analytics-chart h4,
+.analytics-insights h4 {
+    margin: 0 0 20px 0;
+    font-size: 16px;
+    color: #FF6900;
+}
+
+.insights-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.insight-item {
+    display: flex;
+    gap: 12px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.insight-icon {
+    font-size: 20px;
+    margin-top: 2px;
+}
+
+.insight-content h5 {
+    margin: 0 0 5px 0;
+    font-size: 13px;
+    color: #FF6900;
+}
+
+.insight-content p {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+@media (max-width: 768px) {
+    .overview-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .filter-controls {
+        grid-template-columns: 1fr;
+    }
+    
+    .grid-controls {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+    
+    .assets-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .analytics-container {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<script>
+// 上传资产
+function uploadAssets() {
+    console.log('上传新资产');
+}
+
+// 批量操作
+function bulkActions() {
+    console.log('执行批量操作');
+}
+
+// 导出合集
+function exportCollection() {
+    console.log('导出资产合集');
+}
+
+// 搜索资产
+function searchAssets() {
+    const searchTerm = document.querySelector('.search-input').value;
+    console.log('搜索资产:', searchTerm);
+}
+
+// 筛选资产
+function filterAssets() {
+    const assetType = document.getElementById('assetType').value;
+    const productSeries = document.getElementById('productSeries').value;
+    const useCase = document.getElementById('useCase').value;
+    const timeRange = document.getElementById('timeRange').value;
+    
+    const items = document.querySelectorAll('.asset-item');
+    items.forEach(item => {
+        let show = true;
+        
+        if (assetType !== 'all' && !item.dataset.type.includes(assetType)) {
+            show = false;
+        }
+        if (productSeries !== 'all' && !item.dataset.product.includes(productSeries)) {
+            show = false;
+        }
+        if (useCase !== 'all' && !item.dataset.scenario.includes(useCase)) {
+            show = false;
+        }
+        
+        item.style.display = show ? 'block' : 'none';
+    });
+    
+    console.log('筛选资产:', { assetType, productSeries, useCase, timeRange });
+}
+
+// 切换视图
+function changeView(viewType) {
+    document.querySelectorAll('.view-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    const grid = document.getElementById('assetsGrid');
+    if (viewType === 'list') {
+        grid.style.gridTemplateColumns = '1fr';
+        grid.style.gap = '10px';
+    } else {
+        grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(280px, 1fr))';
+        grid.style.gap = '20px';
+    }
+    
+    console.log('切换视图:', viewType);
+}
+
+// 排序资产
+function sortAssets() {
+    const sortBy = document.getElementById('sortBy').value;
+    console.log('排序资产:', sortBy);
+}
+
+// 预览资产
+function previewAsset(assetId) {
+    console.log('预览资产:', assetId);
+}
+
+// 下载资产
+function downloadAsset(assetId) {
+    console.log('下载资产:', assetId);
+}
+
+// 分享资产
+function shareAsset(assetId) {
+    console.log('分享资产:', assetId);
+}
+
+// 初始化使用分析图表
+function initUsageAnalyticsChart() {
+    if (typeof echarts === 'undefined') return;
+    
+    const chart = echarts.init(document.getElementById('usageAnalyticsChart'));
+    const option = {
+        tooltip: {
+            trigger: 'axis'
+        },
+        legend: {
+            data: ['图片', '视频', '文档'],
+            textStyle: { color: 'rgba(255,255,255,0.8)' }
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: {
+            type: 'category',
+            data: ['1月', '2月', '3月', '4月', '5月', '6月'],
+            axisLine: { lineStyle: { color: 'rgba(255,255,255,0.2)' } },
+            axisTick: { show: false }
+        },
+        yAxis: {
+            type: 'value',
+            axisLine: { lineStyle: { color: 'rgba(255,255,255,0.2)' } },
+            splitLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } }
+        },
+        series: [
+            {
+                name: '图片',
+                type: 'line',
+                data: [520, 680, 890, 1200, 1100, 1350],
+                smooth: true,
+                lineStyle: { color: '#FF6900' },
+                itemStyle: { color: '#FF6900' }
+            },
+            {
+                name: '视频',
+                type: 'line',
+                data: [120, 180, 230, 320, 280, 340],
+                smooth: true,
+                lineStyle: { color: '#667EEA' },
+                itemStyle: { color: '#667EEA' }
+            },
+            {
+                name: '文档',
+                type: 'line',
+                data: [80, 120, 160, 210, 190, 240],
+                smooth: true,
+                lineStyle: { color: '#52C41A' },
+                itemStyle: { color: '#52C41A' }
+            }
+        ]
+    };
+    
+    chart.setOption(option);
+    window.addEventListener('resize', () => chart.resize());
+}
+
+// 页面加载时初始化图表
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(() => {
+        initUsageAnalyticsChart();
+    }, 100);
+});
+</script>
