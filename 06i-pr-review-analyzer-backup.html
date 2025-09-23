@@ -1,0 +1,1573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eufy GEO Content Generator - Multi-Platform Content Optimization</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <style>
+        :root {
+            --primary: #667eea;
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --border: #e2e8f0;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f0f4f8;
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        /* Three Column Layout */
+        .three-column-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            min-height: 600px;
+        }
+
+        /* Panel Styles */
+        .panel {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-header {
+            background: linear-gradient(to right, #f8fafc, #f1f5f9);
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .panel-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .panel-title i {
+            color: var(--primary);
+            font-size: 1rem;
+        }
+
+        .panel-body {
+            padding: 1.5rem;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        /* Left Panel - Input Section */
+        .input-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tab-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .tab-btn:hover:not(.active) {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .text-input {
+            width: 100%;
+            min-height: 400px;
+            padding: 1rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            resize: vertical;
+            font-family: 'Monaco', 'Courier New', monospace;
+            transition: all 0.3s;
+        }
+
+        .text-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .upload-area {
+            display: none;
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 3rem;
+            text-align: center;
+            background: var(--light);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upload-area.active {
+            display: block;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary);
+            background: rgba(102, 126, 234, 0.02);
+        }
+
+        .upload-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        /* Middle Panel - Templates */
+        .template-filters {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.4rem 0.8rem;
+            border: 1px solid var(--border);
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .template-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .template-card {
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .template-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+
+        .template-card.selected {
+            border-color: var(--primary);
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .template-icon {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .template-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+            font-size: 0.95rem;
+        }
+
+        .template-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        /* Right Panel - Generated Content */
+        .output-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .output-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .output-content {
+            background: var(--light);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            min-height: 400px;
+            position: relative;
+        }
+
+        .output-placeholder {
+            text-align: center;
+            color: var(--text-secondary);
+            padding: 3rem;
+        }
+
+        .output-placeholder i {
+            font-size: 3rem;
+            color: var(--border);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .generated-content {
+            white-space: pre-wrap;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Action Buttons */
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .btn-sm {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.85rem;
+        }
+
+        /* Bottom Section - Analysis & Scoring */
+        .analysis-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-top: 2rem;
+        }
+
+        .analysis-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .analysis-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .analysis-title i {
+            color: var(--primary);
+        }
+
+        /* Score Cards Grid */
+        .score-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .score-card {
+            padding: 1.5rem;
+            background: var(--light);
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+            text-align: center;
+        }
+
+        .score-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .score-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .score-bar {
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .score-fill {
+            height: 100%;
+            background: var(--primary-gradient);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        /* Recommendations */
+        .recommendations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .recommendation-card {
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: white;
+        }
+
+        .recommendation-card h4 {
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .recommendation-list {
+            list-style: none;
+        }
+
+        .recommendation-list li {
+            padding: 0.5rem 0;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .recommendation-list i {
+            color: var(--success);
+            font-size: 0.8rem;
+            margin-top: 0.2rem;
+        }
+
+        /* Loading State */
+        .loading {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            z-index: 10;
+        }
+
+        .loading.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loading-spinner {
+            font-size: 2rem;
+            color: var(--primary);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .three-column-layout {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .panel-body {
+                padding: 1rem;
+            }
+            
+            .score-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div>
+                <h1>Eufy GEO Content Generator</h1>
+                <p>Multi-Platform Content Optimization for Smart Home Products</p>
+            </div>
+            <div>
+                <button class="btn btn-secondary" onclick="resetAll()">
+                    <i class="fas fa-redo"></i> Reset
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Three Column Layout -->
+        <div class="three-column-layout">
+            <!-- Left Panel - Input -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h3 class="panel-title">
+                        <i class="fas fa-file-import"></i> Content Input
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <div class="input-tabs">
+                        <button class="tab-btn active" onclick="switchInputMode('text')">
+                            <i class="fas fa-keyboard"></i> Text Input
+                        </button>
+                        <button class="tab-btn" onclick="switchInputMode('upload')">
+                            <i class="fas fa-upload"></i> File Upload
+                        </button>
+                    </div>
+                    
+                    <div id="textInputArea">
+                        <textarea id="prContent" class="text-input" placeholder="Paste your PR content here...
+
+Example:
+- Product announcement
+- Press release
+- Feature description
+- Company news
+- Marketing content"></textarea>
+                        
+                        <div style="margin-top: 1rem;">
+                            <button class="btn btn-primary" onclick="analyzeContent()">
+                                <i class="fas fa-magic"></i> Analyze & Generate
+                            </button>
+                            <button class="btn btn-secondary" onclick="loadSample()">
+                                <i class="fas fa-flask"></i> Load Sample
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="uploadArea" class="upload-area" ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
+                        <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                        <p>Drag and drop your file here</p>
+                        <p style="font-size: 0.85rem; color: var(--text-secondary);">or click to browse (TXT, DOC, DOCX, PDF)</p>
+                        <input type="file" id="fileInput" style="display: none;" accept=".txt,.doc,.docx,.pdf" onchange="handleFileSelect(event)">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Middle Panel - Templates -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h3 class="panel-title">
+                        <i class="fas fa-th-large"></i> GEO Content Templates
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <div class="template-filters">
+                        <button class="filter-btn active" onclick="filterTemplates('all')">All</button>
+                        <button class="filter-btn" onclick="filterTemplates('social')">Social</button>
+                        <button class="filter-btn" onclick="filterTemplates('search')">Search</button>
+                        <button class="filter-btn" onclick="filterTemplates('video')">Video</button>
+                        <button class="filter-btn" onclick="filterTemplates('qa')">Q&A</button>
+                        <button class="filter-btn" onclick="filterTemplates('shopping')">Shopping</button>
+                    </div>
+                    
+                    <div class="template-grid">
+                        <div class="template-card" onclick="selectTemplate('twitter')" data-category="social">
+                            <div class="template-icon"><i class="fab fa-twitter"></i></div>
+                            <div class="template-name">Twitter Thread</div>
+                            <div class="template-desc">Optimized for viral reach and engagement</div>
+                        </div>
+                        
+                        <div class="template-card" onclick="selectTemplate('reddit')" data-category="social">
+                            <div class="template-icon"><i class="fab fa-reddit"></i></div>
+                            <div class="template-name">Reddit Post</div>
+                            <div class="template-desc">Community-focused authentic content</div>
+                        </div>
+                        
+                        <div class="template-card" onclick="selectTemplate('google-snippet')" data-category="search">
+                            <div class="template-icon"><i class="fab fa-google"></i></div>
+                            <div class="template-name">Google Featured Snippet</div>
+                            <div class="template-desc">Structured for position zero</div>
+                        </div>
+                        
+                        <div class="template-card" onclick="selectTemplate('youtube')" data-category="video">
+                            <div class="template-icon"><i class="fab fa-youtube"></i></div>
+                            <div class="template-name">YouTube Description</div>
+                            <div class="template-desc">SEO-optimized video description</div>
+                        </div>
+                        
+                        <div class="template-card" onclick="selectTemplate('faq')" data-category="qa">
+                            <div class="template-icon"><i class="fas fa-question-circle"></i></div>
+                            <div class="template-name">FAQ Schema</div>
+                            <div class="template-desc">Structured Q&A for rich results</div>
+                        </div>
+                        
+                        <div class="template-card" onclick="selectTemplate('amazon')" data-category="shopping">
+                            <div class="template-icon"><i class="fab fa-amazon"></i></div>
+                            <div class="template-name">Amazon Listing</div>
+                            <div class="template-desc">A+ content optimization</div>
+                        </div>
+                        
+                        <div class="template-card" onclick="selectTemplate('linkedin')" data-category="social">
+                            <div class="template-icon"><i class="fab fa-linkedin"></i></div>
+                            <div class="template-name">LinkedIn Article</div>
+                            <div class="template-desc">Professional thought leadership</div>
+                        </div>
+                        
+                        <div class="template-card" onclick="selectTemplate('tiktok')" data-category="video">
+                            <div class="template-icon"><i class="fab fa-tiktok"></i></div>
+                            <div class="template-name">TikTok Script</div>
+                            <div class="template-desc">Short-form viral content</div>
+                        </div>
+                        
+                        <div class="template-card" onclick="selectTemplate('pinterest')" data-category="visual">
+                            <div class="template-icon"><i class="fab fa-pinterest"></i></div>
+                            <div class="template-name">Pinterest Description</div>
+                            <div class="template-desc">Visual discovery optimization</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel - Output -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h3 class="panel-title">
+                        <i class="fas fa-file-export"></i> Generated GEO Content
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <div class="output-header">
+                        <div>
+                            <span class="badge" id="selectedTemplate" style="padding: 0.3rem 0.8rem; background: var(--primary); color: white; border-radius: 20px; font-size: 0.85rem;">
+                                No template selected
+                            </span>
+                        </div>
+                        <div class="output-actions">
+                            <button class="btn btn-sm btn-secondary" onclick="copyContent()">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                            <button class="btn btn-sm btn-secondary" onclick="downloadContent()">
+                                <i class="fas fa-download"></i> Export
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="output-content">
+                        <div class="loading" id="outputLoading">
+                            <i class="fas fa-spinner loading-spinner"></i>
+                        </div>
+                        
+                        <div id="outputPlaceholder" class="output-placeholder">
+                            <i class="fas fa-magic"></i>
+                            <p>Select a template and analyze content to generate optimized GEO content</p>
+                        </div>
+                        
+                        <div id="generatedContent" class="generated-content" style="display: none;"></div>
+                    </div>
+                    
+                    <div style="margin-top: 1rem; display: none;" id="regenerateActions">
+                        <button class="btn btn-success" onclick="regenerateContent()">
+                            <i class="fas fa-sync"></i> Regenerate
+                        </button>
+                        <button class="btn btn-secondary" onclick="editContent()">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Section - Analysis & Scoring -->
+        <div class="analysis-section" id="analysisSection" style="display: none;">
+            <div class="analysis-header">
+                <h3 class="analysis-title">
+                    <i class="fas fa-chart-line"></i> Content Analysis & Scoring
+                </h3>
+                <button class="btn btn-secondary" onclick="toggleAnalysisDetails()">
+                    <i class="fas fa-eye"></i> View Details
+                </button>
+            </div>
+
+            <div class="score-cards">
+                <div class="score-card">
+                    <div class="score-value" id="overallScore">0</div>
+                    <div class="score-label">Overall Score</div>
+                    <div class="score-bar">
+                        <div class="score-fill" id="overallBar" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <div class="score-card">
+                    <div class="score-value" id="seoScore">0</div>
+                    <div class="score-label">SEO Optimization</div>
+                    <div class="score-bar">
+                        <div class="score-fill" id="seoBar" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <div class="score-card">
+                    <div class="score-value" id="readabilityScore">0</div>
+                    <div class="score-label">Readability</div>
+                    <div class="score-bar">
+                        <div class="score-fill" id="readabilityBar" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <div class="score-card">
+                    <div class="score-value" id="engagementScore">0</div>
+                    <div class="score-label">Engagement Potential</div>
+                    <div class="score-bar">
+                        <div class="score-fill" id="engagementBar" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recommendations-grid" style="margin-top: 2rem;">
+                <div class="recommendation-card">
+                    <h4><i class="fas fa-lightbulb" style="color: var(--warning);"></i> Quick Improvements</h4>
+                    <ul class="recommendation-list" id="quickImprovements">
+                        <li><i class="fas fa-check"></i> Add more specific data points and metrics</li>
+                        <li><i class="fas fa-check"></i> Include customer testimonials or reviews</li>
+                        <li><i class="fas fa-check"></i> Optimize title for search intent</li>
+                    </ul>
+                </div>
+                
+                <div class="recommendation-card">
+                    <h4><i class="fas fa-search" style="color: var(--info);"></i> SEO Recommendations</h4>
+                    <ul class="recommendation-list" id="seoRecommendations">
+                        <li><i class="fas fa-check"></i> Increase keyword density to 2-3%</li>
+                        <li><i class="fas fa-check"></i> Add structured data markup</li>
+                        <li><i class="fas fa-check"></i> Include relevant internal links</li>
+                    </ul>
+                </div>
+                
+                <div class="recommendation-card">
+                    <h4><i class="fas fa-share-alt" style="color: var(--success);"></i> Platform Optimization</h4>
+                    <ul class="recommendation-list" id="platformOptimization">
+                        <li><i class="fas fa-check"></i> Customize for selected platform algorithm</li>
+                        <li><i class="fas fa-check"></i> Use platform-specific hashtags</li>
+                        <li><i class="fas fa-check"></i> Optimize posting time for audience</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample PR content
+        const samplePR = `Eufy Unveils Next-Generation Smart Home Security System with AI-Powered Detection and Privacy Protection
+
+Eufy, a leading innovator in smart home technology by Anker Innovations, today announced its latest Security System S3 Pro—a comprehensive home protection solution featuring advanced AI detection, local storage, and industry-leading privacy protection. With no monthly fees and military-grade encryption, Eufy continues to redefine home security for privacy-conscious consumers.
+
+The Security System S3 Pro features 4K resolution cameras with Color Night Vision, 365-day battery life per charge, and HomeBase 3 with 16TB expandable storage. The system processes all data locally using Eufy's BionicMind AI chip, ensuring your footage never leaves your home unless you choose to share it.
+
+"Privacy is not optional—it's fundamental to home security," said Frank Zhu, General Manager of Eufy Security. "With S3 Pro, we're proving that homeowners don't need to sacrifice privacy for protection. Our local AI processing delivers faster, more accurate detection while keeping your data where it belongs: in your home."
+
+Key Features:
+- BionicMind AI Technology: On-device AI recognizes family, friends, delivery personnel, and potential threats—0.1s detection with 99.9% accuracy, zero cloud dependency.
+- 4K Ultra HD + Color Night Vision: Crystal-clear footage day and night with f/1.6 aperture and Starlight sensor. See faces and license plates up to 30 feet in complete darkness.
+- 365-Day Battery Life: Industry-leading battery technology powers each camera for a full year on a single charge. Solar panel compatibility for perpetual power.
+- HomeBase 3 with Expandable Storage: 16TB local storage capacity (1TB included), AI-powered search, and automatic clip compilation. Military-grade AES-256 encryption.
+- No Monthly Fees Ever: All features included—human detection, package detection, facial recognition, 24/7 recording, and app access—with no subscriptions.
+- Cross-Platform Integration: Works with Alexa, Google Assistant, Apple HomeKit (coming Q2 2025). RTSP support for advanced users.
+
+The Eufy Security System S3 Pro is now available for pre-order with special launch pricing. As part of Anker's commitment to sustainability, all packaging is 100% recyclable, and the product includes a 5-year warranty—the longest in the industry.
+
+About Eufy:
+Eufy, a smart home brand under Anker Innovations, has been dedicated to creating smart home products that improve everyday life since 2016. With over 10 million users worldwide, Eufy's commitment to privacy, quality, and innovation has earned numerous awards including CES Innovation Awards, Red Dot Design Awards, and Editor's Choice recognitions.
+
+For media inquiries, product samples, or interviews, contact:
+press@eufylife.com
++1 (800) 988-7973
+
+Pre-Order Now | Save $150 on Launch Bundle | Starting at $399
+https://www.eufylife.com/security-s3-pro`;
+
+        let currentInputMode = 'text';
+        let selectedTemplate = '';
+        let originalContent = '';
+        let generatedContent = '';
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', function() {
+            // Initialize default states
+            document.getElementById('uploadArea').addEventListener('click', function() {
+                document.getElementById('fileInput').click();
+            });
+        });
+
+        // Switch input mode
+        function switchInputMode(mode) {
+            currentInputMode = mode;
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            if (mode === 'text') {
+                document.getElementById('textInputArea').style.display = 'block';
+                document.getElementById('uploadArea').classList.remove('active');
+                buttons[0].classList.add('active');
+            } else {
+                document.getElementById('textInputArea').style.display = 'none';
+                document.getElementById('uploadArea').classList.add('active');
+                buttons[1].classList.add('active');
+            }
+        }
+
+        // Filter templates
+        function filterTemplates(category) {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            filterBtns.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            const templates = document.querySelectorAll('.template-card');
+            templates.forEach(template => {
+                if (category === 'all' || template.getAttribute('data-category') === category) {
+                    template.style.display = 'block';
+                } else {
+                    template.style.display = 'none';
+                }
+            });
+        }
+
+        // Select template
+        function selectTemplate(template) {
+            selectedTemplate = template;
+            const cards = document.querySelectorAll('.template-card');
+            cards.forEach(card => card.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+
+            // Update selected template badge
+            const templateNames = {
+                'twitter': 'Twitter Thread',
+                'reddit': 'Reddit Post',
+                'google-snippet': 'Google Featured Snippet',
+                'youtube': 'YouTube Description',
+                'faq': 'FAQ Schema',
+                'amazon': 'Amazon Listing',
+                'linkedin': 'LinkedIn Article',
+                'tiktok': 'TikTok Script',
+                'pinterest': 'Pinterest Description'
+            };
+
+            document.getElementById('selectedTemplate').textContent = templateNames[template] || 'No template selected';
+        }
+
+        // Load sample PR
+        function loadSample() {
+            document.getElementById('prContent').value = samplePR;
+        }
+
+        // Analyze content and generate
+        function analyzeContent() {
+            originalContent = document.getElementById('prContent').value;
+            
+            if (!originalContent.trim()) {
+                alert('Please enter content to analyze');
+                return;
+            }
+
+            if (!selectedTemplate) {
+                alert('Please select a template');
+                return;
+            }
+
+            // Show loading
+            document.getElementById('outputLoading').classList.add('active');
+            document.getElementById('outputPlaceholder').style.display = 'none';
+            document.getElementById('generatedContent').style.display = 'none';
+
+            // Simulate processing
+            setTimeout(() => {
+                generateOptimizedContent();
+                calculateScores();
+                
+                // Hide loading
+                document.getElementById('outputLoading').classList.remove('active');
+                
+                // Show results
+                document.getElementById('generatedContent').style.display = 'block';
+                document.getElementById('regenerateActions').style.display = 'block';
+                document.getElementById('analysisSection').style.display = 'block';
+                
+                // Scroll to results
+                document.getElementById('analysisSection').scrollIntoView({ behavior: 'smooth' });
+            }, 1500);
+        }
+
+        // Generate optimized content based on template
+        function generateOptimizedContent() {
+            const contentGenerators = {
+                'twitter': generateTwitterThread,
+                'reddit': generateRedditPost,
+                'google-snippet': generateGoogleSnippet,
+                'youtube': generateYouTubeDescription,
+                'faq': generateFAQSchema,
+                'amazon': generateAmazonListing,
+                'linkedin': generateLinkedInArticle,
+                'tiktok': generateTikTokScript,
+                'pinterest': generatePinterestDescription
+            };
+
+            const generator = contentGenerators[selectedTemplate] || generateDefaultContent;
+            generatedContent = generator(originalContent);
+            document.getElementById('generatedContent').textContent = generatedContent;
+        }
+
+        // Content generators for different platforms
+        function generateTwitterThread(content) {
+            return `🚨 THREAD: Revolutionary Home Security Without the Monthly Fees
+
+1/ Eufy just dropped the S3 Pro - a security system that actually respects your privacy.
+
+365-day battery life. 4K cameras. Zero cloud fees.
+
+Here's why this changes everything 🧵
+
+2/ THE PRIVACY PROBLEM
+Most security systems upload your footage to the cloud.
+Ring, Nest, Arlo - they all do it.
+
+Your home videos on someone else's server? No thanks.
+
+Eufy S3 Pro: 100% local processing with military-grade encryption 🔒
+
+3/ INSANE BATTERY LIFE
+- 365 days per charge (not a typo!)
+- Solar panel compatible
+- No wiring needed
+
+Compare: Ring needs charging every 6-8 weeks 😮
+
+4/ AI THAT ACTUALLY WORKS
+✅ Recognizes family vs strangers
+✅ Package detection
+✅ Vehicle alerts
+✅ 0.1s response time
+
+All processed on-device. Your data never leaves home.
+
+5/ THE MONEY MATH
+Ring: $30/month = $360/year
+Arlo: $15/month = $180/year
+Nest: $12/month = $144/year
+
+Eufy: $0/month forever
+
+Do the math over 5 years... 💸
+
+6/ NIGHT VISION THAT'S ACTUALLY USEFUL
+4K Color Night Vision up to 30 feet
+See faces & license plates clearly
+f/1.6 aperture + Starlight sensor
+
+Most competitors: Grainy B&W footage 📹
+
+7/ STORAGE SOLVED
+- 16TB expandable (1TB included)
+- AI-powered search
+- Automatic highlight reels
+- Military-grade encryption
+
+No more "your cloud storage is full" notifications
+
+8/ WORKS WITH EVERYTHING
+✅ Alexa
+✅ Google Assistant
+✅ Apple HomeKit (Q2 2025)
+✅ RTSP for power users
+
+Your home, your rules.
+
+9/ THE VERDICT
+If you want security without sacrificing privacy or paying forever fees, this is it.
+
+Pre-order pricing: $399 (save $150)
+5-year warranty (industry best)
+
+Link: eufylife.com/security-s3-pro
+
+RT if you're tired of monthly security fees! 🔄`;
+        }
+
+        function generateRedditPost(content) {
+            return `Title: Eufy S3 Pro - Finally, a security system that doesn't spy on you or charge monthly fees
+
+Hey r/homesecurity,
+
+Just wanted to share my excitement about Eufy's new S3 Pro system. As someone who's been burned by Ring's ever-increasing fees and privacy concerns, this looks like exactly what we've been asking for.
+
+**The headline features:**
+- 365-day battery life (yes, a full year!)
+- 4K cameras with color night vision
+- 100% local processing - no cloud required
+- Zero monthly fees for ALL features
+- 16TB expandable storage
+
+**What really caught my attention:**
+The BionicMind AI chip processes everything locally. Your footage never leaves your home unless you explicitly share it. After all the Ring/police partnerships and data breaches, this is huge.
+
+**The specs that matter:**
+- 0.1s detection time with 99.9% accuracy
+- Recognizes family, friends, delivery people
+- 4K resolution with f/1.6 aperture
+- Works with Alexa, Google, HomeKit (coming Q2 2025)
+- Military-grade AES-256 encryption
+
+**Price breakdown:**
+- Pre-order: $399 (saving $150)
+- Regular price: $549
+- No monthly fees ever
+
+Compare that to Ring ($30/month), Arlo ($15/month), or Nest ($12/month). Over 5 years, you're saving $1,800+.
+
+**My take:**
+Finally, a company that gets it. Privacy shouldn't be a subscription service. The 5-year warranty shows they're confident in the hardware too.
+
+Anyone else planning to switch? I'm tired of paying Ring every month for features that should be included.
+
+Edit: Not affiliated with Eufy, just a frustrated Ring user looking for alternatives!`;
+        }
+
+        function generateGoogleSnippet(content) {
+            return `<h1>What is the Eufy Security System S3 Pro?</h1>
+
+<p><strong>The Eufy Security System S3 Pro is an AI-powered home security system that offers 4K surveillance with 365-day battery life and complete privacy protection through 100% local data processing.</strong></p>
+
+<h2>Key Features:</h2>
+<ul>
+  <li><strong>365-day battery life</strong> - Industry-leading power efficiency</li>
+  <li><strong>4K Ultra HD cameras</strong> - Crystal-clear day and night footage</li>
+  <li><strong>Local AI processing</strong> - Your data never leaves your home</li>
+  <li><strong>No monthly fees</strong> - All features included forever</li>
+  <li><strong>16TB storage capacity</strong> - Expandable local storage</li>
+</ul>
+
+<h2>How does Eufy S3 Pro ensure privacy?</h2>
+<p>The system uses BionicMind AI technology to process all video footage locally on the HomeBase 3 unit. Unlike competitors that upload footage to cloud servers, Eufy ensures your recordings stay within your home network with military-grade AES-256 encryption.</p>
+
+<h2>Eufy S3 Pro vs Competitors</h2>
+<table>
+  <tr>
+    <th>Feature</th>
+    <th>Eufy S3 Pro</th>
+    <th>Ring Pro</th>
+    <th>Arlo Ultra</th>
+  </tr>
+  <tr>
+    <td>Monthly Fee</td>
+    <td>$0</td>
+    <td>$30</td>
+    <td>$15</td>
+  </tr>
+  <tr>
+    <td>Battery Life</td>
+    <td>365 days</td>
+    <td>6-8 weeks</td>
+    <td>3-6 months</td>
+  </tr>
+  <tr>
+    <td>Data Storage</td>
+    <td>Local (Private)</td>
+    <td>Cloud Only</td>
+    <td>Cloud Only</td>
+  </tr>
+  <tr>
+    <td>Video Quality</td>
+    <td>4K HDR</td>
+    <td>1080p HD</td>
+    <td>4K HDR</td>
+  </tr>
+</table>
+
+<h2>Pricing and Availability</h2>
+<p>The Eufy Security System S3 Pro is available for pre-order at $399 (regular price $549). The system includes a 5-year warranty and is expected to ship in March 2025.</p>`;
+        }
+
+        function generateYouTubeDescription(content) {
+            return `🔒 Eufy S3 Pro Review - The Security System That Respects Your Privacy (365-Day Battery!)
+
+In this video, I'm reviewing the brand new Eufy Security System S3 Pro - a game-changing home security solution that keeps your data private and doesn't charge monthly fees!
+
+⏱️ TIMESTAMPS:
+00:00 - Why I'm switching from Ring
+02:15 - Unboxing the S3 Pro
+04:30 - BionicMind AI Features
+07:45 - 365-Day Battery Test
+10:20 - 4K Night Vision Samples
+13:00 - Local vs Cloud Storage Explained
+15:30 - App Walkthrough
+18:00 - Smart Home Integration
+20:15 - Price Comparison
+22:00 - Final Verdict
+
+🔑 KEY FEATURES COVERED:
+✅ 365-day battery life (with solar option)
+✅ 4K Ultra HD with Color Night Vision
+✅ 100% local AI processing
+✅ No monthly fees EVER
+✅ 16TB expandable storage
+✅ Military-grade encryption
+✅ Works with Alexa, Google, HomeKit
+
+💰 PRICING:
+Pre-order: $399 (save $150)
+Regular: $549
+Monthly fees: $0 (vs $30/mo for Ring)
+
+📊 QUICK COMPARISON:
+Eufy S3 Pro vs Ring vs Arlo vs Nest
+Winner: Eufy (by far!)
+
+🛒 LINKS:
+Eufy S3 Pro: https://www.eufylife.com/security-s3-pro
+Solar Panel Add-on: [affiliate link]
+My Security Setup Guide: [link]
+
+💭 MY HONEST OPINION:
+After years of paying Ring's monthly fees and worrying about privacy, the Eufy S3 Pro is exactly what I've been waiting for. The 365-day battery alone makes this worth it!
+
+❓ FAQ:
+Q: Does it really last 365 days?
+A: Yes! Based on 20 events/day
+
+Q: Can I access remotely?
+A: Yes, through the app (encrypted)
+
+Q: What about weather resistance?
+A: IP67 rated for all weather
+
+🏷️ HASHTAGS:
+#EufySecurity #HomeSecuritySystem #SmartHome #SecurityCamera #PrivacyFirst #NoMonthlyFees #EufyS3Pro #HomeSecurity #TechReview #SmartHomeTech
+
+🔔 Subscribe for more honest security tech reviews!
+👍 Like if this helped you decide!
+💬 Comment your questions below!
+
+Disclosure: Not sponsored. Purchased with my own money. Some links may be affiliate.`;
+        }
+
+        function generateFAQSchema(content) {
+            return `<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How long does the Eufy S3 Pro battery really last?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The Eufy S3 Pro offers industry-leading 365-day battery life per charge under typical use (20 motion events per day). This is achieved through advanced power management and the efficient BionicMind AI chip. Solar panel accessories are available for continuous power."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is Eufy S3 Pro really private? Where is my data stored?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, the Eufy S3 Pro is designed with privacy as a priority. All video footage is processed and stored locally on the HomeBase 3 unit using military-grade AES-256 encryption. Your data never leaves your home network unless you explicitly choose to share it. There's no cloud dependency for core functionality."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the monthly fees for Eufy S3 Pro?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "There are no monthly fees for the Eufy S3 Pro. All features including AI detection, facial recognition, 24/7 recording, and app access are included with your purchase. This is unlike competitors like Ring ($30/month), Arlo ($15/month), or Nest ($12/month)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Eufy S3 Pro work with Alexa and Google Home?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, the Eufy S3 Pro is compatible with Amazon Alexa and Google Assistant for voice control and smart home integration. Apple HomeKit support is coming in Q2 2025. The system also supports RTSP for advanced users who want to integrate with other platforms."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What's the difference between Eufy S3 Pro and Ring?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Key differences: 1) Privacy - Eufy stores locally, Ring uses cloud. 2) Fees - Eufy has no monthly fees, Ring charges $30/month. 3) Battery - Eufy lasts 365 days, Ring needs charging every 6-8 weeks. 4) Storage - Eufy offers 16TB local storage, Ring requires cloud subscription."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I install Eufy S3 Pro myself?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, the Eufy S3 Pro is designed for easy DIY installation. No wiring is required due to the battery-powered cameras. The average installation time is 30 minutes. The kit includes all mounting hardware and step-by-step instructions in the app."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What happens if my internet goes down?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The Eufy S3 Pro continues recording locally even without internet. All core features including motion detection, recording, and AI recognition work offline. You can view recordings through the local network. Remote access and notifications require internet."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What's included in the Eufy S3 Pro package?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The S3 Pro includes: 2x 4K wireless cameras, 1x HomeBase 3 with 1TB storage, mounting hardware, USB charging cables, power adapter, quick start guide. Optional accessories include solar panels, additional cameras, and storage expansion up to 16TB."
+      }
+    }
+  ]
+}
+</script>`;
+        }
+
+        function generateAmazonListing(content) {
+            return `Title: Eufy Security S3 Pro - 4K Wireless Security Camera System with 365-Day Battery, Local Storage, No Monthly Fees, AI Detection
+
+Bullet Points:
+• 【365-DAY BATTERY LIFE】Industry-leading battery technology provides a full year of power per charge. Never climb a ladder to recharge again. Optional solar panels available for perpetual power.
+• 【100% PRIVACY GUARANTEED】All footage stored locally with military-grade encryption. Your videos never touch the cloud. Unlike Ring or Arlo, your data stays in YOUR home.
+• 【4K ULTRA HD + COLOR NIGHT VISION】See everything in crystal-clear 4K resolution. Advanced f/1.6 aperture captures vivid color footage even in complete darkness up to 30 feet.
+• 【NO MONTHLY FEES EVER】All features included: AI human detection, facial recognition, package alerts, 24/7 recording. Save $1,800+ over 5 years vs. competitors' subscriptions.
+• 【SMART HOME READY】Works with Alexa, Google Assistant, and Apple HomeKit (Q2 2025). 5-year warranty included - the longest in the industry.
+
+Product Description:
+
+Why Choose Eufy S3 Pro Over Ring, Arlo, or Nest?
+
+PRIVACY FIRST DESIGN
+While other brands upload your footage to the cloud (and charge you monthly for it), Eufy S3 Pro processes everything locally. Your home videos stay in your home, protected by AES-256 military-grade encryption.
+
+BREAKTHROUGH BATTERY TECHNOLOGY
+Forget the hassle of frequent charging. Our advanced power management delivers 365 days of protection on a single charge. That's 6x longer than Ring and 3x longer than Arlo.
+
+AI THAT ACTUALLY WORKS
+BionicMind AI technology recognizes:
+- Family members vs strangers
+- Delivery packages
+- Vehicles vs pedestrians
+- Pets vs intruders
+
+All in 0.1 seconds with 99.9% accuracy - without internet!
+
+SAVE THOUSANDS ON FEES
+- Ring: $30/month = $360/year
+- Arlo: $15/month = $180/year
+- Nest: $12/month = $144/year
+- Eufy: $0/month forever
+
+WHAT'S IN THE BOX
+- 2x S3 Pro 4K Cameras
+- 1x HomeBase 3 (1TB included, expandable to 16TB)
+- Mounting hardware
+- USB charging cables
+- Quick start guide
+
+TECHNICAL SPECIFICATIONS
+- Resolution: 4K (3840 x 2160)
+- Field of View: 135°
+- Night Vision: Color, up to 30 feet
+- Weather Rating: IP67
+- Operating Temp: -20°C to 50°C
+- Storage: Local, up to 16TB
+- Connectivity: 2.4GHz Wi-Fi
+
+Join 10+ million Eufy users who've chosen privacy and savings over subscriptions.`;
+        }
+
+        function generateLinkedInArticle(content) {
+            return `**The Hidden Cost of Home Security: Why I Switched from Cloud to Local Storage**
+
+As a tech professional who values both security and privacy, I recently made a decision that's saving me $360/year while actually improving my home's protection. Let me share why the Eufy S3 Pro represents a paradigm shift in home security.
+
+**The Problem with Traditional Security Systems**
+
+For years, I've been paying Ring $30/month for "cloud storage" - essentially renting space on their servers to store videos of my own home. When you add it up, that's $1,800 over 5 years just to access my own security footage.
+
+But the cost wasn't the only issue. Every video captured by my cameras was uploaded to Amazon's servers. In an era of data breaches and privacy concerns, this never sat well with me.
+
+**Enter Local Processing: A Game-Changer**
+
+The Eufy S3 Pro takes a radically different approach:
+- All video processing happens locally using their BionicMind AI chip
+- Footage is stored on the HomeBase unit in my home (expandable to 16TB)
+- Military-grade AES-256 encryption protects my data
+- Zero monthly fees for all features
+
+**The Technical Innovation That Impressed Me**
+
+What really caught my attention was the 365-day battery life. As someone who's climbed a ladder every 6 weeks to charge Ring cameras, this alone justifies the switch. The engineering behind this involves:
+- Ultra-efficient AI processing
+- Smart power management
+- Optional solar integration
+
+**Real-World Performance**
+
+After three months of use:
+- 0.1-second detection time (faster than cloud-based systems)
+- 99.9% accuracy in distinguishing between people, packages, and pets
+- 4K footage that's actually useful at night (color, not grainy B&W)
+- Seamless integration with my existing smart home setup
+
+**The Business Case**
+
+For businesses and homeowners alike, the math is simple:
+- One-time cost: $399 (pre-order price)
+- Monthly cost: $0
+- 5-year warranty (vs 1-year for most competitors)
+- ROI: 13 months vs subscription services
+
+**Looking Forward**
+
+As we become more aware of data privacy and the true cost of "free" cloud services, solutions like the Eufy S3 Pro represent the future of home security. It's not just about saving money - it's about taking control of our data.
+
+What's your take on local vs cloud storage for security systems? Have you made the switch?
+
+#HomeSecuirty #Privacy #SmartHome #Technology #Innovation`;
+        }
+
+        function generateTikTokScript(content) {
+            return `[HOOK - 0-3 seconds]
+*Camera shows Ring app notification*
+"Stop! Before you pay another monthly fee for your security camera..."
+
+[PROBLEM - 3-8 seconds]
+*Show calendar with $30 crossed out each month*
+"I was paying Ring $30 every month - that's $360 a year just to see my OWN recordings!"
+
+[AGITATE - 8-12 seconds]
+*Show news headlines about data breaches*
+"Plus all my home videos were on THEIR servers. Privacy? What privacy?"
+
+[SOLUTION - 12-20 seconds]
+*Unbox Eufy S3 Pro dramatically*
+"Then I found this - Eufy S3 Pro. It records everything locally, no monthly fees EVER, and get this..."
+
+[WOW FACTOR - 20-25 seconds]
+*Show battery indicator*
+"365 DAY BATTERY LIFE! I charged this LAST YEAR!"
+
+[PROOF - 25-35 seconds]
+*Show night footage on phone*
+"4K quality, sees in the dark better than my eyes, knows the difference between my dog and a burglar"
+
+[VALUE - 35-40 seconds]
+*Quick math on screen*
+"Ring: $1,800 over 5 years
+Eufy: $399 once
+You saved: $1,401!"
+
+[CTA - 40-45 seconds]
+*Point to link*
+"Link in bio for the presale price - save $150 before it's gone! Your wallet (and privacy) will thank you!"
+
+[END SCREEN - 45-47 seconds]
+"Follow for more smart home tips that actually save you money!"
+
+---
+CAPTION:
+Stop paying monthly fees for YOUR security footage! 🚨 This camera lasts 365 DAYS per charge and keeps your data private 🔒 #SmartHome #SecurityCamera #NoMonthlyFees #PrivacyFirst #HomeSecurity #TechTok #SaveMoney`;
+        }
+
+        function generatePinterestDescription(content) {
+            return `Eufy S3 Pro: The Security System That Pays for Itself 🏠🔒
+
+Say goodbye to monthly security fees forever! The Eufy S3 Pro offers:
+
+✨ 365-day battery life (yes, a full YEAR!)
+✨ 4K Ultra HD with color night vision
+✨ 100% private local storage
+✨ No monthly fees (save $360/year vs Ring)
+✨ AI that recognizes family vs strangers
+
+Why this changes everything:
+📹 Your videos stay in YOUR home
+🔋 Charge once a year (or add solar)
+💰 Pays for itself in 13 months
+🏆 5-year warranty included
+
+Perfect for:
+• Privacy-conscious homeowners
+• Busy families tired of false alerts  
+• Anyone paying monthly security fees
+• Renters who need wireless options
+• Tech lovers who want the latest AI
+
+Installation time: 30 minutes
+No wiring required!
+
+Currently $399 (save $150) - Pre-order special
+Link: eufylife.com/security-s3-pro
+
+More smart home ideas: [Follow Board]
+
+#SmartHome #HomeSecurity #SecurityCamera #NoMonthlyFees #HomeImprovement #Privacy #TechForHome #ModernLiving #SmartHomeTechnology #WirelessSecurity #HomeAutomation #SecuritySystem`;
+        }
+
+        function generateDefaultContent(content) {
+            return `[Optimized content for ${selectedTemplate} platform]
+
+${content}
+
+[Platform-specific optimizations applied]`;
+        }
+
+        // Calculate scores
+        function calculateScores() {
+            // Simulate score calculation
+            const scores = {
+                overall: Math.floor(Math.random() * 20) + 75,
+                seo: Math.floor(Math.random() * 20) + 70,
+                readability: Math.floor(Math.random() * 15) + 80,
+                engagement: Math.floor(Math.random() * 25) + 65
+            };
+
+            // Update score displays
+            updateScore('overall', scores.overall);
+            updateScore('seo', scores.seo);
+            updateScore('readability', scores.readability);
+            updateScore('engagement', scores.engagement);
+        }
+
+        // Update individual score
+        function updateScore(type, value) {
+            document.getElementById(`${type}Score`).textContent = value;
+            document.getElementById(`${type}Bar`).style.width = `${value}%`;
+        }
+
+        // Copy content to clipboard
+        function copyContent() {
+            const content = document.getElementById('generatedContent').textContent;
+            navigator.clipboard.writeText(content).then(() => {
+                alert('Content copied to clipboard!');
+            });
+        }
+
+        // Download content
+        function downloadContent() {
+            const content = document.getElementById('generatedContent').textContent;
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `eufy-${selectedTemplate}-content.txt`;
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        // Regenerate content
+        function regenerateContent() {
+            document.getElementById('outputLoading').classList.add('active');
+            setTimeout(() => {
+                generateOptimizedContent();
+                document.getElementById('outputLoading').classList.remove('active');
+            }, 1000);
+        }
+
+        // Edit content
+        function editContent() {
+            const content = document.getElementById('generatedContent');
+            content.setAttribute('contenteditable', 'true');
+            content.style.border = '2px dashed var(--primary)';
+            content.style.padding = '1rem';
+            content.focus();
+        }
+
+        // Reset all
+        function resetAll() {
+            document.getElementById('prContent').value = '';
+            selectedTemplate = '';
+            document.querySelectorAll('.template-card').forEach(card => card.classList.remove('selected'));
+            document.getElementById('selectedTemplate').textContent = 'No template selected';
+            document.getElementById('outputPlaceholder').style.display = 'block';
+            document.getElementById('generatedContent').style.display = 'none';
+            document.getElementById('regenerateActions').style.display = 'none';
+            document.getElementById('analysisSection').style.display = 'none';
+        }
+
+        // Toggle analysis details
+        function toggleAnalysisDetails() {
+            const details = document.querySelector('.recommendations-grid');
+            details.style.display = details.style.display === 'none' ? 'grid' : 'none';
+        }
+
+        // File upload handlers
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.currentTarget.classList.add('dragover');
+        }
+
+        function handleDragLeave(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.currentTarget.classList.remove('dragover');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.currentTarget.classList.remove('dragover');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        }
+
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
+            if (file) {
+                handleFile(file);
+            }
+        }
+
+        function handleFile(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const content = e.target.result;
+                // Switch to text mode and populate
+                switchInputMode('text');
+                document.getElementById('prContent').value = content;
+            };
+            reader.readAsText(file);
+        }
+    </script>
+</body>
+</html>

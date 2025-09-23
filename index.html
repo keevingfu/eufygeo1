@@ -370,12 +370,21 @@
             </div>
             
             <div class="menu-section">
-                <!-- Platform Introduction -->
+                <!-- Navigation Index (formerly under Public Domain Content) -->
                 <div class="menu-item">
-                    <a href="#" class="menu-link" onclick="loadPage('00-platform-intr.html', 'Platform Introduction')">
-                        <span class="menu-icon">📖</span>
-                        <span class="menu-text">Platform Introduction</span>
+                    <a href="#" class="menu-link" onclick="toggleSubmenu(this)">
+                        <span class="menu-icon">🧭</span>
+                        <span class="menu-text">Navigation Index</span>
+                        <span class="menu-arrow">▶</span>
                     </a>
+                    <div class="submenu">
+                        <a href="#" class="submenu-link" onclick="loadPage('01c-navigation-index.html', 'Navigation Index')">
+                            Navigation Index
+                        </a>
+                        <a href="#" class="submenu-link" onclick="loadPage('00-platform-intr.html', 'Platform Introduction')">
+                            Platform Introduction
+                        </a>
+                    </div>
                 </div>
 
                 <!-- Public Domain Content -->
@@ -394,9 +403,6 @@
                         </a>
                         <a href="#" class="submenu-link" onclick="loadPage('01b-public-domain-geo-content-factory.html', 'GEO Content Factory')">
                             GEO Content Factory
-                        </a>
-                        <a href="#" class="submenu-link" onclick="loadPage('01c-navigation-index.html', 'Navigation Index')">
-                            Navigation Index
                         </a>
                         <a href="#" class="submenu-link" onclick="loadPage('01c-public-domain-geo-social&pr.html', 'GEO Social & PR')">
                             GEO Social & PR
