@@ -4,8 +4,18 @@
   "framework": null,
   "rewrites": [
     {
+      "source": "/",
+      "destination": "/login.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/$1"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/",
+      "dest": "/login.html"
     }
   ],
   "headers": [

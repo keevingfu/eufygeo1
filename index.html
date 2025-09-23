@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generative Engine Optimization Content Marketing</title>
+    <script src="auth.js"></script>
+    <script>
+        // Check authentication before page loads
+        if (!isAuthenticated()) {
+            window.location.href = 'login.html';
+        }
+    </script>
     <style>
         * {
             margin: 0;
@@ -355,8 +362,12 @@
                 <span class="pulse"></span>
                 <span>All Systems Operational</span>
             </div>
-            <div style="font-size: 13px; opacity: 0.9;">
+            <div style="font-size: 13px; opacity: 0.9; display: flex; align-items: center; gap: 15px;">
+                <span id="currentUser" style="font-weight: 500;"></span>
                 <span id="currentTime"></span>
+                <button onclick="logout()" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 5px 15px; border-radius: 15px; cursor: pointer; font-size: 12px; transition: all 0.2s;">
+                    Logout
+                </button>
             </div>
         </div>
     </header>
@@ -581,6 +592,12 @@
 
         updateTime();
         setInterval(updateTime, 60000);
+        
+        // Display current user
+        const user = getCurrentUser();
+        if (user) {
+            document.getElementById('currentUser').textContent = `👤 ${user.username}`;
+        }
 
         // Toggle submenu
         function toggleSubmenu(menuLink) {
